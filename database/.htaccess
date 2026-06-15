@@ -1,0 +1,4 @@
+# Deny direct web access to SQL files
+<IfModule mod_authz_core.c>
+    Require all denied
+</IfModule>

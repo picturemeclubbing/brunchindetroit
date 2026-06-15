@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Rise of Artisanal Coffee in Detroit | BrunchInDetroit</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+        .prose img {
+            border-radius: 8px;
+            margin: 2rem auto;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .star-rating input[type="radio"] {
+            display: none;
+        }
+        .star-rating label {
+            color: #d1d5db;
+            font-size: 1.5rem;
+            padding: 0 2px;
+            cursor: pointer;
+        }
+        .star-rating input[type="radio"]:checked ~ label {
+            color: #f59e0b;
+        }
+        .star-rating label:hover,
+        .star-rating label:hover ~ label {
+            color: #f59e0b;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <header class="bg-white shadow-sm">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-8">
+                    <a href="index.html" class="text-2xl font-bold text-teal-700">BrunchInDetroit</a>
+                    <nav class="hidden md:flex space-x-6">
+                        <a href="index.html" class="text-gray-700 hover:text-teal-600">Home</a>
+                        <a href="news.html" class="font-semibold underline text-teal-600">Blog</a>
+                        <a href="#" class="text-gray-700 hover:text-teal-600">Brunch Spots</a>
+                        <a href="#" class="text-gray-700 hover:text-teal-600">Events</a>
+                        <a href="#" class="text-gray-700 hover:text-teal-600">About</a>
+                    </nav>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button class="md:hidden text-gray-700">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                    <div class="hidden md:flex space-x-2">
+                        <a href="#" class="text-gray-700 hover:text-teal-600"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-gray-700 hover:text-teal-600"><i class="fab fa-facebook"></i></a>
+                        <a href="#" class="text-gray-700 hover:text-teal-600"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Breadcrumb Navigation -->
+    <div class="bg-white border-b">
+        <div class="container mx-auto px-4 py-2">
+            <div class="text-sm text-gray-500">
+                <a href="index.html" class="hover:underline">Home</a> › 
+                <a href="news.html" class="hover:underline">Blog</a> › 
+                <span class="text-teal-700 font-semibold">The Rise of Artisanal Coffee in Detroit</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8">
+        <!-- Article Header -->
+        <article class="max-w-4xl mx-auto bg-white rounded-lg shadow-md overflow-hidden mb-8">
+            <!-- Featured Image -->
+            <div class="w-full h-64 md:h-96 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1445116572660-236099ec97a0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1471&q=80');"></div>
+            
+            <div class="p-6 md:p-8 relative">
+                <!-- Category Label -->
+                <span class="inline-block px-3 py-1 bg-teal-100 text-teal-800 rounded-full text-xs font-semibold mb-4">Culture</span>
+                
+                <div class="md:flex justify-between items-start">
+                    <div class="md:w-4/5">
+                        <!-- Title -->
+                        <h1 class="text-3xl font-bold text-gray-800 mb-4">The Rise of Artisanal Coffee in Detroit: A Caffeine Revolution</h1>
+                        
+                        <!-- Author & Date -->
+                        <div class="flex items-center text-sm text-gray-500 mb-6">
+                            <span>By <a href="#" class="text-teal-600 hover:underline">Jamie Wilson</a></span>
+                            <span class="mx-2">•</span>
+                            <span>June 15, 2023</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Share Buttons (Desktop) -->
+                    <div class="hidden md:flex flex-col space-y-3">
+                        <span class="text-sm text-gray-500">Share this:</span>
+                        <div class="flex space-x-3">
+                            <button class="text-gray-500 hover:text-teal-600 transition-colors" title="Email">
+                                <i class="fas fa-envelope text-lg"></i>
+                            </button>
+                            <button class="text-gray-500 hover:text-teal-600 transition-colors" title="Copy link" onclick="copyToClipboard()">
+                                <i class="fas fa-link text-lg"></i>
+                            </button>
+                            <a href="#" class="text-gray-500 hover:text-teal-600 transition-colors" title="Instagram">
+                                <i class="fab fa-instagram text-lg"></i>
+                            </a>
+                            <a href="#" class="text-gray-500 hover:text-teal-600 transition-colors" title="Facebook">
+                                <i class="fab fa-facebook-f text-lg"></i>
+                            </a>
+                            <a href="#" class="text-gray-500 hover:text-teal-600 transition-colors" title="Twitter">
+                                <i class="fab fa-twitter text-lg"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Share Buttons (Mobile) -->
+                <div class="md:hidden mb-6">
+                    <span class="text-sm text-gray-500">Share this:</span>
+                    <div class="flex space-x-4 mt-2">
+                        <button class="text-gray-500 hover:text-teal-600 transition-colors" title="Email">
+                            <i class="fas fa-envelope text-lg"></i>
+                        </button>
+                        <button class="text-gray-500 hover:text-teal-600 transition-colors" title="Copy link" onclick="copyToClipboard()">
+                            <i class="fas fa-link text-lg"></i>
+                        </button>
+                        <a href="#" class="text-gray-500 hover:text-teal-600 transition-colors" title="Instagram">
+                            <i class="fab fa-instagram text-lg"></i>
+                        </a>
+                        <a href="#" class="text-gray-500 hover:text-teal-600 transition-colors" title="Facebook">
+                            <i class="fab fa-facebook-f text-lg"></i>
+                        </a>
+                        <a href="#" class="text-gray-500 hover:text-teal-600 transition-colors" title="Twitter">
+                            <i class="fab fa-twitter text-lg"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Article Content -->
+                <div class="prose max-w-none">
+                    <p class="lead">Detroit's coffee scene has undergone a remarkable transformation in the past decade, evolving from a landscape dominated by chain coffee shops to a thriving ecosystem of artisanal roasters and specialty cafes.</p>
+                    
+                    <p>Walking through downtown Detroit today, you're as likely to encounter a meticulously crafted pour-over as you are a classic cup of joe. This shift reflects broader changes in the city's culinary identity and its embrace of craft culture.</p>
+                    
+                    <h2>The Pioneers of Detroit's Third Wave</h2>
+                    
+                    <p>The movement began in earnest around 2012, when a handful of passionate coffee enthusiasts started experimenting with small-batch roasting. "We saw what was happening in cities like Portland and Chicago and knew Detroit had the same potential," recalls Marcus Chen, founder of Motor City Roasters.</p>
+                    
+                    <img src="https://images.unsplash.com/photo-1517705008128-361805f42e86?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1587&q=80" alt="Coffee beans being roasted" class="w-full">
+                    
+                    <p>These early adopters focused on direct trade relationships with farmers, lighter roasts that highlighted the beans' natural characteristics, and brewing methods that treated coffee preparation as both science and art.</p>
+                    
+                    <h2>Community and Connection</h2>
+                    
+                    <p>What sets Detroit's coffee renaissance apart is how deeply it's tied to neighborhood revitalization. Many of the most successful cafes have become community hubs in areas undergoing transformation.</p>
+                    
+                    <blockquote class="border-l-4 border-teal-500 pl-4 italic text-gray-600">
+                        "Our cafe isn't just about serving great coffee—it's about creating a space where people from all walks of life can come together," says Alicia Johnson of Corktown Coffee Collective.
+                    </blockquote>
+                    
+                    <p>This community focus has led to innovative partnerships with local bakeries, artists, and even auto shops. The result is a coffee culture that feels distinctly Detroit—industrial yet warm, innovative yet grounded in tradition.</p>
+                    
+                    <h2>The Future of Detroit Coffee</h2>
+                    
+                    <p>As the scene matures, new trends are emerging:</p>
+                    
+                    <ul>
+                        <li><strong>Cold brew innovations:</strong> Several roasters are experimenting with barrel-aged cold brews and nitrogen infusions</li>
+                        <li><strong>Home roasting kits:</strong> Making specialty coffee more accessible to home enthusiasts</li>
+                        <li><strong>Coffee education:</strong> Regular cupping sessions and brewing classes at local cafes</li>
+                        <li><strong>Sustainability focus:</strong> Composting programs and reusable cup initiatives</li>
+                    </ul>
+                    
+                    <p>With at least five new specialty cafes slated to open in the next year, Detroit's coffee revolution shows no signs of slowing down. For brunch lovers, this means more opportunities than ever to pair that perfect avocado toast with an equally perfect cup of coffee.</p>
+                </div>
+                
+                <!-- Tags -->
+                <div class="mt-8 pt-6 border-t border-gray-200">
+                    <span class="text-sm text-gray-500 mr-2">Tags:</span>
+                    <a href="#" class="inline-block px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm mr-2 mb-2 hover:bg-teal-100 hover:text-teal-700">Coffee</a>
+                    <a href="#" class="inline-block px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm mr-2 mb-2 hover:bg-teal-100 hover:text-teal-700">Detroit</a>
+                    <a href="#" class="inline-block px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm mr-2 mb-2 hover:bg-teal-100 hover:text-teal-700">Food Culture</a>
+                </div>
+                
+                <!-- Share Buttons (Bottom) -->
+                <div class="mt-8 pt-6 border-t border-gray-200">
+                    <span class="text-sm text-gray-500">Share this article:</span>
+                    <div class="flex space-x-3 mt-2">
+                        <button class="text-gray-500 hover:text-teal-600 transition-colors" title="Email">
+                            <i class="fas fa-envelope text-lg"></i>
+                        </button>
+                        <button class="text-gray-500 hover:text-teal-600 transition-colors" title="Copy link" onclick="copyToClipboard()">
+                            <i class="fas fa-link text-lg"></i>
+                        </button>
+                        <a href="#" class="text-gray-500 hover:text-teal-600 transition-colors" title="Instagram">
+                            <i class="fab fa-instagram text-lg"></i>
+                        </a>
+                        <a href="#" class="text-gray-500 hover:text-teal-600 transition-colors" title="Facebook">
+                            <i class="fab fa-facebook-f text-lg"></i>
+                        </a>
+                        <a href="#" class="text-gray-500 hover:text-teal-600 transition-colors" title="Twitter">
+                            <i class="fab fa-twitter text-lg"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </article>
+        
+        <!-- Comments Section -->
+        <section class="max-w-4xl mx-auto bg-white rounded-lg shadow-md overflow-hidden mb-8">
+            <div class="p-6 md:p-8">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6">Reader Comments</h2>
+                
+                <!-- Existing Comments -->
+                <div class="space-y-6 mb-8">
+                    <!-- Comment 1 -->
+                    <div class="bg-teal-50 p-4 rounded-lg">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="font-semibold text-teal-700">Sarah K.</span>
+                            <span class="text-sm text-gray-500">June 18, 2023</span>
+                        </div>
+                        <p class="text-gray-700">Great article! I've been following Detroit's coffee scene for years and it's amazing to see how much it's grown. Corktown Coffee Collective is my absolute favorite—their seasonal lattes are incredible.</p>
+                    </div>
+                    
+                    <!-- Comment 2 -->
+                    <div class="bg-white p-4 rounded-lg border border-gray-200">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="font-semibold text-teal-700">Michael T.</span>
+                            <span class="text-sm text-gray-500">June 17, 2023</span>
+                        </div>
+                        <p class="text-gray-700">Would love to see more coverage of the home roasting movement in Detroit. There's a great community of home roasters meeting monthly at Eastern Market.</p>
+                    </div>
+                    
+                    <!-- Comment 3 -->
+                    <div class="bg-teal-50 p-4 rounded-lg">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="font-semibold text-teal-700">Priya M.</span>
+                            <span class="text-sm text-gray-500">June 16, 2023</span>
+                        </div>
+                        <p class="text-gray-700">As someone who moved here from Seattle, I've been pleasantly surprised by the quality of coffee in Detroit. The article really captures what makes the scene here special.</p>
+                    </div>
+                </div>
+                
+                <!-- Comment Form -->
+                <h3 class="text-xl font-semibold text-gray-800 mb-4">Leave a Comment</h3>
+                <form class="space-y-4">
+                    <div>
+                        <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Name</label>
+                        <input type="text" id="name" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
+                    </div>
+                    
+                    <div>
+                        <label for="comment" class="block text-sm font-medium text-gray-700 mb-1">Comment</label>
+                        <textarea id="comment" rows="4" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500"></textarea>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Rating (optional)</label>
+                        <div class="star-rating flex items-center">
+                            <input type="radio" id="star5" name="rating" value="5">
+                            <label for="star5" title="5 stars">★</label>
+                            <input type="radio" id="star4" name="rating" value="4">
+                            <label for="star4" title="4 stars">★</label>
+                            <input type="radio" id="star3" name="rating" value="3">
+                            <label for="star3" title="3 stars">★</label>
+                            <input type="radio" id="star2" name="rating" value="2">
+                            <label for="star2" title="2 stars">★</label>
+                            <input type="radio" id="star1" name="rating" value="1">
+                            <label for="star1" title="1 star">★</label>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="px-6 py-2 bg-yellow-500 text-white font-medium rounded-md hover:bg-yellow-600 transition-colors">Post Comment</button>
+                </form>
+            </div>
+        </section>
+        
+        <!-- Related Articles -->
+        <section class="max-w-4xl mx-auto mb-8">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6">More From Our Blog</h2>
+            <div class="grid md:grid-cols-3 gap-6">
+                <!-- Article 1 -->
+                <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
+                    <a href="#">
+                        <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1374&q=80" alt="Brunch spread" class="w-full h-40 object-cover">
+                        <div class="p-4">
+                            <span class="inline-block px-2 py-1 bg-teal-100 text-teal-800 rounded-full text-xs font-semibold mb-2">Brunch Spots</span>
+                            <h3 class="font-bold text-gray-800 mb-2">Detroit's Best Avocado Toast: 5 Must-Try Spots</h3>
+                            <p class="text-sm text-gray-600">Discover where to find the most Instagram-worthy avocado toast in the city.</p>
+                        </div>
+                    </a>
+                </div>
+                
+                <!-- Article 2 -->
+                <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
+                    <a href="#">
+                        <img src="https://images.unsplash.com/photo-1519671482749-fd09be7ccebf?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Cocktails" class="w-full h-40 object-cover">
+                        <div class="p-4">
+                            <span class="inline-block px-2 py-1 bg-teal-100 text-teal-800 rounded-full text-xs font-semibold mb-2">Drinks</span>
+                            <h3 class="font-bold text-gray-800 mb-2">Brunch Cocktails: Detroit's Best Bloody Marys</h3>
+                            <p class="text-sm text-gray-600">From classic to creative, these Bloody Marys are worth waking up for.</p>
+                        </div>
+                    </a>
+                </div>
+                
+                <!-- Article 3 -->
+                <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
+                    <a href="#">
+                        <img src="https://images.unsplash.com/photo-1544025162-d76694265947?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1469&q=80" alt="Bakery" class="w-full h-40 object-cover">
+                        <div class="p-4">
+                            <span class="inline-block px-2 py-1 bg-teal-100 text-teal-800 rounded-full text-xs font-semibold mb-2">Bakeries</span>
+                            <h3 class="font-bold text-gray-800 mb-2">The Ultimate Guide to Detroit's Artisan Bakeries</h3>
+                            <p class="text-sm text-gray-600">Where to find the freshest, most delicious breads and pastries in the city.</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white pt-12 pb-8">
+        <div class="container mx-auto px-4">
+            <div class="grid md:grid-cols-4 gap-8 mb-8">
+                <!-- About -->
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">BrunchInDetroit</h3>
+                    <p class="text-gray-400">Discovering the best brunch spots, coffee shops, and culinary experiences in Detroit since 2015.</p>
+                </div>
+                
+                <!-- Quick Links -->
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Quick Links</h3>
+                    <ul class="space-y-2">
+                        <li><a href="index.html" class="text-gray-400 hover:text-white transition-colors">Home</a></li>
+                        <li><a href="news.html" class="text-gray-400 hover:text-white transition-colors">Blog</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Brunch Spots</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Events</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">About Us</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Contact -->
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Contact</h3>
+                    <ul class="space-y-2">
+                        <li class="text-gray-400">hello@brunchindetroit.com</li>
+                        <li class="text-gray-400">(313) 555-1234</li>
+                        <li class="flex space-x-4 mt-4">
+                            <a href="#" class="text-gray-400 hover:text-white transition-colors"><i class="fab fa-instagram"></i></a>
+                            <a href="#" class="text-gray-400 hover:text-white transition-colors"><i class="fab fa-facebook"></i></a>
+                            <a href="#" class="text-gray-400 hover:text-white transition-colors"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="text-gray-400 hover:text-white transition-colors"><i class="fab fa-pinterest"></i></a>
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- Newsletter -->
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Newsletter</h3>
+                    <p class="text-gray-400 mb-4">Subscribe to get brunch news and updates straight to your inbox.</p>
+                    <form class="flex">
+                        <input type="email" placeholder="Your email" class="px-4 py-2 w-full rounded-l-md text-gray-800">
+                        <button type="submit" class="bg-teal-600 text-white px-4 py-2 rounded-r-md hover:bg-teal-700 transition-colors">Subscribe</button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-700 pt-6">
+                <div class="flex flex-col md:flex-row justify-between items-center">
+                    <p class="text-gray-400 text-sm mb-4 md:mb-0">© 2023 BrunchInDetroit. All rights reserved.</p>
+                    <div class="flex space-x-6">
+                        <a href="#" class="text-gray-400 hover:text-white text-sm transition-colors">Privacy Policy</a>
+                        <a href="#" class="text-gray-400 hover:text-white text-sm transition-colors">Terms of Service</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Copy link functionality
+        function copyToClipboard() {
+            const url = window.location.href;
+            navigator.clipboard.writeText(url).then(() => {
+                alert('Link copied to clipboard!');
+            }).catch(err => {
+                console.error('Could not copy text: ', err);
+            });
+        }
+
+        // Mobile menu toggle functionality would go here
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mobile menu toggle would be implemented here
+        });
+    </script>
+<p style="border-radius: 8px; text-align: center; font-size: 12px; color: #fff; margin-top: 16px;position: fixed; left: 8px; bottom: 8px; z-index: 10; background: rgba(0, 0, 0, 0.8); padding: 4px 8px;">Made with <img src="https://enzostvs-deepsite.hf.space/logo.svg" alt="DeepSite Logo" style="width: 16px; height: 16px; vertical-align: middle;display:inline-block;margin-right:3px;filter:brightness(0) invert(1);"><a href="https://enzostvs-deepsite.hf.space" style="color: #fff;text-decoration: underline;" target="_blank" >DeepSite</a> - 🧬 <a href="https://enzostvs-deepsite.hf.space?remix=picturemeclubbing/article" style="color: #fff;text-decoration: underline;" target="_blank" >Remix</a></p></body>
+</html>

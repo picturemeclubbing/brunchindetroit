@@ -1,0 +1,2602 @@
+/* brunchindetroit.com — shared styles (Phase 1: home foundation) */
+
+:root {
+  --primary: #2c7a7b;
+  --primary-dark: #225e5f;
+  --accent: #f6e05e;
+  --background: #fffdf7;
+  --text: #2d3748;
+  --muted: #718096;
+  --border: #e2e8f0;
+  --white: #ffffff;
+  --danger: #e53e3e;
+  --success: #38a169;
+  --footer-bg: #1a202c;
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 4px 14px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.25rem;
+  --container-max: 72rem;
+  --transition: 0.3s ease;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body.site-body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  font-family: "Poppins", system-ui, sans-serif;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--text);
+  background-color: var(--background);
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+a {
+  color: var(--primary);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.container {
+  width: 100%;
+  max-width: var(--container-max);
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.site-main {
+  flex: 1;
+}
+
+/* Header */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: var(--white);
+  box-shadow: var(--shadow-sm);
+}
+
+.site-header__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+}
+
+.site-logo {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--primary);
+  text-decoration: none;
+  letter-spacing: 0.02em;
+}
+
+.site-logo:hover {
+  text-decoration: none;
+  color: var(--primary-dark);
+}
+
+.site-nav--desktop {
+  display: none;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.site-nav__link {
+  font-weight: 500;
+  color: var(--text);
+  text-decoration: none;
+  transition: color var(--transition);
+}
+
+.site-nav__link:hover,
+.site-nav__link--active {
+  color: var(--primary);
+}
+
+.site-header__menu-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  font-size: 1.5rem;
+  color: var(--text);
+  cursor: pointer;
+  padding: 0.25rem;
+}
+
+.site-nav-mobile {
+  background: var(--white);
+  box-shadow: var(--shadow-md);
+  border-top: 1px solid var(--border);
+}
+
+.site-nav-mobile[hidden] {
+  display: none;
+}
+
+.site-nav-mobile__inner {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.site-nav-mobile__link {
+  font-weight: 500;
+  color: var(--text);
+  text-decoration: none;
+}
+
+.site-nav-mobile__link:hover {
+  color: var(--primary);
+}
+
+@media (min-width: 768px) {
+  .site-nav--desktop {
+    display: flex;
+  }
+
+  .site-header__menu-btn {
+    display: none;
+  }
+
+  .site-nav-mobile {
+    display: none !important;
+  }
+}
+
+/* Footer */
+.site-footer {
+  background: var(--footer-bg);
+  color: var(--white);
+  padding: 3rem 0 0;
+  margin-top: auto;
+}
+
+.site-footer__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  padding-bottom: 2rem;
+}
+
+@media (min-width: 768px) {
+  .site-footer__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .site-footer__grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.site-footer__brand {
+  font-size: 1.35rem;
+  font-weight: 700;
+  margin: 0 0 0.75rem;
+}
+
+.site-footer__heading {
+  font-size: 1.125rem;
+  font-weight: 700;
+  margin: 0 0 1rem;
+}
+
+.site-footer__text {
+  color: #a0aec0;
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.site-footer__text--spaced {
+  margin-top: 1rem;
+}
+
+.site-footer__text a {
+  color: #a0aec0;
+}
+
+.site-footer__text a:hover {
+  color: var(--white);
+}
+
+.site-footer__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.site-footer__list li {
+  margin-bottom: 0.5rem;
+}
+
+.site-footer__list a {
+  color: #a0aec0;
+  text-decoration: none;
+  transition: color var(--transition);
+}
+
+.site-footer__list a:hover {
+  color: var(--white);
+}
+
+.site-footer__list--contact li {
+  color: #a0aec0;
+  font-size: 0.95rem;
+}
+
+.site-footer__list--contact i {
+  width: 1.25rem;
+  margin-right: 0.35rem;
+}
+
+.site-footer__social {
+  display: flex;
+  gap: 1rem;
+  font-size: 1.25rem;
+}
+
+.site-footer__social a {
+  color: #a0aec0;
+  transition: color var(--transition);
+}
+
+.site-footer__social a:hover {
+  color: var(--white);
+}
+
+.site-footer__bottom {
+  border-top: 1px solid #2d3748;
+  padding: 2rem 0;
+  text-align: center;
+  color: #718096;
+  font-size: 0.875rem;
+}
+
+.site-footer__bottom p {
+  margin: 0.25rem 0;
+}
+
+.site-footer__legal a {
+  color: #a0aec0;
+}
+
+.site-footer__legal a:hover {
+  color: var(--white);
+}
+
+/* Hero */
+.hero {
+  background: linear-gradient(
+    135deg,
+    rgba(44, 122, 123, 0.9) 0%,
+    rgba(246, 224, 94, 0.7) 100%
+  );
+  color: var(--white);
+  padding: 4rem 0;
+}
+
+@media (min-width: 768px) {
+  .hero {
+    padding: 6rem 0;
+  }
+}
+
+.hero__inner {
+  max-width: 48rem;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.hero__title {
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 700;
+  margin: 0 0 1.5rem;
+  line-height: 1.2;
+}
+
+.hero__subtitle {
+  font-size: 1.25rem;
+  margin: 0 0 2rem;
+  opacity: 0.95;
+}
+
+.hero-search {
+  background: var(--white);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  padding: 1rem;
+  text-align: left;
+}
+
+.hero-search__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+@media (min-width: 768px) {
+  .hero-search__grid {
+    grid-template-columns: repeat(4, 1fr);
+    align-items: stretch;
+  }
+}
+
+.hero-search__note {
+  margin: 0.75rem 0 0;
+  font-size: 0.8rem;
+  color: var(--muted);
+  text-align: center;
+}
+
+/* Forms (hero search panel) */
+.form-control {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  font-family: inherit;
+  font-size: 1rem;
+  color: var(--text);
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(246, 224, 94, 0.45);
+}
+
+.form-control:disabled {
+  opacity: 0.85;
+  cursor: not-allowed;
+  background: #f7fafc;
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 1rem;
+  line-height: 1.2;
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--radius-sm);
+  border: 2px solid transparent;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background-color var(--transition), color var(--transition), border-color var(--transition), transform var(--transition);
+}
+
+.btn:hover {
+  text-decoration: none;
+}
+
+.btn--primary {
+  background: var(--primary);
+  color: var(--white);
+}
+
+.btn--primary:hover {
+  background: var(--primary-dark);
+  color: var(--white);
+}
+
+.btn--accent {
+  background: var(--accent);
+  color: var(--primary-dark);
+}
+
+.btn--accent:hover {
+  filter: brightness(0.97);
+  color: var(--primary-dark);
+}
+
+.btn--outline-light {
+  background: transparent;
+  color: var(--white);
+  border-color: var(--white);
+}
+
+.btn--outline-light:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: var(--white);
+}
+
+.btn--lg {
+  padding: 0.875rem 2rem;
+  font-size: 1.0625rem;
+}
+
+.btn--block {
+  width: 100%;
+}
+
+/* Sections */
+.section {
+  padding: 4rem 0;
+}
+
+.section--white {
+  background: var(--white);
+}
+
+.section--muted {
+  background: #f7fafc;
+}
+
+.section-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.section-title {
+  font-size: 1.875rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.section-title--spaced {
+  margin-bottom: 2rem;
+}
+
+.section-header__link {
+  font-weight: 500;
+  color: var(--primary);
+  text-decoration: none;
+}
+
+.section-header__link:hover {
+  text-decoration: underline;
+}
+
+.section-intro {
+  max-width: 42rem;
+  margin: -0.5rem 0 2rem;
+  color: var(--muted);
+  font-size: 1.05rem;
+  line-height: 1.65;
+}
+
+.section-intro strong {
+  color: var(--text);
+  font-weight: 600;
+}
+
+/* Cards */
+.card {
+  background: var(--white);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+}
+
+.card--hover {
+  transition: transform var(--transition), box-shadow var(--transition);
+}
+
+.card--hover:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-lg);
+}
+
+.card__media {
+  height: 12rem;
+  background-size: cover;
+  background-position: center;
+}
+
+.card__body {
+  padding: 1.5rem;
+}
+
+.card__title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: 0.5rem 0;
+}
+
+.card__text {
+  color: var(--muted);
+  margin: 0 0 1rem;
+  font-size: 0.95rem;
+}
+
+.card__link {
+  font-weight: 500;
+  color: var(--primary);
+  text-decoration: none;
+}
+
+.card__link:hover {
+  text-decoration: underline;
+}
+
+.card__meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--muted);
+}
+
+/* Badges / tags */
+.tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.badge {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.25rem 0.5rem;
+  border-radius: var(--radius-sm);
+  background: #edf2f7;
+  color: var(--text);
+}
+
+.badge--accent {
+  background: var(--accent);
+  color: var(--primary-dark);
+}
+
+/* Slider */
+.slider-controls {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.slider-controls__btn {
+  width: 2.75rem;
+  height: 2.75rem;
+  border: none;
+  border-radius: 50%;
+  background: #edf2f7;
+  color: var(--text);
+  cursor: pointer;
+  transition: background var(--transition);
+}
+
+.slider-controls__btn:hover {
+  background: #e2e8f0;
+}
+
+.slider__viewport {
+  overflow: hidden;
+}
+
+.slider__track {
+  display: flex;
+  transition: transform 0.3s ease-in-out;
+}
+
+.slider__slide {
+  flex: 0 0 100%;
+  padding: 0 0.5rem;
+  min-width: 0;
+}
+
+@media (min-width: 768px) {
+  .slider__slide {
+    flex: 0 0 50%;
+  }
+}
+
+@media (min-width: 1024px) {
+  .slider__slide {
+    flex: 0 0 33.333%;
+  }
+}
+
+/* Grids */
+.grid--articles {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+}
+
+@media (min-width: 768px) {
+  .grid--articles {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.grid--galleries {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+}
+
+@media (min-width: 768px) {
+  .grid--galleries {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .grid--galleries {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.card--gallery__media-link {
+  display: block;
+  overflow: hidden;
+  line-height: 0;
+}
+
+.card--gallery__img {
+  width: 100%;
+  height: 12rem;
+  object-fit: cover;
+  transition: transform var(--transition);
+}
+
+.card--gallery:hover .card--gallery__img {
+  transform: scale(1.03);
+}
+
+.card--gallery__venue {
+  margin: 0 0 0.25rem;
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.card--gallery__event {
+  margin: 0 0 0.75rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--primary);
+}
+
+.badge--location {
+  background: rgba(44, 122, 123, 0.12);
+  color: var(--primary-dark);
+}
+
+.card--gallery__date {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0 0 1.25rem;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.card--gallery__date i {
+  color: var(--primary);
+}
+
+.card--gallery .btn--block {
+  margin-top: 0;
+}
+
+.grid--categories {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+@media (min-width: 768px) {
+  .grid--categories {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.category-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 1.5rem 1rem;
+  background: #f7fafc;
+  border-radius: var(--radius-xl);
+  text-decoration: none;
+  color: var(--text);
+  transition: background var(--transition);
+}
+
+.category-tile:hover {
+  background: #edf2f7;
+  text-decoration: none;
+}
+
+.category-tile__icon {
+  font-size: 1.75rem;
+  color: var(--primary);
+  margin-bottom: 0.75rem;
+}
+
+.category-tile__label {
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+/* CTA band */
+.cta-band {
+  background: var(--primary);
+  color: var(--white);
+  padding: 4rem 0;
+  text-align: center;
+}
+
+.cta-band__title {
+  font-size: 1.875rem;
+  font-weight: 700;
+  margin: 0 0 1rem;
+}
+
+.cta-band__text {
+  font-size: 1.125rem;
+  max-width: 36rem;
+  margin: 0 auto 2rem;
+  opacity: 0.95;
+}
+
+.cta-band__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Public directory page (Phase 3A)                                           */
+/* -------------------------------------------------------------------------- */
+
+/* Page hero (reusable inner-page header) */
+.page-hero {
+  background: linear-gradient(
+    135deg,
+    rgba(44, 122, 123, 0.9) 0%,
+    rgba(246, 224, 94, 0.7) 100%
+  );
+  color: var(--white);
+  padding: 4rem 0;
+  text-align: center;
+}
+
+.page-hero__content {
+  max-width: 48rem;
+  margin: 0 auto;
+}
+
+.page-hero h1 {
+  font-size: clamp(2rem, 5vw, 2.75rem);
+  font-weight: 700;
+  margin: 0.5rem 0 1rem;
+  line-height: 1.2;
+}
+
+.page-hero p {
+  font-size: 1.1rem;
+  margin: 0;
+  opacity: 0.95;
+}
+
+.eyebrow {
+  display: inline-block;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: rgba(255, 255, 255, 0.18);
+  color: var(--white);
+  padding: 0.3rem 0.75rem;
+  border-radius: var(--radius-sm);
+}
+
+/* Section subtitle (small helper used under section titles) */
+.section-subtitle {
+  margin: 0.35rem 0 0;
+  color: var(--muted);
+  font-size: 1rem;
+}
+
+/* Responsive grid of venue cards */
+.directory-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+@media (min-width: 640px) {
+  .directory-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .directory-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Venue card */
+.venue-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.venue-card__body {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 1.5rem;
+}
+
+.venue-card__featured {
+  align-self: flex-start;
+  margin-bottom: 0.75rem;
+}
+
+.venue-card__title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: 0 0 0.5rem;
+  color: var(--text);
+}
+
+.venue-card__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0 0 0.75rem;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.venue-card__meta-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.venue-card__meta-item i {
+  color: var(--primary);
+}
+
+.venue-card__price {
+  font-weight: 700;
+  color: var(--primary-dark);
+  letter-spacing: 0.02em;
+}
+
+.venue-card__description {
+  margin: 0 0 0.85rem;
+  color: var(--text);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.venue-card__address,
+.venue-card__hours {
+  display: flex;
+  gap: 0.4rem;
+  align-items: flex-start;
+  margin: 0 0 0.4rem;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.venue-card__address i,
+.venue-card__hours i {
+  color: var(--primary);
+  margin-top: 0.15rem;
+}
+
+.venue-card__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: auto;
+  padding-top: 1rem;
+}
+
+/* "Details coming" disabled affordance */
+.venue-card__details-coming {
+  background: #edf2f7;
+  color: var(--muted);
+  cursor: not-allowed;
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 0.55rem 0.9rem;
+  border-radius: var(--radius-sm);
+}
+
+/* Empty state (no venues yet) */
+.empty-state {
+  background: var(--white);
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-xl);
+  padding: 2.5rem 1.5rem;
+  text-align: center;
+  color: var(--muted);
+}
+
+.empty-state h3 {
+  margin: 0 0 0.5rem;
+  font-size: 1.25rem;
+  color: var(--text);
+}
+
+.empty-state p {
+  margin: 0 auto;
+  max-width: 36rem;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Admin (Phase 2)                                                            */
+/* -------------------------------------------------------------------------- */
+
+.admin-body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: "Poppins", system-ui, sans-serif;
+  background: #f7fafc;
+  color: var(--text);
+}
+
+.admin-body--login {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+}
+
+.admin-topbar {
+  background: var(--white);
+  box-shadow: var(--shadow-sm);
+  border-bottom: 1px solid var(--border);
+}
+
+.admin-topbar__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-top: 0.875rem;
+  padding-bottom: 0.875rem;
+}
+
+.admin-topbar__brand {
+  font-weight: 700;
+  color: var(--primary-dark);
+  text-decoration: none;
+  font-size: 1.125rem;
+}
+
+.admin-topbar__label {
+  font-weight: 600;
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+
+.admin-topbar__actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  font-size: 0.9rem;
+}
+
+.admin-topbar__link {
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.admin-topbar__link:hover {
+  text-decoration: underline;
+}
+
+.admin-topbar__link--muted {
+  color: var(--muted);
+}
+
+.admin-topbar__user {
+  color: var(--text);
+  font-weight: 500;
+}
+
+.admin-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  min-height: calc(100vh - 4rem);
+}
+
+@media (min-width: 900px) {
+  .admin-layout {
+    grid-template-columns: 14rem 1fr;
+  }
+}
+
+.admin-sidebar {
+  background: var(--white);
+  border-bottom: 1px solid var(--border);
+  padding: 1rem;
+}
+
+@media (min-width: 900px) {
+  .admin-sidebar {
+    border-bottom: none;
+    border-right: 1px solid var(--border);
+    padding: 1.5rem 1rem;
+  }
+}
+
+.admin-sidebar__nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.admin-sidebar__link {
+  display: block;
+  padding: 0.65rem 0.85rem;
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+
+.admin-sidebar__link:hover {
+  background: #edf2f7;
+  text-decoration: none;
+}
+
+.admin-sidebar__link--active {
+  background: rgba(44, 122, 123, 0.12);
+  color: var(--primary-dark);
+}
+
+.admin-sidebar__link--disabled {
+  color: var(--muted);
+  cursor: not-allowed;
+  opacity: 0.75;
+}
+
+.admin-main {
+  padding: 1.5rem 1rem 2.5rem;
+}
+
+@media (min-width: 768px) {
+  .admin-main {
+    padding: 2rem 1.5rem 3rem;
+  }
+}
+
+.admin-page-header {
+  margin-bottom: 1.75rem;
+}
+
+.admin-page-title {
+  margin: 0 0 0.5rem;
+  font-size: 1.75rem;
+  color: var(--primary-dark);
+}
+
+.admin-page-lead {
+  margin: 0;
+  color: var(--muted);
+  max-width: 40rem;
+}
+
+.admin-stats {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+@media (min-width: 640px) {
+  .admin-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1100px) {
+  .admin-stats {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.admin-stat-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  background: var(--white);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-sm);
+  padding: 1.25rem;
+}
+
+.admin-stat-card__icon {
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 50%;
+  background: rgba(44, 122, 123, 0.1);
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.admin-stat-card__label {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.admin-stat-card__value {
+  margin: 0.15rem 0 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--primary-dark);
+}
+
+.admin-stat-card__meta {
+  margin: 0.15rem 0 0;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.admin-panel {
+  background: var(--white);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-sm);
+  padding: 1.5rem;
+}
+
+.admin-panel__title {
+  margin: 0 0 1rem;
+  font-size: 1.125rem;
+  color: var(--primary-dark);
+}
+
+.admin-checklist {
+  margin: 0;
+  padding-left: 1.25rem;
+  color: var(--muted);
+}
+
+.admin-checklist li {
+  margin-bottom: 0.5rem;
+}
+
+.admin-checklist code {
+  font-size: 0.85em;
+  background: #edf2f7;
+  padding: 0.1rem 0.35rem;
+  border-radius: 0.25rem;
+}
+
+.admin-login {
+  width: 100%;
+  max-width: 26rem;
+}
+
+.admin-login__card {
+  background: var(--white);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg);
+  padding: 2rem;
+}
+
+.admin-login__brand {
+  margin: 0 0 0.25rem;
+  font-weight: 700;
+  color: var(--primary);
+  text-transform: lowercase;
+}
+
+.admin-login__title {
+  margin: 0 0 0.5rem;
+  font-size: 1.5rem;
+  color: var(--text);
+}
+
+.admin-login__hint {
+  margin: 0 0 1.5rem;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.admin-login__form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.admin-login__footer {
+  margin: 1.25rem 0 0;
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+.form-label {
+  margin-top: 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.alert {
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-sm);
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+}
+
+.alert--danger {
+  background: #fff5f5;
+  color: #c53030;
+  border: 1px solid #feb2b2;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Public venue profile + directory card refinements (Phase 3B)               */
+/* -------------------------------------------------------------------------- */
+
+/* Secondary outline button (for lighter/secondary actions on light backgrounds) */
+.btn--outline {
+  background: transparent;
+  color: var(--primary-dark);
+  border-color: var(--border);
+}
+
+.btn--outline:hover {
+  background: #edf2f7;
+  color: var(--primary-dark);
+  border-color: var(--primary);
+}
+
+/* Directory card: make "View Profile" the primary action, "Website" secondary */
+.venue-card__view-profile {
+  /* Uses .btn--primary as the base */
+  flex: 1 1 auto;
+}
+
+.venue-card__website {
+  /* Secondary styling via .btn--outline */
+  flex: 0 0 auto;
+  font-weight: 600;
+}
+
+/* Venue detail page layout */
+.venue-detail {
+  max-width: 52rem;
+  margin: 0 auto;
+}
+
+.venue-detail__content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.venue-detail__header {
+  max-width: 48rem;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.venue-detail__header .badge {
+  margin-bottom: 0.75rem;
+}
+
+.venue-detail__title {
+  font-size: clamp(2rem, 5vw, 2.75rem);
+  font-weight: 700;
+  margin: 0.5rem 0 0.75rem;
+  line-height: 1.2;
+}
+
+.venue-detail__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  margin: 0;
+  font-size: 1rem;
+  color: var(--white);
+  opacity: 0.95;
+}
+
+/* Dark variant of the eyebrow for use on light backgrounds (404 page) */
+.eyebrow--dark {
+  background: rgba(44, 122, 123, 0.12);
+  color: var(--primary-dark);
+}
+
+.venue-detail__panel {
+  margin: 0;
+}
+
+.venue-detail__panel + .venue-detail__panel {
+  margin-top: 0;
+}
+
+.venue-detail__panel-title {
+  margin: 0 0 0.75rem;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.venue-detail__description {
+  margin: 0 0 1.25rem;
+  font-size: 1.05rem;
+  line-height: 1.7;
+}
+
+.venue-detail__info-list {
+  list-style: none;
+  margin: 0 0 1.25rem;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.venue-detail__info-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  font-size: 0.95rem;
+  color: var(--text);
+}
+
+.venue-detail__info-list i {
+  color: var(--primary);
+  margin-top: 0.2rem;
+  width: 1.1rem;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.venue-detail__info-list a {
+  color: var(--primary);
+  text-decoration: none;
+}
+
+.venue-detail__info-list a:hover {
+  text-decoration: underline;
+}
+
+.venue-detail__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-bottom: 1rem;
+}
+
+.venue-detail__action {
+  font-weight: 600;
+}
+
+.venue-detail__updated {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.venue-detail__updated i {
+  color: var(--muted);
+}
+
+/* Menu & allergy filtering placeholder card */
+.venue-detail__placeholder {
+  background: #f7fafc;
+  border: 1px dashed var(--border);
+  box-shadow: none;
+}
+
+.venue-detail__placeholder-text {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.venue-detail__back {
+  display: flex;
+  justify-content: flex-start;
+}
+
+/* Generic 404 / not found state */
+.not-found {
+  background: var(--white);
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-xl);
+  padding: 3rem 1.5rem;
+  text-align: center;
+  max-width: 42rem;
+  margin: 0 auto;
+}
+
+.not-found__title {
+  margin: 0.5rem 0 0.75rem;
+  font-size: clamp(1.75rem, 4vw, 2.25rem);
+  font-weight: 700;
+  color: var(--text);
+}
+
+.not-found__text {
+  margin: 0 auto 1.5rem;
+  max-width: 32rem;
+  color: var(--muted);
+}
+
+/* -------------------------------------------------------------------------- */
+/* Venue profile page (Phase 3B — richer read-only layout)                    */
+/* -------------------------------------------------------------------------- */
+
+/* Overall page section spacing for the profile */
+.venue-profile {
+  padding-top: 1.5rem;
+  padding-bottom: 4rem;
+}
+
+/* Wider centered profile container (desktop ~1200px, within mockup range).
+   Overrides the default 72rem container only on the profile page. */
+.venue-profile .container {
+  max-width: 75rem;
+}
+
+/* Top profile area: large hero card (left) + Contact & Location card (right).
+   Stacks to a single column on mobile. */
+.venue-profile-top {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+.venue-profile-contact {
+  min-width: 0;
+}
+
+@media (min-width: 1024px) {
+  .venue-profile-top {
+    grid-template-columns: minmax(0, 1fr) 22rem;
+    align-items: stretch;
+  }
+
+  /* Inside the top grid the hero should fill its column height so the
+     Contact & Location card aligns neatly beside it. */
+  .venue-profile-top .venue-profile-hero {
+    min-height: 100%;
+  }
+
+  /* Vertically center the contact panel content within the matched height. */
+  .venue-profile-contact .venue-profile-panel {
+    height: 100%;
+  }
+}
+
+/* Breadcrumb */
+.venue-breadcrumb {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0 0 1.25rem;
+  font-size: 0.875rem;
+  color: var(--muted);
+}
+
+.venue-breadcrumb a {
+  color: var(--primary);
+  text-decoration: none;
+}
+
+.venue-breadcrumb a:hover {
+  text-decoration: underline;
+}
+
+.venue-breadcrumb__sep {
+  color: var(--muted);
+  opacity: 0.7;
+}
+
+.venue-breadcrumb__current {
+  color: var(--text);
+  font-weight: 600;
+}
+
+/* Hero profile card */
+.venue-profile-hero {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  min-height: 22rem;
+  padding: 2.5rem 2rem;
+  border-radius: var(--radius-xl);
+  background-color: var(--primary-dark);
+  background-size: cover;
+  background-position: center;
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+  color: var(--white);
+}
+
+/* Dark teal gradient overlay (on-brand) so text stays readable over any image.
+   Uses the site's primary-dark teal, not a separate blue/navy theme. */
+.venue-profile-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(34, 94, 95, 0.30) 0%,
+    rgba(34, 94, 95, 0.65) 55%,
+    rgba(26, 32, 44, 0.82) 100%
+  );
+  pointer-events: none;
+}
+
+/* CSS gradient fallback when no main_image_path is present.
+   Matches the existing .page-hero / .hero site gradient (teal → yellow). */
+.venue-profile-hero--fallback {
+  background-image: linear-gradient(
+    135deg,
+    rgba(44, 122, 123, 0.92) 0%,
+    rgba(34, 94, 95, 0.92) 55%,
+    rgba(246, 224, 94, 0.65) 100%
+  );
+}
+
+.venue-profile-hero__content {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 44rem;
+}
+
+.venue-profile-hero__featured {
+  display: inline-block;
+  margin-bottom: 0.75rem;
+}
+
+.venue-profile-hero__title {
+  font-size: clamp(1.9rem, 5vw, 2.75rem);
+  font-weight: 700;
+  margin: 0.5rem 0 0.5rem;
+  line-height: 1.15;
+  color: var(--white);
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+}
+
+.venue-profile-hero__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
+  margin: 0 0 0.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--white);
+}
+
+.venue-profile-hero__meta-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.venue-profile-hero__meta-item i {
+  color: var(--accent);
+}
+
+.venue-profile-hero__meta-sep {
+  opacity: 0.7;
+}
+
+.venue-profile-hero__price {
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--accent);
+}
+
+.venue-profile-hero__hours {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0 0 0.75rem;
+  font-size: 0.98rem;
+  font-weight: 600;
+  color: var(--white);
+}
+
+.venue-profile-hero__hours i {
+  color: var(--accent);
+}
+
+/* Strong white text (no washed-out tint) for readable contrast over overlay */
+.venue-profile-hero__description {
+  margin: 0 0 1.25rem;
+  max-width: 40rem;
+  font-size: 1.05rem;
+  line-height: 1.65;
+  font-weight: 500;
+  color: #ffffff;
+}
+
+.venue-profile-hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+/* Quick info strip below hero */
+.venue-profile-strip {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0;
+  margin-top: 1.5rem;
+  background: var(--white);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+}
+
+.venue-profile-strip__item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.venue-profile-strip__item:last-child {
+  border-bottom: none;
+}
+
+.venue-profile-strip__label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.venue-profile-strip__value {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+/* Two-column layout (main + sidebar) */
+.venue-profile-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+@media (min-width: 900px) {
+  .venue-profile-layout {
+    grid-template-columns: minmax(0, 1fr) 20rem;
+    align-items: start;
+  }
+}
+
+/* Main content column */
+.venue-profile-main {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  min-width: 0;
+}
+
+/* Sidebar column — looks sticky but does not require JS */
+.venue-profile-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  min-width: 0;
+}
+
+@media (min-width: 1024px) {
+  .venue-profile-sidebar {
+    position: sticky;
+    top: 5.5rem;
+  }
+}
+
+/* Panels (cards) used in both columns */
+.venue-profile-panel {
+  background: var(--white);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-md);
+  padding: 1.5rem;
+}
+
+.venue-profile-panel__title {
+  margin: 0 0 0.85rem;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+/* About text */
+.venue-profile-about__text {
+  margin: 0;
+  font-size: 1.02rem;
+  line-height: 1.7;
+  color: var(--text);
+}
+
+.venue-profile-about__text--muted {
+  color: var(--muted);
+}
+
+/* Info lists (contact + quick facts) */
+.venue-profile-info-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.venue-profile-info-list__item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  font-size: 0.95rem;
+  color: var(--text);
+}
+
+.venue-profile-info-list__item i {
+  color: var(--primary);
+  margin-top: 0.2rem;
+  width: 1.15rem;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.venue-profile-info-list__item a {
+  color: var(--primary);
+  text-decoration: none;
+}
+
+.venue-profile-info-list__item a:hover {
+  text-decoration: underline;
+}
+
+/* Facts variant: label / value rows */
+.venue-profile-info-list--facts .venue-profile-info-list__item {
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.venue-profile-info-list--facts .venue-profile-info-list__item:last-child {
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.venue-profile-info-list__label {
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.venue-profile-info-list__value {
+  font-weight: 600;
+  color: var(--text);
+  text-align: right;
+}
+
+/* Placeholder cards */
+.venue-profile-placeholder {
+  background: #f7fafc;
+  border: 1px dashed var(--border);
+  box-shadow: none;
+}
+
+.venue-profile-placeholder__text {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.95rem;
+  line-height: 1.65;
+}
+
+/* Advertisement placeholder */
+.ad-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  min-height: 250px;
+  background: #edf2f7;
+  border: 1px dashed var(--border);
+  box-shadow: none;
+  text-align: center;
+  color: var(--muted);
+}
+
+.ad-placeholder__label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.ad-placeholder__size {
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+/* Responsive tweaks for hero on small screens */
+@media (max-width: 640px) {
+  .venue-profile-hero {
+    min-height: 18rem;
+    padding: 1.75rem 1.25rem;
+  }
+
+  .venue-profile-hero__description {
+    font-size: 0.98rem;
+  }
+
+  /* Buttons wrap instead of overflowing; each takes available width */
+  .venue-profile-hero__actions .btn {
+    flex: 1 1 auto;
+  }
+}
+
+/* Quick info strip: 2 columns on small tablets, 4 on desktop */
+@media (min-width: 480px) {
+  .venue-profile-strip {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .venue-profile-strip__item:nth-child(odd) {
+    border-right: 1px solid var(--border);
+  }
+
+  .venue-profile-strip__item:nth-last-child(2) {
+    border-bottom: none;
+  }
+}
+
+@media (min-width: 900px) {
+  .venue-profile-strip {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .venue-profile-strip__item {
+    border-bottom: none;
+    border-right: 1px solid var(--border);
+    text-align: left;
+  }
+
+  .venue-profile-strip__item:last-child {
+    border-right: none;
+  }
+}
+
+/* -------------------------------------------------------------------------- */
+/* Venue profile — Interior Gallery (visual placeholder)                      */
+/* -------------------------------------------------------------------------- */
+
+.venue-profile-gallery {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.75rem;
+  margin-bottom: 0.85rem;
+}
+
+.venue-profile-gallery__tile {
+  position: relative;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background-color: #edf2f7;
+  background-size: cover;
+  background-position: center;
+  min-height: 7rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Larger lead tile */
+.venue-profile-gallery__tile--large {
+  min-height: 12rem;
+  background-color: var(--primary-dark);
+}
+
+/* Placeholder tiles get a subtle dashed accent border */
+.venue-profile-gallery__tile--placeholder {
+  border: 1px dashed var(--border);
+}
+
+.venue-profile-gallery__tile-icon {
+  font-size: 1.5rem;
+  color: var(--muted);
+  opacity: 0.7;
+}
+
+.venue-profile-gallery__tile--large .venue-profile-gallery__tile-icon {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 2rem;
+}
+
+.venue-profile-gallery__note {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.venue-profile-gallery__note i {
+  color: var(--primary);
+}
+
+/* Desktop: one large tile on the left, four small tiles on the right */
+@media (min-width: 640px) {
+  .venue-profile-gallery {
+    grid-template-columns: 2fr 1fr;
+    grid-template-rows: repeat(2, 1fr);
+  }
+
+  .venue-profile-gallery__tile--large {
+    grid-row: 1 / span 2;
+    min-height: 100%;
+  }
+
+  .venue-profile-gallery__tile--placeholder {
+    min-height: 5.5rem;
+  }
+}
+
+/* -------------------------------------------------------------------------- */
+/* Venue profile — Recent Event Galleries (visual placeholder)                */
+/* -------------------------------------------------------------------------- */
+
+.venue-profile-events {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+}
+
+@media (min-width: 640px) {
+  .venue-profile-events {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.venue-profile-event-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.venue-profile-event-card__date {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0 0 0.4rem;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.venue-profile-event-card__date i {
+  color: var(--primary);
+}
+
+.venue-profile-event-card__title {
+  margin: 0 0 0.4rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.venue-profile-event-card__text {
+  margin: 0 0 1rem;
+  font-size: 0.92rem;
+  line-height: 1.6;
+  color: var(--muted);
+}
+
+/* Disabled "coming soon" affordance — muted, not clickable */
+.venue-profile-event-card__action {
+  margin-top: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--muted);
+  background: #edf2f7;
+  padding: 0.55rem 0.85rem;
+  border-radius: var(--radius-sm);
+  cursor: not-allowed;
+  align-self: flex-start;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Venue profile — Sidebar note panels (e.g. Upcoming Events)                 */
+/* -------------------------------------------------------------------------- */
+
+.venue-profile-panel--note {
+  text-align: center;
+}
+
+.venue-profile-note__text {
+  margin: 0 0 0.4rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.venue-profile-note__text--muted {
+  font-weight: 400;
+  color: var(--muted);
+}
+
+/* -------------------------------------------------------------------------- */
+/* Venue profile — Interior Gallery grid (mockup-aligned, image placeholders) */
+/* One large image tile on the left, a 2x2 grid of small image tiles right.  */
+/* Image URLs are reused from home.php / DeepSite references. On mobile the  */
+/* tiles stack into a single readable column.                                */
+/* -------------------------------------------------------------------------- */
+
+.venue-gallery-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.75rem;
+  margin-bottom: 0.85rem;
+}
+
+.venue-gallery-grid__large,
+.venue-gallery-grid__small {
+  position: relative;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background-color: #edf2f7;
+  display: block;
+  width: 100%;
+  box-shadow: var(--shadow-sm);
+}
+
+/* Large lead tile (an <img>) fills its grid cell and crops nicely */
+.venue-gallery-grid__large {
+  min-height: 16rem;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* Small image tiles crop into their grid cells */
+.venue-gallery-grid__small {
+  min-height: 7.5rem;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* Ensure every <img> in the grid fills and crops consistently */
+.venue-gallery-grid img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* Desktop: large tile spans two rows on the left; 2x2 small tiles on right */
+@media (min-width: 640px) {
+  .venue-gallery-grid {
+    grid-template-columns: 1.6fr 1fr;
+    grid-template-rows: repeat(2, 1fr);
+    gap: 0.85rem;
+  }
+
+  .venue-gallery-grid__large {
+    grid-row: 1 / span 2;
+    min-height: 100%;
+  }
+
+  .venue-gallery-grid__small {
+    min-height: 100%;
+  }
+}
+
+/* -------------------------------------------------------------------------- */
+/* Venue profile — Recent Event Galleries (image-backed placeholder cards)    */
+/* Each card has an image header + body with disabled "coming soon" action.   */
+/* -------------------------------------------------------------------------- */
+
+.venue-event-gallery-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+}
+
+@media (min-width: 640px) {
+  .venue-event-gallery-list {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.venue-event-gallery-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+
+/* Card image header — crops nicely, rounded only at the top (card corners) */
+.venue-event-gallery-card__image {
+  display: block;
+  width: 100%;
+  height: 9.5rem;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* Card body holds the date, title, text, and disabled action */
+.venue-event-gallery-card__body {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  padding: 1.25rem;
+}
+
+.venue-event-gallery-card__date {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0 0 0.4rem;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.venue-event-gallery-card__date i {
+  color: var(--primary);
+}
+
+.venue-event-gallery-card__title {
+  margin: 0 0 0.4rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.venue-event-gallery-card__text {
+  margin: 0 0 1rem;
+  font-size: 0.92rem;
+  line-height: 1.6;
+  color: var(--muted);
+}
+
+/* Disabled "coming soon" affordance — muted, not clickable */
+.venue-event-gallery-card__action {
+  margin-top: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--muted);
+  background: #edf2f7;
+  padding: 0.55rem 0.85rem;
+  border-radius: var(--radius-sm);
+  cursor: not-allowed;
+  align-self: flex-start;
+}
+/* -------------------------------------------------------------------------- */
+/* Venue profile â€” Menu & Allergy Filtering (Phase 3C, read-only)             */
+/* -------------------------------------------------------------------------- */
+
+/* Disclaimer banner above the filter */
+.allergy-disclaimer {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  margin: 0 0 1.25rem;
+  padding: 0.85rem 1rem;
+  background: #fff8e6;
+  border: 1px solid #f6e05e;
+  border-left: 4px solid var(--accent);
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+  line-height: 1.55;
+  color: #744210;
+}
+
+.allergy-disclaimer i {
+  color: #b7791f;
+  margin-top: 0.15rem;
+  flex-shrink: 0;
+}
+
+/* Wrapper/anchor for the whole menu section. Also the AJAX loading target:
+   .is-loading is toggled by venue-menu.js while a fragment is in flight. */
+.menu-filter-panel {
+  position: relative;
+}
+
+.menu-filter-panel.is-loading {
+  opacity: 0.65;
+  pointer-events: none;
+}
+
+.menu-filter-panel.is-loading::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: transparent;
+  border-radius: inherit;
+  cursor: progress;
+}
+
+.allergen-filter-form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 0.75rem;
+  background: #f7fafc;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.allergen-filter-form__label {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--text);
+  flex: 1 1 100%;
+}
+
+.allergen-filter-form__label i {
+  color: var(--primary);
+}
+
+.allergen-select {
+  flex: 1 1 16rem;
+  min-width: 0;
+}
+
+/* Active filter note */
+.active-allergen-note {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0.85rem 0 0;
+  font-size: 0.9rem;
+  color: var(--text);
+}
+
+.active-allergen-note strong {
+  color: var(--primary-dark);
+}
+
+.active-allergen-note a {
+  font-weight: 600;
+  color: var(--primary);
+}
+
+.active-allergen-note__sep {
+  color: var(--muted);
+}
+
+/* Menu categories */
+.menu-category + .menu-category {
+  margin-top: 1.75rem;
+}
+
+.menu-category__title {
+  margin: 0 0 0.85rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--primary-dark);
+  padding-bottom: 0.4rem;
+  border-bottom: 2px solid var(--border);
+}
+
+/* Grid of menu item cards */
+.menu-items-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+@media (min-width: 640px) {
+  .menu-items-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Single menu item card */
+.menu-item-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1rem 1.1rem;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow var(--transition), transform var(--transition);
+}
+
+.menu-item-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+.menu-item-card__header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin: 0;
+}
+
+.menu-item-card__name {
+  margin: 0;
+  font-size: 1.02rem;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.3;
+}
+
+.menu-item-card__price {
+  font-size: 0.98rem;
+  font-weight: 700;
+  color: var(--primary-dark);
+  white-space: nowrap;
+}
+
+.menu-item-card__description {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: var(--muted);
+}
+
+/* Allergen status badges list */
+.allergen-status-list {
+  list-style: none;
+  margin: 0.25rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.allergen-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.25rem 0.55rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+  background: #edf2f7;
+  color: var(--text);
+  line-height: 1.3;
+}
+
+.allergen-status-badge__name {
+  font-weight: 700;
+}
+
+.allergen-status-badge__status {
+  font-weight: 500;
+  opacity: 0.9;
+}
+
+/* Status variants */
+.allergen-status-badge--contains {
+  background: #fff1f1;
+  color: #c53030;
+  border-color: #fed7d7;
+}
+
+.allergen-status-badge--does-not-contain {
+  background: #f0fff4;
+  color: #276749;
+  border-color: #c6f6d5;
+}
+
+.allergen-status-badge--may-contain {
+  background: #fffaf0;
+  color: #9c4221;
+  border-color: #fbd38d;
+}
+
+.allergen-status-badge--cross-contact-risk {
+  background: #fff5f5;
+  color: #9b2c2c;
+  border-color: #feb2b2;
+}
+
+.allergen-status-badge--unknown {
+  background: #edf2f7;
+  color: var(--muted);
+  border-color: var(--border);
+}
+
+/* Highlight the active filter's badge for the shown item */
+.allergen-status-badge--active {
+  outline: 2px solid var(--primary);
+  outline-offset: 1px;
+}
+
+/* Empty state when no items match (or none published) */
+.menu-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 2rem 1rem;
+  text-align: center;
+  background: #f7fafc;
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-md);
+  color: var(--muted);
+}
+
+.menu-empty-state i {
+  font-size: 1.75rem;
+  color: var(--primary);
+}
+
+.menu-empty-state p {
+  margin: 0;
+  max-width: 32rem;
+  font-size: 0.95rem;
+  line-height: 1.55;
+}
+
+/* Mobile: keep filter row comfortable, badges wrap */
+@media (max-width: 640px) {
+  .menu-item-card__header {
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .menu-item-card__price {
+    align-self: flex-end;
+  }
+}
+
+/* -------------------------------------------------------------------------- */
+/* Compact allergen summary + collapsible full details (Phase 3C refinement)  */
+/* Keeps menu cards clean: only risk/important badges show by default, and    */
+/* the full 9-allergen list is hidden behind a <details> disclosure.         */
+/* -------------------------------------------------------------------------- */
+
+/* Compact row of summary badges shown directly on the card */
+.allergen-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.25rem;
+}
+
+/* Collapsible full allergen list — closed by default */
+.allergen-details {
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.allergen-details > summary {
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--primary-dark);
+  list-style: none;
+  /* Custom disclosure marker */
+}
+
+.allergen-details > summary::-webkit-details-marker {
+  display: none;
+}
+
+.allergen-details > summary::before {
+  content: "\f054"; /* fa-chevron-right */
+  font-family: "Font Awesome 6 Free", "Font Awesome 5 Free", inherit;
+  font-weight: 900;
+  display: inline-block;
+  width: 1rem;
+  margin-right: 0.35rem;
+  font-size: 0.7rem;
+  transition: transform var(--transition);
+}
+
+.allergen-details[open] > summary::before {
+  transform: rotate(90deg);
+}
+
+.allergen-details > summary:hover {
+  text-decoration: underline;
+}
+
+/* The full list inside the disclosure reuses .allergen-status-list */
+.allergen-details .allergen-status-list {
+  margin-top: 0.6rem;
+  padding-left: 1.35rem;
+}

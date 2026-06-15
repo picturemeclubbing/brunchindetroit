@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brunch Culture & Community | BrunchInDetroit</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+        .featured-article {
+            background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('https://images.unsplash.com/photo-1551218808-94e220e084d2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80');
+            background-size: cover;
+            background-position: center;
+        }
+        .article-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        .category-badge {
+            top: -10px;
+            right: 10px;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-md py-4">
+        <div class="container mx-auto px-4 flex justify-between items-center">
+            <a href="index.html" class="text-2xl font-bold text-teal-800">BrunchInDetroit</a>
+            <div class="hidden md:flex space-x-8">
+                <a href="index.html" class="text-gray-700 hover:text-teal-600">Home</a>
+                <a href="brunch_directory.html" class="text-gray-700 hover:text-teal-600">Directory</a>
+                <a href="brunch_galleries.html" class="text-gray-700 hover:text-teal-600">Events</a>
+                <a href="news.html" class="text-gray-700 hover:text-teal-600 font-semibold underline">Blog</a>
+                <a href="brunch_submit.html" class="text-gray-700 hover:text-teal-600">Add Your Spot</a>
+            </div>
+            <div class="md:hidden">
+                <button class="text-gray-700">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Breadcrumb -->
+    <div class="container mx-auto px-4">
+        <div class="text-sm text-gray-500 px-4 py-2">
+            <a href="index.html" class="hover:underline">Home</a> › <span class="text-teal-700 font-semibold">Blog</span>
+        </div>
+    </div>
+
+    <!-- Page Intro -->
+    <section class="bg-teal-50 py-12">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-4xl font-bold text-teal-800 mb-4">Brunch Culture & Community</h1>
+            <p class="text-lg text-gray-600 max-w-2xl mx-auto">Stories from behind the scenes, chef interviews, trending brunch spots, and more.</p>
+        </div>
+    </section>
+
+    <!-- Category Filters -->
+    <section class="container mx-auto px-4 py-8">
+        <div class="flex flex-wrap justify-center gap-3 mb-8">
+            <button aria-label="Filter by All Articles" class="px-4 py-2 bg-teal-700 text-white rounded-full text-sm font-medium">All Articles</button>
+            <button aria-label="Filter by Reviews" class="px-4 py-2 bg-white text-teal-700 border border-teal-700 rounded-full text-sm font-medium hover:bg-teal-50">Reviews</button>
+            <button aria-label="Filter by Chef Interviews" class="px-4 py-2 bg-white text-teal-700 border border-teal-700 rounded-full text-sm font-medium hover:bg-teal-50">Chef Interviews</button>
+            <button aria-label="Filter by Trends" class="px-4 py-2 bg-white text-teal-700 border border-teal-700 rounded-full text-sm font-medium hover:bg-teal-50">Trends</button>
+            <button aria-label="Filter by Recipes" class="px-4 py-2 bg-white text-teal-700 border border-teal-700 rounded-full text-sm font-medium hover:bg-teal-50">Recipes</button>
+            <button aria-label="Filter by Events" class="px-4 py-2 bg-white text-teal-700 border border-teal-700 rounded-full text-sm font-medium hover:bg-teal-50">Events</button>
+        </div>
+    </section>
+
+    <!-- Featured Article -->
+    <section class="container mx-auto px-4 mb-12">
+        <div class="featured-article rounded-xl overflow-hidden h-96 flex items-end relative">
+            <div class="absolute top-4 left-4">
+                <span class="bg-yellow-400 text-yellow-900 px-3 py-1 rounded-full text-xs font-bold">Editor's Pick</span>
+            </div>
+            <div class="p-8 text-white relative z-10">
+                <span class="bg-teal-600 text-white px-3 py-1 rounded-full text-xs font-medium mb-2 inline-block">Trends</span>
+                <h2 class="text-3xl font-bold mb-3">The Rise of Bottomless Brunch in Detroit</h2>
+                <p class="text-lg mb-4 max-w-2xl">How Detroit's brunch scene is embracing the bottomless trend while maintaining quality and creativity in their offerings.</p>
+                <a href="#" class="inline-block bg-white text-teal-700 px-6 py-2 rounded-lg font-medium hover:bg-gray-100 transition">Read More</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Blog Listings -->
+    <section class="container mx-auto px-4 pb-12">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- Article 1 -->
+            <article class="bg-white rounded-xl overflow-hidden shadow-md article-card transition duration-300 relative">
+                <div class="relative">
+                    <img src="https://images.unsplash.com/photo-1544025162-d76694265947?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1469&q=80" alt="Chef preparing brunch" class="w-full h-48 object-cover">
+                    <span class="absolute top-4 left-4 bg-teal-600 text-white px-3 py-1 rounded-full text-xs font-medium">Chef Interview</span>
+                </div>
+                <div class="p-6">
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">Meet Chef Elena: Reinventing Detroit Brunch</h3>
+                    <p class="text-gray-600 mb-4">An exclusive interview with the chef behind Detroit's most innovative brunch menu this season.</p>
+                    <div class="flex items-center text-sm text-gray-500">
+                        <span>By Jamie Wilson</span>
+                        <span class="mx-2">•</span>
+                        <span>May 15, 2023</span>
+                    </div>
+                    <a href="#" class="mt-4 inline-block text-teal-600 font-medium hover:underline">Read More →</a>
+                </div>
+            </article>
+
+            <!-- Article 2 -->
+            <article class="bg-white rounded-xl overflow-hidden shadow-md article-card transition duration-300 relative">
+                <div class="relative">
+                    <img src="https://images.unsplash.com/photo-1559847844-5315695dadae?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1398&q=80" alt="Avocado toast" class="w-full h-48 object-cover">
+                    <span class="absolute top-4 left-4 bg-amber-500 text-white px-3 py-1 rounded-full text-xs font-medium">Review</span>
+                </div>
+                <div class="p-6">
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">The Best Avocado Toast in Detroit: 5 Must-Try Spots</h3>
+                    <p class="text-gray-600 mb-4">We sampled 15 different avocado toasts across the city to find the absolute best versions of this brunch staple.</p>
+                    <div class="flex items-center text-sm text-gray-500">
+                        <span>By Marcus Chen</span>
+                        <span class="mx-2">•</span>
+                        <span>April 28, 2023</span>
+                    </div>
+                    <a href="#" class="mt-4 inline-block text-teal-600 font-medium hover:underline">Read More →</a>
+                </div>
+            </article>
+
+            <!-- Article 3 -->
+            <article class="bg-white rounded-xl overflow-hidden shadow-md article-card transition duration-300 relative">
+                <div class="relative">
+                    <img src="https://images.unsplash.com/photo-1490645935967-10de6ba17061?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1453&q=80" alt="Pancakes with berries" class="w-full h-48 object-cover">
+                    <span class="absolute top-4 left-4 bg-purple-500 text-white px-3 py-1 rounded-full text-xs font-medium">Recipe</span>
+                </div>
+                <div class="p-6">
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">Detroit-Style Blueberry Pancakes You Can Make at Home</h3>
+                    <p class="text-gray-600 mb-4">A local chef shares her famous pancake recipe with a Detroit twist that's perfect for weekend brunch at home.</p>
+                    <div class="flex items-center text-sm text-gray-500">
+                        <span>By Sarah Johnson</span>
+                        <span class="mx-2">•</span>
+                        <span>April 10, 2023</span>
+                    </div>
+                    <a href="#" class="mt-4 inline-block text-teal-600 font-medium hover:underline">Read More →</a>
+                </div>
+            </article>
+
+            <!-- Article 4 -->
+            <article class="bg-white rounded-xl overflow-hidden shadow-md article-card transition duration-300 relative">
+                <div class="relative">
+                    <img src="https://images.unsplash.com/photo-1517248135467-4aea1480e8df?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Brunch restaurant interior" class="w-full h-48 object-cover">
+                    <span class="absolute top-4 left-4 bg-pink-500 text-white px-3 py-1 rounded-full text-xs font-medium">Trends</span>
+                </div>
+                <div class="p-6">
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">How Detroit's Brunch Spots Are Redefining Interior Design</h3>
+                    <p class="text-gray-600 mb-4">From industrial chic to cozy retro, discover how Detroit's brunch restaurants are creating Instagram-worthy spaces.</p>
+                    <div class="flex items-center text-sm text-gray-500">
+                        <span>By Alex Turner</span>
+                        <span class="mx-2">•</span>
+                        <span>March 22, 2023</span>
+                    </div>
+                    <a href="#" class="mt-4 inline-block text-teal-600 font-medium hover:underline">Read More →</a>
+                </div>
+            </article>
+
+            <!-- Article 5 -->
+            <article class="bg-white rounded-xl overflow-hidden shadow-md article-card transition duration-300 relative">
+                <div class="relative">
+                    <img src="https://images.unsplash.com/photo-1546069901-ba9599a8e63c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1480&q=80" alt="Healthy brunch bowl" class="w-full h-48 object-cover">
+                    <span class="absolute top-4 left-4 bg-emerald-500 text-white px-3 py-1 rounded-full text-xs font-medium">Trends</span>
+                </div>
+                <div class="p-6">
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">The Healthy Brunch Movement Comes to Detroit</h3>
+                    <p class="text-gray-600 mb-4">How local restaurants are balancing indulgence with nutritious options in their brunch menus this season.</p>
+                    <div class="flex items-center text-sm text-gray-500">
+                        <span>By Taylor Smith</span>
+                        <span class="mx-2">•</span>
+                        <span>March 15, 2023</span>
+                    </div>
+                    <a href="#" class="mt-4 inline-block text-teal-600 font-medium hover:underline">Read More →</a>
+                </div>
+            </article>
+
+            <!-- Article 6 -->
+            <article class="bg-white rounded-xl overflow-hidden shadow-md article-card transition duration-300 relative">
+                <div class="relative">
+                    <img src="https://images.unsplash.com/photo-1559847844-5315695dadae?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1398&q=80" alt="Brunch cocktails" class="w-full h-48 object-cover">
+                    <span class="absolute top-4 left-4 bg-rose-500 text-white px-3 py-1 rounded-full text-xs font-medium">Events</span>
+                </div>
+                <div class="p-6">
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">Detroit Brunch Cocktail Festival Returns This June</h3>
+                    <p class="text-gray-600 mb-4">Everything you need to know about this year's festival celebrating Detroit's most creative brunch cocktails.</p>
+                    <div class="flex items-center text-sm text-gray-500">
+                        <span>By Nicole Brown</span>
+                        <span class="mx-2">•</span>
+                        <span>March 5, 2023</span>
+                    </div>
+                    <a href="#" class="mt-4 inline-block text-teal-600 font-medium hover:underline">Read More →</a>
+                </div>
+            </article>
+        </div>
+
+        <!-- Load More Button -->
+        <div class="text-center mt-12">
+            <button class="bg-teal-700 text-white px-6 py-3 rounded-lg hover:bg-teal-800 transition font-medium">
+                Load More Articles
+            </button>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white pt-12 pb-6">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+                <div>
+                    <h3 class="text-xl font-bold text-teal-400 mb-4">BrunchInDetroit</h3>
+                    <p class="text-gray-300">Discovering Detroit's best brunch spots one weekend at a time.</p>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Explore</h4>
+                    <ul class="space-y-2">
+                        <li><a href="index.html" class="text-gray-300 hover:text-teal-400">Home</a></li>
+                        <li><a href="brunch_directory.html" class="text-gray-300 hover:text-teal-400">Brunch Directory</a></li>
+                        <li><a href="brunch_galleries.html" class="text-gray-300 hover:text-teal-400">Events</a></li>
+                        <li><a href="news.html" class="text-gray-300 hover:text-teal-400">Blog</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Connect</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-300 hover:text-teal-400">Instagram</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-teal-400">Facebook</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-teal-400">Twitter</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-teal-400">TikTok</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Newsletter</h4>
+                    <p class="text-gray-300 mb-4">Get weekly brunch updates straight to your inbox.</p>
+                    <div class="flex">
+                        <input type="email" placeholder="Your email" class="px-4 py-2 rounded-l text-gray-800 w-full">
+                        <button class="bg-teal-600 hover:bg-teal-700 px-4 py-2 rounded-r">Subscribe</button>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 pt-6 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-400 text-sm mb-4 md:mb-0">© 2023 BrunchInDetroit. All rights reserved.</p>
+                <div class="flex space-x-6">
+                    <a href="#" class="text-gray-400 hover:text-teal-400 text-sm">Privacy Policy</a>
+                    <a href="#" class="text-gray-400 hover:text-teal-400 text-sm">Terms of Service</a>
+                    <a href="brunch_submit.html" class="text-gray-400 hover:text-teal-400 text-sm">Add Your Spot</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Simple filter functionality (visual only)
+        document.querySelectorAll('[aria-label^="Filter by"]').forEach(button => {
+            button.addEventListener('click', function() {
+                // Remove active class from all buttons
+                document.querySelectorAll('[aria-label^="Filter by"]').forEach(btn => {
+                    btn.classList.remove('bg-teal-700', 'text-white');
+                    btn.classList.add('bg-white', 'text-teal-700', 'border', 'border-teal-700');
+                });
+                
+                // Add active class to clicked button
+                this.classList.remove('bg-white', 'text-teal-700', 'border', 'border-teal-700');
+                this.classList.add('bg-teal-700', 'text-white');
+                
+                // In a real implementation, you would filter articles here
+            });
+        });
+        
+        // Set "All Articles" as active by default
+        document.querySelector('[aria-label="Filter by All Articles"]').classList.add('bg-teal-700', 'text-white');
+        document.querySelector('[aria-label="Filter by All Articles"]').classList.remove('bg-white', 'text-teal-700', 'border', 'border-teal-700');
+    </script>
+<p style="border-radius: 8px; text-align: center; font-size: 12px; color: #fff; margin-top: 16px;position: fixed; left: 8px; bottom: 8px; z-index: 10; background: rgba(0, 0, 0, 0.8); padding: 4px 8px;">Made with <img src="https://enzostvs-deepsite.hf.space/logo.svg" alt="DeepSite Logo" style="width: 16px; height: 16px; vertical-align: middle;display:inline-block;margin-right:3px;filter:brightness(0) invert(1);"><a href="https://enzostvs-deepsite.hf.space" style="color: #fff;text-decoration: underline;" target="_blank" >DeepSite</a> - 🧬 <a href="https://enzostvs-deepsite.hf.space?remix=picturemeclubbing/blog" style="color: #fff;text-decoration: underline;" target="_blank" >Remix</a></p></body>
+</html>

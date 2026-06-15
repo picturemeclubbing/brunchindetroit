@@ -1,0 +1,13 @@
+# Public web root — brunchindetroit.com
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    DirectoryIndex index.php
+</IfModule>
+
+# Block script execution in upload directories
+<IfModule mod_rewrite.c>
+    RewriteRule ^uploads/.*\.(php|phtml|php5|phar)$ - [F,L,NC]
+</IfModule>
+
+Options -Indexes

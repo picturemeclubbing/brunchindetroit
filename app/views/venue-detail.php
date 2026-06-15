@@ -1,0 +1,441 @@
+<?php
+declare(strict_types=1);
+
+/**
+ * Read-only venue profile page (Phase 3B).
+ *
+ * Renders a polished, location-profile-style layout for a single published
+ * venue. No reviews, ratings, RSVP, events, or user accounts in this MVP.
+ *
+ * Desktop layout follows the profile mockup:
+ *   - Wide centered container (~1200px)
+ *   - Top grid: large hero card (left) + Contact & Location card (right)
+ *   - Quick info strip directly under the top grid
+ *   - Main two-column area: wide content column (About, Interior Gallery,
+ *     Recent Event Galleries, Menu placeholder, What to Know placeholder)
+ *     and a narrower sidebar (Quick Facts, Upcoming Events, Ad placeholder)
+ *   - On mobile everything stacks into a single readable column.
+ *
+ * The Interior Gallery and Recent Event Galleries use a small set of
+ * decorative image URLs already referenced on the home page and DeepSite
+ * reference designs. These are visual placeholders only (no DB queries,
+ * no real gallery/event backend) until the admin-managed galleries ship.
+ *
+ * @var array|null $venue Single venue row from Venue::findBySlug().
+ */
+
+// Defensive guard: if we ever reach this view without a venue, render the
+// styled not-found state instead of fataling on missing array keys.
+if (!isset($venue) || empty($venue)) {
+    require APP_ROOT . '/views/partials/header.php';
+    ?>
+    <main>
+        <section class="section section--muted">
+            <div class="container">
+                <div class="not-found">
+                    <p class="eyebrow eyebrow--dark">404</p>
+                    <h1 class="not-found__title">Venue not found</h1>
+                    <p class="not-found__text">This venue is not published or does not exist.</p>
+                    <a class="btn btn--primary" href="<?= e(asset_url('directory.php')) ?>">
+                        <i class="fas fa-arrow-left" aria-hidden="true"></i>
+                        Back to Directory
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+    <?php
+    require APP_ROOT . '/views/partials/footer.php';
+    return;
+}
+
+// ---- Pre-compute display values so the markup below stays clean. ----------
+
+$hasNeighborhood = !empty($venue['neighborhood_name']);
+$hasPrice        = !empty($venue['price_range']);
+$hasHours        = !empty($venue['brunch_hours_note']);
+$hasPhone        = !empty($venue['phone']);
+$hasWebsite      = !empty($venue['website_url']);
+$hasInstagram    = !empty($venue['instagram_url']);
+$hasFacebook     = !empty($venue['facebook_url']);
+$hasUpdated      = !empty($venue['updated_at']);
+
+// Build a safe single-line address from whichever fields are present.
+$addressParts = array_filter([
+    $venue['address_line1'] ?? '',
+    $venue['address_line2'] ?? '',
+    trim((($venue['city'] ?? '') . ' ' . ($venue['state'] ?? '') . ' ' . ($venue['zip'] ?? ''))),
+], static fn ($v) => trim((string) $v) !== '');
+$addressLine = implode(', ', $addressParts);
+
+// Hero background image (if any). Supports full URLs and project-relative paths.
+$hasImage  = !empty($venue['main_image_path']);
+$imageUrl  = '';
+if ($hasImage) {
+    $imgPath  = (string) $venue['main_image_path'];
+    $imageUrl = str_starts_with($imgPath, 'http') ? $imgPath : asset_url($imgPath);
+}
+
+// Sanitized phone number for tel: links (keep digits and a leading +).
+$phoneTel = $hasPhone ? preg_replace('/[^0-9+]/', '', (string) $venue['phone']) : '';
+
+// Human-friendly last-updated date.
+$updatedFormatted = $hasUpdated ? date('F j, Y', strtotime((string) $venue['updated_at'])) : '';
+
+// Visual placeholder images for the Interior Gallery and Recent Event
+// Galleries sections. These REUSE image URLs already present on the home
+// page and DeepSite reference designs so the profile page feels populated
+// before the admin-managed gallery feature is built. They are decorative
+// placeholders only — not real venue data — and involve no DB queries.
+//
+// Sources (all already referenced in the project):
+//   - app/views/home.php (featured slider, articles, gallery cards)
+//   - deepsite-originals/home_index.html + index_gallery.html
+$galleryImages = [
+    'https://images.unsplash.com/photo-1559847844-5315695dadae?auto=format&fit=crop&w=1198&q=80',
+    'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1170&q=80',
+    'https://images.unsplash.com/photo-1490645935967-10de6ba17061?auto=format&fit=crop&w=1153&q=80',
+    'https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=1170&q=80',
+];
+// Default large interior image when the venue has no main_image_path
+// (same Unsplash photo used for The Garden Rooftop on the home page slider).
+$defaultInteriorImage = 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=1074&q=80';
+// Image for the recent event gallery cards (same photo used by the home
+// page gallery cards for Sunday Jazz Brunch / The Grand Brunch House).
+$eventGalleryImage = 'https://images.unsplash.com/photo-1551218808-94e220e084d2?auto=format&fit=crop&w=1074&q=80';
+
+require APP_ROOT . '/views/partials/header.php';
+?>
+
+<main>
+    <section class="section section--muted venue-profile">
+        <div class="container">
+
+            <!-- A. Breadcrumb -->
+            <nav class="venue-breadcrumb" aria-label="Breadcrumb">
+                <a href="<?= e(asset_url('index.php')) ?>">Home</a>
+                <span class="venue-breadcrumb__sep" aria-hidden="true">&rsaquo;</span>
+                <a href="<?= e(asset_url('directory.php')) ?>">Directory</a>
+                <span class="venue-breadcrumb__sep" aria-hidden="true">&rsaquo;</span>
+                <span class="venue-breadcrumb__current"><?= e($venue['name']) ?></span>
+            </nav>
+
+            <!-- B. Top profile area: hero (left) + Contact & Location (right) -->
+            <div class="venue-profile-top">
+
+                <!-- Hero profile card -->
+                <section class="venue-profile-hero <?= $hasImage ? '' : 'venue-profile-hero--fallback' ?>"<?php if ($hasImage): ?> style="background-image: url('<?= e($imageUrl) ?>');"<?php endif; ?>>
+                    <div class="venue-profile-hero__content">
+                        <?php if (!empty($venue['is_featured'])): ?>
+                            <span class="badge badge--accent venue-profile-hero__featured">Featured</span>
+                        <?php endif; ?>
+
+                        <p class="eyebrow">Detroit Brunch Guide</p>
+                        <h1 class="venue-profile-hero__title"><?= e($venue['name']) ?></h1>
+
+                        <?php if ($hasNeighborhood || $hasPrice): ?>
+                            <p class="venue-profile-hero__meta">
+                                <?php if ($hasNeighborhood): ?>
+                                    <span class="venue-profile-hero__meta-item">
+                                        <i class="fas fa-map-marker-alt" aria-hidden="true"></i>
+                                        <?= e($venue['neighborhood_name']) ?>
+                                    </span>
+                                <?php endif; ?>
+                                <?php if ($hasNeighborhood && $hasPrice): ?>
+                                    <span class="venue-profile-hero__meta-sep" aria-hidden="true">&middot;</span>
+                                <?php endif; ?>
+                                <?php if ($hasPrice): ?>
+                                    <span class="venue-profile-hero__price"><?= e($venue['price_range']) ?></span>
+                                <?php endif; ?>
+                            </p>
+                        <?php endif; ?>
+
+                        <?php if ($hasHours): ?>
+                            <p class="venue-profile-hero__hours">
+                                <i class="fas fa-clock" aria-hidden="true"></i>
+                                <?= e($venue['brunch_hours_note']) ?>
+                            </p>
+                        <?php endif; ?>
+
+                        <?php if (!empty($venue['description'])): ?>
+                            <p class="venue-profile-hero__description"><?= e($venue['description']) ?></p>
+                        <?php endif; ?>
+
+                        <div class="venue-profile-hero__actions">
+                            <a class="btn btn--primary" href="<?= e(asset_url('directory.php')) ?>">
+                                <i class="fas fa-arrow-left" aria-hidden="true"></i>
+                                Back to Directory
+                            </a>
+                            <?php if ($hasWebsite): ?>
+                                <a class="btn btn--outline-light" href="<?= e($venue['website_url']) ?>" target="_blank" rel="noopener">
+                                    <i class="fas fa-up-right-from-square" aria-hidden="true"></i>
+                                    Website
+                                </a>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Contact & Location sidebar card (sits beside the hero) -->
+                <aside class="venue-profile-contact">
+                    <article class="venue-profile-panel">
+                        <h2 class="venue-profile-panel__title">Contact & Location</h2>
+                        <ul class="venue-profile-info-list">
+                            <?php if ($addressLine !== ''): ?>
+                                <li class="venue-profile-info-list__item">
+                                    <i class="fas fa-location-dot" aria-hidden="true"></i>
+                                    <span><?= e($addressLine) ?></span>
+                                </li>
+                            <?php endif; ?>
+
+                            <?php if ($hasPhone): ?>
+                                <li class="venue-profile-info-list__item">
+                                    <i class="fas fa-phone" aria-hidden="true"></i>
+                                    <a href="tel:<?= e($phoneTel) ?>"><?= e($venue['phone']) ?></a>
+                                </li>
+                            <?php endif; ?>
+
+                            <?php if ($hasWebsite): ?>
+                                <li class="venue-profile-info-list__item">
+                                    <i class="fas fa-globe" aria-hidden="true"></i>
+                                    <a href="<?= e($venue['website_url']) ?>" target="_blank" rel="noopener">Website</a>
+                                </li>
+                            <?php endif; ?>
+
+                            <?php if ($hasInstagram): ?>
+                                <li class="venue-profile-info-list__item">
+                                    <i class="fab fa-instagram" aria-hidden="true"></i>
+                                    <a href="<?= e($venue['instagram_url']) ?>" target="_blank" rel="noopener">Instagram</a>
+                                </li>
+                            <?php endif; ?>
+
+                            <?php if ($hasFacebook): ?>
+                                <li class="venue-profile-info-list__item">
+                                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                                    <a href="<?= e($venue['facebook_url']) ?>" target="_blank" rel="noopener">Facebook</a>
+                                </li>
+                            <?php endif; ?>
+                        </ul>
+                    </article>
+                </aside>
+
+            </div>
+
+            <!-- C. Quick info strip -->
+            <div class="venue-profile-strip">
+                <div class="venue-profile-strip__item">
+                    <span class="venue-profile-strip__label">Neighborhood</span>
+                    <span class="venue-profile-strip__value"><?= $hasNeighborhood ? e($venue['neighborhood_name']) : '&mdash;' ?></span>
+                </div>
+                <div class="venue-profile-strip__item">
+                    <span class="venue-profile-strip__label">Price</span>
+                    <span class="venue-profile-strip__value"><?= $hasPrice ? e($venue['price_range']) : '&mdash;' ?></span>
+                </div>
+                <div class="venue-profile-strip__item">
+                    <span class="venue-profile-strip__label">Brunch Hours</span>
+                    <span class="venue-profile-strip__value"><?= $hasHours ? e($venue['brunch_hours_note']) : '&mdash;' ?></span>
+                </div>
+                <div class="venue-profile-strip__item">
+                    <span class="venue-profile-strip__label">Last Updated</span>
+                    <span class="venue-profile-strip__value"><?= $updatedFormatted !== '' ? e($updatedFormatted) : '&mdash;' ?></span>
+                </div>
+            </div>
+
+            <!-- D & E. Main content + sidebar -->
+            <div class="venue-profile-layout">
+
+                <!-- D. Main content column -->
+                <div class="venue-profile-main">
+
+                    <!-- 1. About -->
+                    <article class="venue-profile-panel">
+                        <h2 class="venue-profile-panel__title">About</h2>
+                        <?php if (!empty($venue['description'])): ?>
+                            <p class="venue-profile-about__text"><?= e($venue['description']) ?></p>
+                        <?php else: ?>
+                            <p class="venue-profile-about__text venue-profile-about__text--muted">
+                                No description has been added for this venue yet.
+                            </p>
+                        <?php endif; ?>
+                    </article>
+
+                    <!-- 2. Interior Gallery (visual placeholder) -->
+                    <article class="venue-profile-panel">
+                        <h2 class="venue-profile-panel__title">Interior Gallery</h2>
+                        <div class="venue-gallery-grid">
+                            <img
+                                class="venue-gallery-grid__large"
+                                src="<?= e($hasImage ? $imageUrl : $defaultInteriorImage) ?>"
+                                alt="Interior preview of <?= e($venue['name']) ?>"
+                                loading="lazy"
+                            >
+                            <img
+                                class="venue-gallery-grid__small"
+                                src="<?= e($galleryImages[0]) ?>"
+                                alt="Brunch atmosphere preview"
+                                loading="lazy"
+                            >
+                            <img
+                                class="venue-gallery-grid__small"
+                                src="<?= e($galleryImages[1]) ?>"
+                                alt="Brunch dining preview"
+                                loading="lazy"
+                            >
+                            <img
+                                class="venue-gallery-grid__small"
+                                src="<?= e($galleryImages[2]) ?>"
+                                alt="Brunch dishes preview"
+                                loading="lazy"
+                            >
+                            <img
+                                class="venue-gallery-grid__small"
+                                src="<?= e($galleryImages[3]) ?>"
+                                alt="Brunch pastry preview"
+                                loading="lazy"
+                            >
+                        </div>
+                        <p class="venue-profile-gallery__note">
+                            <i class="fas fa-circle-info" aria-hidden="true"></i>
+                            Interior photos will be managed from the admin area in a later phase.
+                        </p>
+                    </article>
+
+                    <!-- 3. Recent Event Galleries (visual placeholder) -->
+                    <article class="venue-profile-panel">
+                        <h2 class="venue-profile-panel__title">Recent Event Galleries</h2>
+                        <div class="venue-event-gallery-list">
+                            <article class="venue-event-gallery-card">
+                                <img
+                                    class="venue-event-gallery-card__image"
+                                    src="<?= e($eventGalleryImage) ?>"
+                                    alt="Sunday Brunch Pop-Up preview"
+                                    loading="lazy"
+                                >
+                                <div class="venue-event-gallery-card__body">
+                                    <p class="venue-event-gallery-card__date">
+                                        <i class="fas fa-calendar" aria-hidden="true"></i>
+                                        Coming soon
+                                    </p>
+                                    <h3 class="venue-event-gallery-card__title">Sunday Brunch Pop-Up</h3>
+                                    <p class="venue-event-gallery-card__text">
+                                        Photos from special brunch events and pop-ups will appear here
+                                        once the gallery feature launches.
+                                    </p>
+                                    <span class="venue-event-gallery-card__action" aria-disabled="true">
+                                        <i class="fas fa-images" aria-hidden="true"></i>
+                                        View Gallery Coming Soon
+                                    </span>
+                                </div>
+                            </article>
+
+                            <article class="venue-event-gallery-card">
+                                <img
+                                    class="venue-event-gallery-card__image"
+                                    src="<?= e($galleryImages[1]) ?>"
+                                    alt="Seasonal Brunch Tasting preview"
+                                    loading="lazy"
+                                >
+                                <div class="venue-event-gallery-card__body">
+                                    <p class="venue-event-gallery-card__date">
+                                        <i class="fas fa-calendar" aria-hidden="true"></i>
+                                        Coming soon
+                                    </p>
+                                    <h3 class="venue-event-gallery-card__title">Seasonal Brunch Tasting</h3>
+                                    <p class="venue-event-gallery-card__text">
+                                        Seasonal brunch tasting events will be featured here in a future
+                                        phase of DetroitBrunch.com.
+                                    </p>
+                                    <span class="venue-event-gallery-card__action" aria-disabled="true">
+                                        <i class="fas fa-images" aria-hidden="true"></i>
+                                        View Gallery Coming Soon
+                                    </span>
+                                </div>
+                            </article>
+                        </div>
+                    </article>
+
+                    <?php
+                    // Menu & Allergy Filtering section is rendered from a shared
+                    // partial so the same markup can be served as an AJAX HTML
+                    // fragment by public/menu-fragment.php.
+                    require APP_ROOT . '/views/partials/venue-menu-section.php';
+                    ?>
+
+                    <!-- 5. What to Know placeholder -->
+                    <article class="venue-profile-panel venue-profile-placeholder">
+                        <h2 class="venue-profile-panel__title">What to Know</h2>
+                        <p class="venue-profile-placeholder__text">
+                            <?php if ($hasHours): ?>
+                                Brunch is served <?= e($venue['brunch_hours_note']) ?>.
+                            <?php endif; ?>
+                            <?php if ($hasNeighborhood): ?>
+                                Located in the <?= e($venue['neighborhood_name']) ?> neighborhood.
+                            <?php endif; ?>
+                            Details are curated by DetroitBrunch.com &mdash; please confirm hours and
+                            menus directly with the venue before visiting.
+                        </p>
+                    </article>
+
+                </div>
+
+                <!-- E. Sidebar column -->
+                <aside class="venue-profile-sidebar">
+
+                    <!-- 1. Quick Facts -->
+                    <article class="venue-profile-panel">
+                        <h2 class="venue-profile-panel__title">Quick Facts</h2>
+                        <ul class="venue-profile-info-list venue-profile-info-list--facts">
+                            <li class="venue-profile-info-list__item">
+                                <span class="venue-profile-info-list__label">Cuisine</span>
+                                <span class="venue-profile-info-list__value">Coming soon</span>
+                            </li>
+                            <li class="venue-profile-info-list__item">
+                                <span class="venue-profile-info-list__label">Neighborhood</span>
+                                <span class="venue-profile-info-list__value"><?= $hasNeighborhood ? e($venue['neighborhood_name']) : 'Not listed' ?></span>
+                            </li>
+                            <li class="venue-profile-info-list__item">
+                                <span class="venue-profile-info-list__label">Price Range</span>
+                                <span class="venue-profile-info-list__value"><?= $hasPrice ? e($venue['price_range']) : 'Not listed' ?></span>
+                            </li>
+                            <li class="venue-profile-info-list__item">
+                                <span class="venue-profile-info-list__label">Reservations</span>
+                                <span class="venue-profile-info-list__value">Check with venue</span>
+                            </li>
+                            <li class="venue-profile-info-list__item">
+                                <span class="venue-profile-info-list__label">Brunch Hours</span>
+                                <span class="venue-profile-info-list__value"><?= $hasHours ? e($venue['brunch_hours_note']) : 'Not listed' ?></span>
+                            </li>
+                            <li class="venue-profile-info-list__item">
+                                <span class="venue-profile-info-list__label">Family Friendly</span>
+                                <span class="venue-profile-info-list__value">Coming soon</span>
+                            </li>
+                        </ul>
+                    </article>
+
+                    <!-- 2. Upcoming Events (visual placeholder) -->
+                    <article class="venue-profile-panel venue-profile-panel--note">
+                        <h2 class="venue-profile-panel__title">Upcoming Events</h2>
+                        <p class="venue-profile-note__text">No upcoming events listed yet.</p>
+                        <p class="venue-profile-note__text venue-profile-note__text--muted">
+                            Check back soon for brunch events at this location.
+                        </p>
+                    </article>
+
+                    <!-- 3. Advertisement placeholder -->
+                    <div class="venue-profile-panel ad-placeholder">
+                        <span class="ad-placeholder__label">Advertisement</span>
+                        <span class="ad-placeholder__size">300 &times; 250</span>
+                    </div>
+
+                </aside>
+            </div>
+        </div>
+    </section>
+</main>
+<?php
+require APP_ROOT . '/views/partials/footer.php';
+
+// Progressive enhancement for the menu allergen filter (this page only).
+// Without JS the filter form still submits via normal GET.
+?>
+<script src="<?= e(asset_url('assets/js/venue-menu.js')) ?>"></script>

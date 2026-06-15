@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Gallery Archives | BrunchInDetroit</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+        .gallery-image {
+            transition: transform 0.3s ease;
+        }
+        .gallery-image:hover {
+            transform: scale(1.03);
+        }
+        .modal {
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-md py-4">
+        <div class="container mx-auto px-4 flex justify-between items-center">
+            <a href="index.html" class="text-2xl font-bold text-teal-800">BrunchInDetroit</a>
+            <div class="hidden md:flex space-x-8">
+                <a href="index.html" class="text-gray-700 hover:text-teal-600">Home</a>
+                <a href="brunch_directory.html" class="text-gray-700 hover:text-teal-600">Directory</a>
+                <a href="event-galleries.html" class="text-gray-700 hover:text-teal-600 font-semibold underline">Events</a>
+                <a href="news.html" class="text-gray-700 hover:text-teal-600">Blog</a>
+                <a href="brunch_submit.html" class="text-gray-700 hover:text-teal-600">Add Your Spot</a>
+            </div>
+            <div class="md:hidden">
+                <button class="text-gray-700">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <section class="bg-teal-50 py-12">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-4xl font-bold text-teal-800 mb-4">Event Gallery Archives</h1>
+            <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                Browse our favorite brunch photos from venues around Detroit.
+            </p>
+        </div>
+    </section>
+
+    <!-- Filter Section -->
+    <section class="py-8 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row gap-4 items-center justify-between">
+                <div class="w-full md:w-auto flex-1 md:flex-none">
+                    <select class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500">
+                        <option value="">All Locations</option>
+                        <option value="downtown">Downtown</option>
+                        <option value="midtown">Midtown</option>
+                        <option value="corktown">Corktown</option>
+                        <option value="rivertown">Rivertown</option>
+                        <option value="greek-town">Greek Town</option>
+                    </select>
+                </div>
+                <div class="w-full md:w-auto flex-1 md:flex-none">
+                    <select class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500">
+                        <option value="">All Dates</option>
+                        <option value="2023-06">June 2023</option>
+                        <option value="2023-05">May 2023</option>
+                        <option value="2023-04">April 2023</option>
+                        <option value="2023-03">March 2023</option>
+                        <option value="2023-02">February 2023</option>
+                    </select>
+                </div>
+                <div class="w-full md:w-auto flex-1">
+                    <input type="text" placeholder="Search by venue or event..." class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500">
+                </div>
+                <button class="w-full md:w-auto bg-yellow-500 hover:bg-yellow-600 text-gray-800 font-bold px-6 py-2 rounded-lg transition duration-200">
+                    Apply Filters
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Grid -->
+    <section class="py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Gallery Card 1 -->
+                <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition duration-200">
+                    <div class="relative overflow-hidden h-48">
+                        <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1074&q=80" 
+                             alt="Sunday Jazz Brunch" 
+                             class="w-full h-full object-cover gallery-image cursor-pointer"
+                             onclick="openModal('Sunday Jazz Brunch', 'The Grand Brunch House', 'June 2023', 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1074&q=80', ['Downtown', 'Live Music', 'Bottomless'])">
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-gray-800 mb-1">The Grand Brunch House</h3>
+                        <h4 class="text-lg text-teal-700 mb-2">Sunday Jazz Brunch</h4>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="bg-teal-100 text-teal-800 text-xs px-2 py-1 rounded">Downtown</span>
+                            <span class="bg-teal-100 text-teal-800 text-xs px-2 py-1 rounded">Live Music</span>
+                            <span class="bg-teal-100 text-teal-800 text-xs px-2 py-1 rounded">Bottomless</span>
+                        </div>
+                        <p class="text-gray-500 mb-4">June 2023</p>
+                        <button class="w-full bg-teal-700 hover:bg-teal-800 text-white font-medium py-2 px-4 rounded-lg transition duration-200"
+                                onclick="openModal('Sunday Jazz Brunch', 'The Grand Brunch House', 'June 2023', 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1074&q=80', ['Downtown', 'Live Music', 'Bottomless'])">
+                            View Gallery
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Gallery Card 2 -->
+                <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition duration-200">
+                    <div class="relative overflow-hidden h-48">
+                        <img src="https://images.unsplash.com/photo-1517248135467-4dbc85a5e1d0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" 
+                             alt="Rooftop Mimosa Party" 
+                             class="w-full h-full object-cover gallery-image cursor-pointer"
+                             onclick="openModal('Rooftop Mimosa Party', 'Skyline Bistro', 'May 2023', 'https://images.unsplash.com/photo-1517248135467-4dbc85a5e1d0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80', ['Rooftop', 'Bottomless', 'Midtown'])">
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-gray-800 mb-1">Skyline Bistro</h3>
+                        <h4 class="text-lg text-teal-700 mb-2">Rooftop Mimosa Party</h4>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="bg-teal-100 text-teal-800 text-xs px-2 py-1 rounded">Rooftop</span>
+                            <span class="bg-teal-100 text-teal-800 text-xs px-2 py-1 rounded">Bottomless</span>
+                            <span class="bg-teal-100 text-teal-800 text-xs px-2 py-1 rounded">Midtown</span>
+                        </div>
+                        <p class="text-gray-500 mb-4">May 2023</p>
+                        <button class="w-full bg-teal-700 hover:bg-teal-800 text-white font-medium py-2 px-4 rounded-lg transition duration-200"
+                                onclick="openModal('Rooftop Mimosa Party', 'Skyline Bistro', 'May 2023', 'https://images.unsplash.com/photo-1517248135467-4dbc85a5e1d0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80', ['Rooftop', 'Bottomless', 'Midtown'])">
+                            View Gallery
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Gallery Card 3 -->
+                <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition duration-200">
+                    <div class="relative overflow-hidden h-48">
+                        <img src="https://images.unsplash.com/photo-1555244162-803834f70033?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" 
+                             alt="Mother's Day Brunch" 
+                             class="w-full h-full object-cover gallery-image cursor-pointer"
+                             onclick="openModal('Mother\'s Day Brunch', 'Garden Café', 'May 2023', 'https://images.unsplash.com/photo-1555244162-803834f70033?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80', ['Garden', 'Special Event', 'Corktown'])">
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-gray-800 mb-1">Garden Café</h3>
+                        <h4 class="text-lg text-teal-700 mb-2">Mother's Day Brunch</h4>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="bg-teal-100 text-teal-800 text-xs px-2 py-1 rounded">Garden</span>
+                            <span class="bg-teal-100 text-teal-800 text-xs px-2 py-1 rounded">Special Event</span>
+                            <span class="bg-teal-100 text-teal-800 text-xs px-2 py-1 rounded">Corktown</span>
+                        </div>
+                        <p class="text-gray-500 mb-4">May 2023</p>
+                        <button class="w-full bg-teal-700 hover:bg-teal-800 text-white font-medium py-2 px-4 rounded-lg transition duration-200"
+                                onclick="openModal('Mother\'s Day Brunch', 'Garden Café', 'May 2023', 'https://images.unsplash.com/photo-1555244162-803834f70033?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80', ['Garden', 'Special Event', 'Corktown'])">
+                            View Gallery
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Gallery Card 4 -->
+                <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition duration-200">
+                    <div class="relative overflow-hidden h-48">
+                        <img src="https://images.unsplash.com/photo-1544025162-d76694265947?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1169&q=80" 
+                             alt="Drag Brunch Extravaganza" 
+                             class="w-full h-full object-cover gallery-image cursor-pointer"
+                             onclick="openModal('Drag Brunch Extravaganza', 'The Rainbow Room', 'April 2023', 'https://images.unsplash.com/photo-1544025162-d76694265947?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1169&q=80', ['Entertainment', 'Downtown', 'Bottomless'])">
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-gray-800 mb-1">The Rainbow Room</h3>
+                        <h4 class="text-lg text-teal-700 mb-2">Drag Brunch Extravaganza</h4>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="bg-teal-100 text-teal-800 text-xs px-2 py-1 rounded">Entertainment</span>
+                            <span class="bg-teal-100 text-teal-800 text-xs px-2 py-1 rounded">Downtown</span>
+                            <span class="bg-teal-100 text-teal-800 text-xs px-2 py-1 rounded">Bottomless</span>
+                        </div>
+                        <p class="text-gray-500 mb-4">April 2023</p>
+                        <button class="w-full bg-teal-700 hover:bg-teal-800 text-white font-medium py-2 px-4 rounded-lg transition duration-200"
+                                onclick="openModal('Drag Brunch Extravaganza', 'The Rainbow Room', 'April 2023', 'https://images.unsplash.com/photo-1544025162-d76694265947?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1169&q=80', ['Entertainment', 'Downtown', 'Bottomless'])">
+                            View Gallery
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Gallery Card 5 -->
+                <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition duration-200">
+                    <div class="relative overflow-hidden h-48">
+                        <img src="https://images.unsplash.com/photo-1514933651103-005eec06c04b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1074&q=80" 
+                             alt="Farmers Market Brunch" 
+                             class="w-full h-full object-cover gallery-image cursor-pointer"
+                             onclick="openModal('Farmers Market Brunch', 'Harvest Table', 'March 2023', 'https://images.unsplash.com/photo-1514933651103-005eec06c04b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1074&q=80', ['Farm-to-Table', 'Rivertown', 'Seasonal'])">
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-gray-800 mb-1">Harvest Table</h3>
+                        <h4 class="text-lg text-teal-700 mb-2">Farmers Market Brunch</h4>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="bg-teal-100 text-teal-800 text-xs px-2 py-1 rounded">Farm-to-Table</span>
+                            <span class="bg-teal-100 text-teal-800 text-xs px-2 py-1 rounded">Rivertown</span>
+                            <span class="bg-teal-100 text-teal-800 text-xs px-2 py-1 rounded">Seasonal</span>
+                        </div>
+                        <p class="text-gray-500 mb-4">March 2023</p>
+                        <button class="w-full bg-teal-700 hover:bg-teal-800 text-white font-medium py-2 px-4 rounded-lg transition duration-200"
+                                onclick="openModal('Farmers Market Brunch', 'Harvest Table', 'March 2023', 'https://images.unsplash.com/photo-1514933651103-005eec06c04b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1074&q=80', ['Farm-to-Table', 'Rivertown', 'Seasonal'])">
+                            View Gallery
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Gallery Card 6 -->
+                <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition duration-200">
+                    <div class="relative overflow-hidden h-48">
+                        <img src="https://images.unsplash.com/photo-1559847844-5315695dadae?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1198&q=80" 
+                             alt="Greek Easter Brunch" 
+                             class="w-full h-full object-cover gallery-image cursor-pointer"
+                             onclick="openModal('Greek Easter Brunch', 'Olympia Café', 'April 2023', 'https://images.unsplash.com/photo-1559847844-5315695dadae?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1198&q=80', ['Greek Town', 'Cultural', 'Special Event'])">
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-gray-800 mb-1">Olympia Café</h3>
+                        <h4 class="text-lg text-teal-700 mb-2">Greek Easter Brunch</h4>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="bg-teal-100 text-teal-800 text-xs px-2 py-1 rounded">Greek Town</span>
+                            <span class="bg-teal-100 text-teal-800 text-xs px-2 py-1 rounded">Cultural</span>
+                            <span class="bg-teal-100 text-teal-800 text-xs px-2 py-1 rounded">Special Event</span>
+                        </div>
+                        <p class="text-gray-500 mb-4">April 2023</p>
+                        <button class="w-full bg-teal-700 hover:bg-teal-800 text-white font-medium py-2 px-4 rounded-lg transition duration-200"
+                                onclick="openModal('Greek Easter Brunch', 'Olympia Café', 'April 2023', 'https://images.unsplash.com/photo-1559847844-5315695dadae?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1198&q=80', ['Greek Town', 'Cultural', 'Special Event'])">
+                            View Gallery
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Load More Button -->
+            <div class="text-center mt-12">
+                <button id="loadMoreBtn" class="bg-teal-700 hover:bg-teal-800 text-white font-bold py-3 px-8 rounded-lg transition duration-200">
+                    Load More Galleries
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Modal -->
+    <div id="galleryModal" class="modal fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75 opacity-0 invisible transition duration-300">
+        <div class="bg-white rounded-xl shadow-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+            <div class="p-6">
+                <div class="flex justify-between items-start mb-4">
+                    <div>
+                        <h2 id="modalEventTitle" class="text-2xl font-bold text-gray-800"></h2>
+                        <p id="modalVenueName" class="text-lg text-teal-700"></p>
+                        <p id="modalEventDate" class="text-gray-500 mb-2"></p>
+                    </div>
+                    <button onclick="closeModal()" class="text-gray-500 hover:text-gray-700 text-2xl">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <div id="modalTags" class="flex flex-wrap gap-2 mb-6"></div>
+                
+                <div class="mb-6">
+                    <img id="modalImage" src="" alt="" class="w-full h-auto max-h-[60vh] object-contain rounded-lg">
+                </div>
+                
+                <div class="border-t border-gray-200 pt-4">
+                    <h3 class="text-lg font-semibold mb-3">Share this gallery:</h3>
+                    <div class="flex space-x-4">
+                        <button class="bg-blue-500 hover:bg-blue-600 text-white p-2 rounded-full">
+                            <i class="fab fa-facebook-f"></i>
+                        </button>
+                        <button class="bg-pink-500 hover:bg-pink-600 text-white p-2 rounded-full">
+                            <i class="fab fa-instagram"></i>
+                        </button>
+                        <button class="bg-blue-400 hover:bg-blue-500 text-white p-2 rounded-full">
+                            <i class="fab fa-twitter"></i>
+                        </button>
+                        <button class="bg-red-500 hover:bg-red-600 text-white p-2 rounded-full">
+                            <i class="fas fa-envelope"></i>
+                        </button>
+                        <button class="bg-gray-700 hover:bg-gray-800 text-white p-2 rounded-full">
+                            <i class="fas fa-link"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-teal-800 text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-xl font-bold mb-4">BrunchInDetroit</h3>
+                    <p class="text-teal-100">
+                        Discovering the best brunch spots in Detroit since 2018. Join us for the ultimate weekend dining experience.
+                    </p>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Quick Links</h4>
+                    <ul class="space-y-2">
+                        <li><a href="index.html" class="text-teal-100 hover:text-white">Home</a></li>
+                        <li><a href="brunch_directory.html" class="text-teal-100 hover:text-white">Brunch Directory</a></li>
+                        <li><a href="event-galleries.html" class="text-teal-100 hover:text-white">Events</a></li>
+                        <li><a href="news.html" class="text-teal-100 hover:text-white">Blog</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Connect</h4>
+                    <div class="flex space-x-4 mb-4">
+                        <a href="#" class="text-teal-100 hover:text-white text-xl"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-teal-100 hover:text-white text-xl"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="text-teal-100 hover:text-white text-xl"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-teal-100 hover:text-white text-xl"><i class="fab fa-pinterest"></i></a>
+                    </div>
+                    <p class="text-teal-100">
+                        <i class="fas fa-envelope mr-2"></i> hello@brunchindetroit.com
+                    </p>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Newsletter</h4>
+                    <p class="text-teal-100 mb-2">
+                        Subscribe for weekly brunch updates and exclusive offers.
+                    </p>
+                    <div class="flex">
+                        <input type="email" placeholder="Your email" class="px-4 py-2 rounded-l-lg w-full text-gray-800">
+                        <button class="bg-yellow-500 hover:bg-yellow-600 text-gray-800 font-bold px-4 py-2 rounded-r-lg">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-teal-700 mt-8 pt-8 text-center text-teal-100">
+                <p>&copy; 2023 BrunchInDetroit. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Modal functionality
+        function openModal(eventTitle, venueName, eventDate, imageUrl, tags) {
+            const modal = document.getElementById('galleryModal');
+            document.getElementById('modalEventTitle').textContent = eventTitle;
+            document.getElementById('modalVenueName').textContent = venueName;
+            document.getElementById('modalEventDate').textContent = eventDate;
+            document.getElementById('modalImage').src = imageUrl;
+            document.getElementById('modalImage').alt = eventTitle;
+            
+            const tagsContainer = document.getElementById('modalTags');
+            tagsContainer.innerHTML = '';
+            tags.forEach(tag => {
+                const tagElement = document.createElement('span');
+                tagElement.className = 'bg-teal-100 text-teal-800 text-xs px-2 py-1 rounded';
+                tagElement.textContent = tag;
+                tagsContainer.appendChild(tagElement);
+            });
+            
+            modal.classList.remove('invisible', 'opacity-0');
+            modal.classList.add('opacity-100', 'visible');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('galleryModal');
+            modal.classList.remove('opacity-100', 'visible');
+            modal.classList.add('invisible', 'opacity-0');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Load more functionality
+        document.getElementById('loadMoreBtn').addEventListener('click', function() {
+            // In a real implementation, this would fetch more data from a server
+            // For demo purposes, we'll just show an alert
+            alert('Loading more galleries... This would fetch additional gallery cards in a real implementation.');
+        });
+
+        // Close modal when clicking outside
+        document.getElementById('galleryModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+    </script>
+<p style="border-radius: 8px; text-align: center; font-size: 12px; color: #fff; margin-top: 16px;position: fixed; left: 8px; bottom: 8px; z-index: 10; background: rgba(0, 0, 0, 0.8); padding: 4px 8px;">Made with <img src="https://enzostvs-deepsite.hf.space/logo.svg" alt="DeepSite Logo" style="width: 16px; height: 16px; vertical-align: middle;display:inline-block;margin-right:3px;filter:brightness(0) invert(1);"><a href="https://enzostvs-deepsite.hf.space" style="color: #fff;text-decoration: underline;" target="_blank" >DeepSite</a> - 🧬 <a href="https://enzostvs-deepsite.hf.space?remix=picturemeclubbing/brunch-directory" style="color: #fff;text-decoration: underline;" target="_blank" >Remix</a></p></body>
+</html>
