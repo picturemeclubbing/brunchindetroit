@@ -131,8 +131,9 @@ SET @cb_coffee        = (SELECT id FROM menu_items WHERE venue_id = @corktown_bi
 -- ALLERGEN STATUSES (all 9 allergens per item, varied for visible filtering)
 -- ===========================================================================
 INSERT INTO menu_item_allergen_statuses (menu_item_id, allergen_id, status) VALUES
-  -- Chicken & Waffles (contains gluten, eggs, dairy; NO peanuts, tree nuts, soy, fish, sesame)
-  (@sm_chick_waffle, @peanuts,      'does_not_contain'),
+  -- Chicken & Waffles (fried in peanut oil; contains gluten, eggs, dairy;
+  -- NO tree nuts, soy, fish, sesame)
+  (@sm_chick_waffle, @peanuts,      'contains'),
   (@sm_chick_waffle, @tree_nuts,    'does_not_contain'),
   (@sm_chick_waffle, @dairy,        'contains'),
   (@sm_chick_waffle, @eggs,         'contains'),

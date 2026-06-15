@@ -64,3 +64,45 @@ function redirect(string $url): void
     header('Location: ' . $url);
     exit;
 }
+
+/**
+ * Build an absolute canonical URL for a given site path.
+ *
+ * Examples:
+ *   canonical_url('blog.php')
+ *   canonical_url('article.php?slug=my-post')
+ *
+ * Uses the configured site_domain when available, choosing a sensible scheme
+ * (http for localhost / local dev, https otherwise). If site_domain is
+ * missing, falls back to the current request host. The path is appended
+ * as-is (already-escaped by callers for HTML output via e()).
+ */
+function canonical_url(string $path = ''): string
+{
+    $config = app_config();
+    $domain = (string) ($config['site_domain'] ?? '');
+    $isLocal = ($config['environment'] ?? '') === 'local'
+        || $domain === ''
+        || str_contains($domain, 'localhost')
+        || str_contains($domain, '127.0.0.1');
+
+    // Determine scheme + host.
+    if ($domain !== '' && !$isLocal) {
+        $scheme = 'https';
+        $host   = $domain;
+    } else {
+        // Fallback to the current request host (works in local dev).
+        $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
+            ? 'https'
+            : 'http';
+        $host = (string) ($_SERVER['HTTP_HOST'] ?? ($domain !== '' ? $domain : 'localhost'));
+    }
+
+    // Normalize the path: keep query strings intact, just trim a leading slash.
+    $path = ltrim($path, '/');
+    if ($path === '') {
+        return $scheme . '://' . $host . '/';
+    }
+
+    return $scheme . '://' . $host . '/' . $path;
+}

@@ -1,0 +1,250 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * Read-only Blog model (Phase 4A).
+ *
+ * Provides published blog posts and blog categories for the public
+ * News & Blogs section. Uses PDO through db() and prepared statements.
+ *
+ * All queries LEFT JOIN blog_categories and admins so a post with a NULL
+ * category or a deleted author still renders gracefully.
+ */
+final class Blog
+{
+    /**
+     * All blog categories, ordered by sort_order then name.
+     *
+     * @return array<int, array{id:int, name:string, slug:string, sort_order:int}>
+     */
+    public static function categories(): array
+    {
+        $pdo = db();
+
+        $sql = "
+            SELECT id, name, slug, sort_order
+            FROM blog_categories
+            ORDER BY sort_order ASC, name ASC
+        ";
+
+        return $pdo->query($sql)->fetchAll();
+    }
+
+    /**
+     * Published blog posts, with category + author display name.
+     *
+     * @param string|null $categorySlug Optional category slug filter.
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    public static function publishedPosts(?string $categorySlug = null): array
+    {
+        $pdo = db();
+
+        $sql = "
+            SELECT
+                bp.id,
+                bp.slug,
+                bp.title,
+                bp.excerpt,
+                bp.featured_image_path,
+                bp.published_at,
+                bp.is_featured,
+                bc.id   AS category_id,
+                bc.name AS category_name,
+                bc.slug AS category_slug,
+                a.display_name AS author_name
+            FROM blog_posts bp
+            LEFT JOIN blog_categories bc ON bc.id = bp.category_id
+            LEFT JOIN admins a           ON a.id  = bp.author_admin_id
+            WHERE bp.is_published = 1
+              AND bp.published_at IS NOT NULL
+        ";
+
+        $params = [];
+
+        if ($categorySlug !== null && $categorySlug !== '') {
+            $sql .= " AND bc.slug = :categorySlug";
+            $params[':categorySlug'] = $categorySlug;
+        }
+
+        // Featured posts first, then newest published_at first.
+        $sql .= "
+            ORDER BY bp.is_featured DESC, bp.published_at DESC, bp.created_at DESC
+        ";
+
+        $stmt = $pdo->prepare($sql);
+        foreach ($params as $key => $value) {
+            $stmt->bindValue($key, $value);
+        }
+        $stmt->execute();
+
+        return $stmt->fetchAll();
+    }
+
+    /**
+     * One published featured post (the most recent featured), or null.
+     *
+     * @return array<string, mixed>|null
+     */
+    public static function featuredPost(): ?array
+    {
+        $pdo = db();
+
+        $sql = "
+            SELECT
+                bp.id,
+                bp.slug,
+                bp.title,
+                bp.excerpt,
+                bp.body,
+                bp.featured_image_path,
+                bp.published_at,
+                bp.is_featured,
+                bc.id   AS category_id,
+                bc.name AS category_name,
+                bc.slug AS category_slug,
+                a.display_name AS author_name
+            FROM blog_posts bp
+            LEFT JOIN blog_categories bc ON bc.id = bp.category_id
+            LEFT JOIN admins a           ON a.id  = bp.author_admin_id
+            WHERE bp.is_published = 1
+              AND bp.published_at IS NOT NULL
+            ORDER BY bp.is_featured DESC, bp.published_at DESC
+            LIMIT 1
+        ";
+
+        $row = $pdo->query($sql)->fetch();
+        return $row !== false ? $row : null;
+    }
+
+    /**
+     * One published blog post by slug, with category + author name.
+     *
+     * @return array<string, mixed>|null
+     */
+    public static function findBySlug(string $slug): ?array
+    {
+        $pdo = db();
+
+        $sql = "
+            SELECT
+                bp.id,
+                bp.slug,
+                bp.title,
+                bp.excerpt,
+                bp.body,
+                bp.featured_image_path,
+                bp.category_id,
+                bp.is_published,
+                bp.is_featured,
+                bp.published_at,
+                bp.created_at,
+                bp.updated_at,
+                bc.name AS category_name,
+                bc.slug AS category_slug,
+                a.display_name AS author_name
+            FROM blog_posts bp
+            LEFT JOIN blog_categories bc ON bc.id = bp.category_id
+            LEFT JOIN admins a           ON a.id  = bp.author_admin_id
+            WHERE bp.slug = :slug
+              AND bp.is_published = 1
+              AND bp.published_at IS NOT NULL
+            LIMIT 1
+        ";
+
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindValue(':slug', $slug);
+        $stmt->execute();
+
+        $row = $stmt->fetch();
+        return $row !== false ? $row : null;
+    }
+
+    /**
+     * Up to $limit related published posts (excluding the current post).
+     * Prefers the same category when $categoryId is provided.
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    public static function relatedPosts(int $excludePostId, ?int $categoryId = null, int $limit = 3): array
+    {
+        $pdo = db();
+
+        // Same category first (if provided), then fall back to any posts.
+        $sql = "
+            SELECT
+                bp.id,
+                bp.slug,
+                bp.title,
+                bp.excerpt,
+                bp.featured_image_path,
+                bp.published_at,
+                bc.name AS category_name,
+                bc.slug AS category_slug,
+                a.display_name AS author_name
+            FROM blog_posts bp
+            LEFT JOIN blog_categories bc ON bc.id = bp.category_id
+            LEFT JOIN admins a           ON a.id  = bp.author_admin_id
+            WHERE bp.is_published = 1
+              AND bp.published_at IS NOT NULL
+              AND bp.id <> :excludeId
+        ";
+
+        $params = [':excludeId' => $excludePostId];
+
+        if ($categoryId !== null && $categoryId > 0) {
+            $sql .= " AND bp.category_id = :categoryId";
+            $params[':categoryId'] = $categoryId;
+        }
+
+        $sql .= " ORDER BY bp.published_at DESC, bp.created_at DESC LIMIT " . max(1, (int) $limit);
+
+        $stmt = $pdo->prepare($sql);
+        foreach ($params as $key => $value) {
+            $stmt->bindValue($key, $value);
+        }
+        $stmt->execute();
+
+        $rows = $stmt->fetchAll();
+
+        // If we filtered by category and got fewer than the limit, top up
+        // with other posts so the "Related" section doesn't look empty.
+        if ($categoryId !== null && $categoryId > 0 && count($rows) < $limit) {
+            $need   = $limit - count($rows);
+            $topSql = "
+                SELECT
+                    bp.id,
+                    bp.slug,
+                    bp.title,
+                    bp.excerpt,
+                    bp.featured_image_path,
+                    bp.published_at,
+                    bc.name AS category_name,
+                    bc.slug AS category_slug,
+                    a.display_name AS author_name
+                FROM blog_posts bp
+                LEFT JOIN blog_categories bc ON bc.id = bp.category_id
+                LEFT JOIN admins a           ON a.id  = bp.author_admin_id
+                WHERE bp.is_published = 1
+                  AND bp.published_at IS NOT NULL
+                  AND bp.id <> :excludeId
+                  AND bp.category_id <> :categoryId
+                ORDER BY bp.published_at DESC, bp.created_at DESC
+                LIMIT :need
+            ";
+            $topStmt = $pdo->prepare($topSql);
+            $topStmt->bindValue(':excludeId', $excludePostId, PDO::PARAM_INT);
+            $topStmt->bindValue(':categoryId', $categoryId, PDO::PARAM_INT);
+            $topStmt->bindValue(':need', $need, PDO::PARAM_INT);
+            $topStmt->execute();
+
+            foreach ($topStmt->fetchAll() as $extra) {
+                $rows[] = $extra;
+            }
+        }
+
+        return $rows;
+    }
+}

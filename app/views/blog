@@ -1,0 +1,192 @@
+<?php
+declare(strict_types=1);
+
+/**
+ * Article detail view (Phase 4A).
+ *
+ * @var array  $post
+ * @var array  $related
+ * @var string $canonicalUrl
+ * @var string $facebookShareUrl
+ * @var string $twitterShareUrl
+ */
+
+require APP_ROOT . '/views/partials/header.php';
+
+$formatDate = static function (?string $raw): string {
+    if ($raw === null || $raw === '') {
+        return '';
+    }
+    $ts = strtotime($raw);
+    return $ts !== false ? date('F j, Y', $ts) : '';
+};
+
+$articleUrl = static function (string $slug): string {
+    return asset_url('article.php?slug=' . urlencode($slug));
+};
+
+$publishedDate = $formatDate($post['published_at'] ?? null);
+$bodyHtml      = (string) ($post['body'] ?? '');
+?>
+
+<main>
+    <!-- Breadcrumb -->
+    <nav class="container breadcrumb" aria-label="Breadcrumb">
+        <a href="<?= e(asset_url('index.php')) ?>">Home</a>
+        <span aria-hidden="true">›</span>
+        <a href="<?= e(asset_url('blog.php')) ?>">News & Blogs</a>
+        <span aria-hidden="true">›</span>
+        <span class="breadcrumb__current" aria-current="page"><?= e($post['title']) ?></span>
+    </nav>
+
+    <!-- Article hero -->
+    <article class="article-detail">
+        <header class="article-detail__hero">
+            <?php if (!empty($post['featured_image_path'])): ?>
+                <div
+                    class="article-detail__image"
+                    style="background-image:url('<?= e($post['featured_image_path']) ?>');"
+                    role="img"
+                    aria-label="<?= e($post['title']) ?>"
+                ></div>
+            <?php endif; ?>
+
+            <div class="article-detail__hero-inner">
+                <?php if (!empty($post['category_name'])): ?>
+                    <a
+                        class="badge badge--accent"
+                        href="<?= e(asset_url('blog.php?category=' . urlencode((string) $post['category_slug']))) ?>"
+                    >
+                        <?= e($post['category_name']) ?>
+                    </a>
+                <?php endif; ?>
+
+                <h1 class="article-detail__title"><?= e($post['title']) ?></h1>
+
+                <p class="article-meta article-meta--hero">
+                    <?php if (!empty($post['author_name'])): ?>
+                        <span class="article-meta__item">
+                            <i class="fas fa-user-pen" aria-hidden="true"></i>
+                            <?= e($post['author_name']) ?>
+                        </span>
+                    <?php endif; ?>
+                    <?php if ($publishedDate !== ''): ?>
+                        <span class="article-meta__item">
+                            <i class="fas fa-calendar-day" aria-hidden="true"></i>
+                            <?= e($publishedDate) ?>
+                        </span>
+                    <?php endif; ?>
+                </p>
+            </div>
+        </header>
+
+        <!-- Article body -->
+        <div class="article-detail__content">
+            <?php if (trim($bodyHtml) !== ''): ?>
+                <div class="article-prose">
+                    <?= $bodyHtml /* admin-controlled HTML, escaped on input */ ?>
+                </div>
+            <?php else: ?>
+                <p class="article-prose article-prose--empty">
+                    Full story coming soon.
+                </p>
+            <?php endif; ?>
+
+            <!-- Share -->
+            <section class="article-share" aria-label="Share this article">
+                <h2 class="article-share__title">
+                    <i class="fas fa-share-nodes" aria-hidden="true"></i>
+                    Share this article
+                </h2>
+                <div class="article-share__actions">
+                    <button
+                        type="button"
+                        class="btn btn--outline article-share__btn"
+                        data-copy-link="<?= e($canonicalUrl) ?>"
+                    >
+                        <i class="fas fa-link" aria-hidden="true"></i>
+                        <span>Copy Link</span>
+                    </button>
+                    <a
+                        class="btn btn--outline article-share__btn"
+                        href="<?= e($facebookShareUrl) ?>"
+                        target="_blank"
+                        rel="noopener"
+                    >
+                        <i class="fab fa-facebook" aria-hidden="true"></i>
+                        <span>Facebook</span>
+                    </a>
+                    <a
+                        class="btn btn--outline article-share__btn"
+                        href="<?= e($twitterShareUrl) ?>"
+                        target="_blank"
+                        rel="noopener"
+                    >
+                        <i class="fab fa-x-twitter" aria-hidden="true"></i>
+                        <span>Share on X</span>
+                    </a>
+                </div>
+            </section>
+        </div>
+    </article>
+
+    <!-- Related articles -->
+    <?php if (!empty($related)): ?>
+        <section class="section section--muted related-articles">
+            <div class="container">
+                <div class="section-header">
+                    <div>
+                        <h2 class="section-title">More Detroit Brunch Stories</h2>
+                        <p class="section-subtitle">Keep reading from the DetroitBrunch.com team.</p>
+                    </div>
+                </div>
+
+                <div class="article-grid">
+                    <?php foreach ($related as $r): ?>
+                        <article class="article-card card card--hover">
+                            <?php if (!empty($r['featured_image_path'])): ?>
+                                <a
+                                    class="article-card__image"
+                                    href="<?= e($articleUrl((string) $r['slug'])) ?>"
+                                    aria-label="<?= e('Read ' . $r['title']) ?>"
+                                    style="background-image:url('<?= e($r['featured_image_path']) ?>');"
+                                ></a>
+                            <?php endif; ?>
+
+                            <div class="article-card__body">
+                                <?php if (!empty($r['category_name'])): ?>
+                                    <span class="badge badge--accent article-card__category">
+                                        <?= e($r['category_name']) ?>
+                                    </span>
+                                <?php endif; ?>
+
+                                <h3 class="article-card__title">
+                                    <a href="<?= e($articleUrl((string) $r['slug'])) ?>">
+                                        <?= e($r['title']) ?>
+                                    </a>
+                                </h3>
+
+                                <?php if (!empty($r['excerpt'])): ?>
+                                    <p class="article-card__excerpt"><?= e($r['excerpt']) ?></p>
+                                <?php endif; ?>
+
+                                <a
+                                    class="btn btn--outline article-card__read-more"
+                                    href="<?= e($articleUrl((string) $r['slug'])) ?>"
+                                >
+                                    Read More
+                                    <i class="fas fa-arrow-right-long" aria-hidden="true"></i>
+                                </a>
+                            </div>
+                        </article>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+        </section>
+    <?php endif; ?>
+</main>
+
+<script src="<?= e(asset_url('assets/js/article-share.js')) ?>" defer></script>
+
+<?php
+require APP_ROOT . '/views/partials/footer.php';

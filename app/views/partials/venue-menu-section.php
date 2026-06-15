@@ -53,6 +53,13 @@ $menuStatusClass = [
 // filter is active. "does_not_contain" is deliberately excluded from the
 // summary — it would flood the cards with up to 9 badges per item.
 $riskStatuses = ['contains', 'may_contain', 'cross_contact_risk', 'unknown'];
+
+// Count the total number of menu items currently shown (after filtering) so
+// we can surface a clear "N menu items match this filter" feedback message.
+$totalItemsShown = 0;
+foreach ($menuCategories as $category) {
+    $totalItemsShown += count($category['items'] ?? []);
+}
 ?>
 <section id="venue-menu-section" class="venue-profile-panel menu-filter-panel">
 
@@ -91,13 +98,51 @@ $riskStatuses = ['contains', 'may_contain', 'cross_contact_risk', 'unknown'];
         </noscript>
     </form>
 
-    <?php if ($selectedAllergen !== ''): ?>
-        <p class="active-allergen-note">
-            Showing items marked <strong>does not contain: <?= e($selectedAllergenName) ?></strong>
-            <span class="active-allergen-note__sep" aria-hidden="true">&middot;</span>
-            <a href="<?= e(asset_url('venue.php')) ?>?slug=<?= e($venue['slug']) ?>">Clear filter</a>
-        </p>
-    <?php endif; ?>
+    <!-- Active filter status: clearly tells the user what is filtered and how
+         many items match. Shown both when a filter is active (prominent
+         teal/yellow callout) and when none is active (neutral summary). -->
+    <div
+        class="menu-filter-status <?= $selectedAllergen !== '' ? 'menu-filter-status--active' : 'menu-filter-status--default' ?>"
+        role="status"
+        aria-live="polite"
+    >
+        <?php if ($selectedAllergen !== ''): ?>
+            <div class="menu-filter-status__row">
+                <span class="menu-filter-status__icon" aria-hidden="true">
+                    <i class="fas fa-circle-check"></i>
+                </span>
+                <span class="menu-filter-status__text">
+                    Filtering by: <strong><?= e($selectedAllergenName) ?></strong>
+                    &mdash; showing only items marked &lsquo;does not contain.&rsquo;
+                </span>
+            </div>
+            <div class="menu-filter-status__row menu-filter-status__row--meta">
+                <span class="menu-filter-status__count">
+                    <?php if ($totalItemsShown > 0): ?>
+                        <?= $totalItemsShown ?> menu <?= $totalItemsShown === 1 ? 'item' : 'items' ?> <?= $totalItemsShown === 1 ? 'matches' : 'match' ?> this filter.
+                    <?php else: ?>
+                        No menu items match this filter.
+                    <?php endif; ?>
+                </span>
+                <a class="menu-filter-status__clear" href="<?= e(asset_url('venue.php')) ?>?slug=<?= e($venue['slug']) ?>">
+                    <i class="fas fa-xmark" aria-hidden="true"></i>
+                    Clear filter
+                </a>
+            </div>
+        <?php else: ?>
+            <div class="menu-filter-status__row">
+                <span class="menu-filter-status__icon" aria-hidden="true">
+                    <i class="fas fa-list"></i>
+                </span>
+                <span class="menu-filter-status__text">
+                    Showing all published menu items
+                    <?php if ($totalItemsShown > 0): ?>
+                        (<?= $totalItemsShown ?> <?= $totalItemsShown === 1 ? 'item' : 'items' ?>)
+                    <?php endif; ?>.
+                </span>
+            </div>
+        <?php endif; ?>
+    </div>
 
     <?php if ($menuCategories === []): ?>
         <div class="menu-empty-state">
