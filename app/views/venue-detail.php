@@ -11,18 +11,14 @@ declare(strict_types=1);
  *   - Wide centered container (~1200px)
  *   - Top grid: large hero card (left) + Contact & Location card (right)
  *   - Quick info strip directly under the top grid
- *   - Main two-column area with a LINEAR left column:
- *       1. About
- *       2. Interior Gallery
- *       3. Recent Event Galleries
- *       4. Menu & Allergy Filtering
- *       5. What to Know
+ *   - Main two-column area with a TABBED left column:
+ *       Overview (About + What to Know), Photos (Interior + Event Galleries),
+ *       Menu (Allergy Filtering), Events (placeholder)
  *     and a narrower sidebar (Quick Facts, Upcoming Events, Ad placeholder)
  *   - On mobile everything stacks into a single readable column.
  *
- * Interior Gallery and Recent Event Galleries are intentionally placed high
- * in the main content flow to match the mockup. Both are placeholder-only
- * (no DB queries, no schema changes, no real gallery feature).
+ * Tab behavior is progressive: without JS all panels are visible; with JS
+ * only the active panel shows (see public/assets/js/venue-tabs.js).
  *
  * @var array|null $venue Single venue row from Venue::findBySlug().
  */
@@ -103,7 +99,7 @@ $galleryImages = [
 // Default large interior image when the venue has no main_image_path
 // (same Unsplash photo used for The Garden Rooftop on the home page slider).
 $defaultInteriorImage = 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=1074&q=80';
-// Image for the recent event gallery card (same photo used by the home
+// Image for the recent event gallery cards (same photo used by the home
 // page gallery cards for Sunday Jazz Brunch / The Grand Brunch House).
 $eventGalleryImage = 'https://images.unsplash.com/photo-1551218808-94e220e084d2?auto=format&fit=crop&w=1074&q=80';
 
@@ -244,143 +240,220 @@ require APP_ROOT . '/views/partials/header.php';
                 </div>
             </div>
 
-            <!-- D & E. Main content + sidebar -->
+            <!-- D & E. Main content (tabbed) + sidebar -->
             <div class="venue-profile-layout">
 
-                <!-- D. Main content column (linear flow, no tabs) -->
+                <!-- D. Main content column — now using a tab component -->
                 <div class="venue-profile-main">
+                    <div class="venue-tabs" data-venue-tabs>
 
-                    <!-- 1. About -->
-                    <article class="venue-profile-panel" id="about">
-                        <h2 class="venue-profile-panel__title">About</h2>
-                        <?php if (!empty($venue['description'])): ?>
-                            <p class="venue-profile-about__text"><?= e($venue['description']) ?></p>
-                        <?php else: ?>
-                            <p class="venue-profile-about__text venue-profile-about__text--muted">
-                                No description has been added for this venue yet.
-                            </p>
-                        <?php endif; ?>
-                    </article>
-
-                    <!-- 2. Interior Gallery (placeholder-only, moved high in the flow) -->
-                    <article class="venue-profile-panel" id="interior-gallery">
-                        <h2 class="venue-profile-panel__title">Interior Gallery</h2>
-                        <div class="venue-gallery-grid">
-                            <img
-                                class="venue-gallery-grid__large"
-                                src="<?= e($hasImage ? $imageUrl : $defaultInteriorImage) ?>"
-                                alt="Interior preview of <?= e($venue['name']) ?>"
-                                loading="lazy"
-                            >
-                            <img
-                                class="venue-gallery-grid__small"
-                                src="<?= e($galleryImages[0]) ?>"
-                                alt="Brunch atmosphere preview"
-                                loading="lazy"
-                            >
-                            <img
-                                class="venue-gallery-grid__small"
-                                src="<?= e($galleryImages[1]) ?>"
-                                alt="Brunch dining preview"
-                                loading="lazy"
-                            >
-                            <img
-                                class="venue-gallery-grid__small"
-                                src="<?= e($galleryImages[2]) ?>"
-                                alt="Brunch dishes preview"
-                                loading="lazy"
-                            >
-                            <img
-                                class="venue-gallery-grid__small"
-                                src="<?= e($galleryImages[3]) ?>"
-                                alt="Brunch pastry preview"
-                                loading="lazy"
-                            >
+                        <!-- Tab navigation -->
+                        <div class="venue-tabs__nav" role="tablist" aria-label="<?= e($venue['name']) ?> details">
+                            <button class="venue-tabs__button" type="button" role="tab"
+                                    id="venue-tab-overview"
+                                    data-venue-tab="overview"
+                                    aria-selected="false"
+                                    aria-controls="venue-tabpanel-overview"
+                                    tabindex="-1">
+                                <i class="fas fa-circle-info" aria-hidden="true"></i>
+                                <span>Overview</span>
+                            </button>
+                            <button class="venue-tabs__button" type="button" role="tab"
+                                    id="venue-tab-photos"
+                                    data-venue-tab="photos"
+                                    aria-selected="false"
+                                    aria-controls="venue-tabpanel-photos"
+                                    tabindex="-1">
+                                <i class="fas fa-images" aria-hidden="true"></i>
+                                <span>Photos</span>
+                            </button>
+                            <button class="venue-tabs__button" type="button" role="tab"
+                                    id="venue-tab-menu"
+                                    data-venue-tab="menu"
+                                    aria-selected="false"
+                                    aria-controls="venue-tabpanel-menu"
+                                    tabindex="-1">
+                                <i class="fas fa-utensils" aria-hidden="true"></i>
+                                <span>Menu</span>
+                            </button>
+                            <button class="venue-tabs__button" type="button" role="tab"
+                                    id="venue-tab-events"
+                                    data-venue-tab="events"
+                                    aria-selected="false"
+                                    aria-controls="venue-tabpanel-events"
+                                    tabindex="-1">
+                                <i class="fas fa-calendar-days" aria-hidden="true"></i>
+                                <span>Events</span>
+                            </button>
                         </div>
-                        <p class="venue-profile-gallery__note">
-                            <i class="fas fa-circle-info" aria-hidden="true"></i>
-                            Interior photos will be managed from the admin area in a later phase.
-                        </p>
-                    </article>
 
-                    <!-- 3. Recent Event Galleries (placeholder-only, moved high) -->
-                    <article class="venue-profile-panel" id="event-galleries">
-                        <h2 class="venue-profile-panel__title">Recent Event Galleries</h2>
-                        <div class="venue-event-gallery-list">
-                            <article class="venue-event-gallery-card">
-                                <img
-                                    class="venue-event-gallery-card__image"
-                                    src="<?= e($eventGalleryImage) ?>"
-                                    alt="Sunday Brunch Pop-Up preview"
-                                    loading="lazy"
-                                >
-                                <div class="venue-event-gallery-card__body">
-                                    <p class="venue-event-gallery-card__date">
-                                        <i class="fas fa-calendar" aria-hidden="true"></i>
-                                        Coming soon
+                        <!-- Panel 1: Overview (About + What to Know) -->
+                        <div class="venue-tabs__panel" role="tabpanel"
+                             id="venue-tabpanel-overview"
+                             aria-labelledby="venue-tab-overview"
+                             data-venue-tab-panel="overview">
+
+                            <article class="venue-profile-panel">
+                                <h2 class="venue-profile-panel__title">About</h2>
+                                <?php if (!empty($venue['description'])): ?>
+                                    <p class="venue-profile-about__text"><?= e($venue['description']) ?></p>
+                                <?php else: ?>
+                                    <p class="venue-profile-about__text venue-profile-about__text--muted">
+                                        No description has been added for this venue yet.
                                     </p>
-                                    <h3 class="venue-event-gallery-card__title">Sunday Brunch Pop-Up</h3>
-                                    <p class="venue-event-gallery-card__text">
-                                        Photos from special brunch events and pop-ups will appear here
-                                        once the gallery feature launches.
-                                    </p>
-                                    <span class="venue-event-gallery-card__action" aria-disabled="true">
-                                        <i class="fas fa-images" aria-hidden="true"></i>
-                                        View Gallery Coming Soon
-                                    </span>
-                                </div>
+                                <?php endif; ?>
                             </article>
 
-                            <article class="venue-event-gallery-card">
-                                <img
-                                    class="venue-event-gallery-card__image"
-                                    src="<?= e($galleryImages[1]) ?>"
-                                    alt="Seasonal Brunch Tasting preview"
-                                    loading="lazy"
-                                >
-                                <div class="venue-event-gallery-card__body">
-                                    <p class="venue-event-gallery-card__date">
-                                        <i class="fas fa-calendar" aria-hidden="true"></i>
-                                        Coming soon
-                                    </p>
-                                    <h3 class="venue-event-gallery-card__title">Seasonal Brunch Tasting</h3>
-                                    <p class="venue-event-gallery-card__text">
-                                        Seasonal brunch tasting events will be featured here in a future
-                                        phase of DetroitBrunch.com.
-                                    </p>
-                                    <span class="venue-event-gallery-card__action" aria-disabled="true">
-                                        <i class="fas fa-images" aria-hidden="true"></i>
-                                        View Gallery Coming Soon
-                                    </span>
+                            <article class="venue-profile-panel venue-profile-placeholder">
+                                <h2 class="venue-profile-panel__title">What to Know</h2>
+                                <p class="venue-profile-placeholder__text">
+                                    <?php if ($hasHours): ?>
+                                        Brunch is served <?= e($venue['brunch_hours_note']) ?>.
+                                    <?php endif; ?>
+                                    <?php if ($hasNeighborhood): ?>
+                                        Located in the <?= e($venue['neighborhood_name']) ?> neighborhood.
+                                    <?php endif; ?>
+                                    Details are curated by DetroitBrunch.com &mdash; please confirm hours and
+                                    menus directly with the venue before visiting.
+                                </p>
+                            </article>
+                        </div>
+
+                        <!-- Panel 2: Photos (Interior Gallery + Recent Event Galleries) -->
+                        <div class="venue-tabs__panel" role="tabpanel"
+                             id="venue-tabpanel-photos"
+                             aria-labelledby="venue-tab-photos"
+                             data-venue-tab-panel="photos">
+
+                            <article class="venue-profile-panel">
+                                <h2 class="venue-profile-panel__title">Interior Gallery</h2>
+                                <div class="venue-gallery-grid">
+                                    <img
+                                        class="venue-gallery-grid__large"
+                                        src="<?= e($hasImage ? $imageUrl : $defaultInteriorImage) ?>"
+                                        alt="Interior preview of <?= e($venue['name']) ?>"
+                                        loading="lazy"
+                                    >
+                                    <img
+                                        class="venue-gallery-grid__small"
+                                        src="<?= e($galleryImages[0]) ?>"
+                                        alt="Brunch atmosphere preview"
+                                        loading="lazy"
+                                    >
+                                    <img
+                                        class="venue-gallery-grid__small"
+                                        src="<?= e($galleryImages[1]) ?>"
+                                        alt="Brunch dining preview"
+                                        loading="lazy"
+                                    >
+                                    <img
+                                        class="venue-gallery-grid__small"
+                                        src="<?= e($galleryImages[2]) ?>"
+                                        alt="Brunch dishes preview"
+                                        loading="lazy"
+                                    >
+                                    <img
+                                        class="venue-gallery-grid__small"
+                                        src="<?= e($galleryImages[3]) ?>"
+                                        alt="Brunch pastry preview"
+                                        loading="lazy"
+                                    >
+                                </div>
+                                <p class="venue-profile-gallery__note">
+                                    <i class="fas fa-circle-info" aria-hidden="true"></i>
+                                    Interior photos will be managed from the admin area in a later phase.
+                                </p>
+                            </article>
+
+                            <article class="venue-profile-panel">
+                                <h2 class="venue-profile-panel__title">Recent Event Galleries</h2>
+                                <div class="venue-event-gallery-list">
+                                    <article class="venue-event-gallery-card">
+                                        <img
+                                            class="venue-event-gallery-card__image"
+                                            src="<?= e($eventGalleryImage) ?>"
+                                            alt="Sunday Brunch Pop-Up preview"
+                                            loading="lazy"
+                                        >
+                                        <div class="venue-event-gallery-card__body">
+                                            <p class="venue-event-gallery-card__date">
+                                                <i class="fas fa-calendar" aria-hidden="true"></i>
+                                                Coming soon
+                                            </p>
+                                            <h3 class="venue-event-gallery-card__title">Sunday Brunch Pop-Up</h3>
+                                            <p class="venue-event-gallery-card__text">
+                                                Photos from special brunch events and pop-ups will appear here
+                                                once the gallery feature launches.
+                                            </p>
+                                            <span class="venue-event-gallery-card__action" aria-disabled="true">
+                                                <i class="fas fa-images" aria-hidden="true"></i>
+                                                View Gallery Coming Soon
+                                            </span>
+                                        </div>
+                                    </article>
+
+                                    <article class="venue-event-gallery-card">
+                                        <img
+                                            class="venue-event-gallery-card__image"
+                                            src="<?= e($galleryImages[1]) ?>"
+                                            alt="Seasonal Brunch Tasting preview"
+                                            loading="lazy"
+                                        >
+                                        <div class="venue-event-gallery-card__body">
+                                            <p class="venue-event-gallery-card__date">
+                                                <i class="fas fa-calendar" aria-hidden="true"></i>
+                                                Coming soon
+                                            </p>
+                                            <h3 class="venue-event-gallery-card__title">Seasonal Brunch Tasting</h3>
+                                            <p class="venue-event-gallery-card__text">
+                                                Seasonal brunch tasting events will be featured here in a future
+                                                phase of DetroitBrunch.com.
+                                            </p>
+                                            <span class="venue-event-gallery-card__action" aria-disabled="true">
+                                                <i class="fas fa-images" aria-hidden="true"></i>
+                                                View Gallery Coming Soon
+                                            </span>
+                                        </div>
+                                    </article>
                                 </div>
                             </article>
                         </div>
-                    </article>
 
-                    <!-- 4. Menu & Allergy Filtering (AJAX-enhanced partial) -->
-                    <?php
-                    // Menu & Allergy Filtering section is rendered from a shared
-                    // partial so the same markup can be served as an AJAX HTML
-                    // fragment by public/menu-fragment.php.
-                    // The #venue-menu-section inside this panel is the AJAX
-                    // replacement target for venue-menu.js — it must stay here.
-                    require APP_ROOT . '/views/partials/venue-menu-section.php';
-                    ?>
+                        <!-- Panel 3: Menu (Allergy Filtering) -->
+                        <div class="venue-tabs__panel" role="tabpanel"
+                             id="venue-tabpanel-menu"
+                             aria-labelledby="venue-tab-menu"
+                             data-venue-tab-panel="menu">
 
-                    <!-- 5. What to Know (placeholder) -->
-                    <article class="venue-profile-panel venue-profile-placeholder" id="what-to-know">
-                        <h2 class="venue-profile-panel__title">What to Know</h2>
-                        <p class="venue-profile-placeholder__text">
-                            <?php if ($hasHours): ?>
-                                Brunch is served <?= e($venue['brunch_hours_note']) ?>.
-                            <?php endif; ?>
-                            <?php if ($hasNeighborhood): ?>
-                                Located in the <?= e($venue['neighborhood_name']) ?> neighborhood.
-                            <?php endif; ?>
-                            Details are curated by DetroitBrunch.com &mdash; please confirm hours and
-                            menus directly with the venue before visiting.
-                        </p>
-                    </article>
+                            <?php
+                            // Menu & Allergy Filtering section is rendered from a shared
+                            // partial so the same markup can be served as an AJAX HTML
+                            // fragment by public/menu-fragment.php.
+                            // The #venue-menu-section inside this panel is the AJAX
+                            // replacement target for venue-menu.js — it must stay here.
+                            require APP_ROOT . '/views/partials/venue-menu-section.php';
+                            ?>
+                        </div>
+
+                        <!-- Panel 4: Events (placeholder) -->
+                        <div class="venue-tabs__panel" role="tabpanel"
+                             id="venue-tabpanel-events"
+                             aria-labelledby="venue-tab-events"
+                             data-venue-tab-panel="events">
+
+                            <article class="venue-profile-panel venue-profile-panel--note">
+                                <h2 class="venue-profile-panel__title">Upcoming Events</h2>
+                                <div class="venue-profile-events-empty">
+                                    <i class="fas fa-calendar-xmark" aria-hidden="true"></i>
+                                    <p class="venue-profile-note__text">No upcoming events listed yet.</p>
+                                    <p class="venue-profile-note__text venue-profile-note__text--muted">
+                                        Check back soon for brunch events at this location.
+                                    </p>
+                                </div>
+                            </article>
+                        </div>
+
+                    </div>
                 </div>
 
                 <!-- E. Sidebar column -->
@@ -440,10 +513,10 @@ require APP_ROOT . '/views/partials/header.php';
 <?php
 require APP_ROOT . '/views/partials/footer.php';
 
-// Progressive enhancement script (this page only).
-// venue-menu.js adds AJAX allergen filtering inside the Menu panel and works
-// independently. The tab component (venue-tabs.js) is intentionally not
-// referenced here because the main column now uses a linear flow with the
-// Interior Gallery and Recent Event Galleries placed high in the markup.
+// Progressive enhancement scripts (this page only).
+// venue-tabs.js adds the tab component to the main content area.
+// venue-menu.js adds AJAX allergen filtering inside the Menu tab — both
+// work independently and degrade gracefully without JS.
 ?>
+<script src="<?= e(asset_url('assets/js/venue-tabs.js')) ?>"></script>
 <script src="<?= e(asset_url('assets/js/venue-menu.js')) ?>"></script>
