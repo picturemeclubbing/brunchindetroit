@@ -3,14 +3,17 @@
 declare(strict_types=1);
 
 /**
- * Read-only Gallery model (Phase 4B).
+ * Gallery model (Phase 4B public reads + Phase 5A admin CRUD).
  *
  * Provides published galleries for the public Gallery index. Galleries link
  * directly to an external gallery_url (SmugMug, etc.); this model does NOT
  * load local images or query gallery_images.
  *
- * Uses PDO through db() and prepared statements. All queries LEFT JOIN
- * venues and neighborhoods so a gallery with no venue still renders.
+ * Phase 5A adds admin read/write methods (all/find/slugExists/create/update/
+ * setPublished/setFeatured) without changing the public methods.
+ *
+ * Uses PDO through db() and prepared statements. Public queries LEFT JOIN
+ * venues and neighborhoods; admin queries LEFT JOIN venues for the name.
  */
 final class Gallery
 {
@@ -173,5 +176,212 @@ final class Gallery
         }
 
         return $years;
+    }
+
+    // --------------------------------------------------------------------------
+    // Phase 5A — admin CRUD methods (do not affect public reads above).
+    // --------------------------------------------------------------------------
+
+    /**
+     * All galleries for the admin list (including unpublished), with venue
+     * name. Ordered newest-first so admins see recent work at the top.
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    public static function all(): array
+    {
+        $pdo = db();
+
+        $sql = "
+            SELECT
+                g.id,
+                g.slug,
+                g.title,
+                g.venue_id,
+                g.event_date,
+                g.location_label,
+                g.description,
+                g.cover_image_path,
+                g.gallery_url,
+                g.is_published,
+                g.is_featured,
+                g.created_at,
+                g.updated_at,
+                v.name AS venue_name
+            FROM galleries g
+            LEFT JOIN venues v ON v.id = g.venue_id
+            ORDER BY g.created_at DESC
+        ";
+
+        return $pdo->query($sql)->fetchAll();
+    }
+
+    /**
+     * Single gallery by primary key (including unpublished), with venue name.
+     *
+     * @return array<string, mixed>|null
+     */
+    public static function find(int $id): ?array
+    {
+        $pdo = db();
+
+        $sql = "
+            SELECT
+                g.id,
+                g.slug,
+                g.title,
+                g.venue_id,
+                g.event_date,
+                g.location_label,
+                g.description,
+                g.cover_image_path,
+                g.gallery_url,
+                g.is_published,
+                g.is_featured,
+                g.created_at,
+                g.updated_at,
+                v.name AS venue_name
+            FROM galleries g
+            LEFT JOIN venues v ON v.id = g.venue_id
+            WHERE g.id = :id
+            LIMIT 1
+        ";
+
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute([':id' => $id]);
+
+        $row = $stmt->fetch();
+
+        return $row !== false ? $row : null;
+    }
+
+    /**
+     * Whether a slug is already in use by another gallery.
+     *
+     * Pass the current record id (when editing) as $ignoreId so the gallery
+     * being saved is excluded from the uniqueness check.
+     */
+    public static function slugExists(string $slug, ?int $ignoreId = null): bool
+    {
+        $pdo = db();
+
+        $sql = 'SELECT COUNT(*) FROM galleries WHERE slug = :slug';
+        $params = [':slug' => $slug];
+
+        if ($ignoreId !== null && $ignoreId > 0) {
+            $sql .= ' AND id <> :id';
+            $params[':id'] = $ignoreId;
+        }
+
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute($params);
+
+        return (int) $stmt->fetchColumn() > 0;
+    }
+
+    /**
+     * Insert a gallery row.
+     *
+     * Callers should pass empty optional fields as null (not ''). Booleans may
+     * be passed as bool/int; they are normalized to 0/1 here.
+     *
+     * @param array<string, mixed> $data
+     * @return int New gallery id.
+     */
+    public static function create(array $data): int
+    {
+        $pdo = db();
+
+        $stmt = $pdo->prepare(
+            'INSERT INTO galleries
+                (slug, title, venue_id, event_date, location_label, description,
+                 cover_image_path, gallery_url, is_published, is_featured)
+             VALUES
+                (:slug, :title, :venue_id, :event_date, :location_label, :description,
+                 :cover_image_path, :gallery_url, :is_published, :is_featured)'
+        );
+
+        $stmt->execute([
+            ':slug' => $data['slug'],
+            ':title' => $data['title'],
+            ':venue_id' => $data['venue_id'] ?? null,
+            ':event_date' => $data['event_date'] ?? null,
+            ':location_label' => $data['location_label'] ?? null,
+            ':description' => $data['description'] ?? null,
+            ':cover_image_path' => $data['cover_image_path'] ?? null,
+            ':gallery_url' => $data['gallery_url'] ?? null,
+            ':is_published' => !empty($data['is_published']) ? 1 : 0,
+            ':is_featured' => !empty($data['is_featured']) ? 1 : 0,
+        ]);
+
+        return (int) $pdo->lastInsertId();
+    }
+
+    /**
+     * Update an existing gallery row. updated_at is refreshed automatically by
+     * the table's ON UPDATE CURRENT_TIMESTAMP.
+     *
+     * @param array<string, mixed> $data
+     */
+    public static function update(int $id, array $data): void
+    {
+        $pdo = db();
+
+        $stmt = $pdo->prepare(
+            'UPDATE galleries SET
+                slug = :slug,
+                title = :title,
+                venue_id = :venue_id,
+                event_date = :event_date,
+                location_label = :location_label,
+                description = :description,
+                cover_image_path = :cover_image_path,
+                gallery_url = :gallery_url,
+                is_published = :is_published,
+                is_featured = :is_featured
+             WHERE id = :id'
+        );
+
+        $stmt->execute([
+            ':id' => $id,
+            ':slug' => $data['slug'],
+            ':title' => $data['title'],
+            ':venue_id' => $data['venue_id'] ?? null,
+            ':event_date' => $data['event_date'] ?? null,
+            ':location_label' => $data['location_label'] ?? null,
+            ':description' => $data['description'] ?? null,
+            ':cover_image_path' => $data['cover_image_path'] ?? null,
+            ':gallery_url' => $data['gallery_url'] ?? null,
+            ':is_published' => !empty($data['is_published']) ? 1 : 0,
+            ':is_featured' => !empty($data['is_featured']) ? 1 : 0,
+        ]);
+    }
+
+    /**
+     * Toggle the published flag for a gallery.
+     */
+    public static function setPublished(int $id, bool $published): void
+    {
+        $pdo = db();
+
+        $stmt = $pdo->prepare('UPDATE galleries SET is_published = :value WHERE id = :id');
+        $stmt->execute([
+            ':id' => $id,
+            ':value' => $published ? 1 : 0,
+        ]);
+    }
+
+    /**
+     * Toggle the featured flag for a gallery.
+     */
+    public static function setFeatured(int $id, bool $featured): void
+    {
+        $pdo = db();
+
+        $stmt = $pdo->prepare('UPDATE galleries SET is_featured = :value WHERE id = :id');
+        $stmt->execute([
+            ':id' => $id,
+            ':value' => $featured ? 1 : 0,
+        ]);
     }
 }

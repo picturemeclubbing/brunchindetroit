@@ -86,4 +86,23 @@ final class Venue
 
         return $row !== false ? $row : null;
     }
+
+    /**
+     * All venues (including unpublished) as id/name pairs, for admin
+     * dropdowns. Ordered alphabetically by name.
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    public static function allForSelect(): array
+    {
+        $pdo = db();
+
+        $sql = '
+            SELECT id, name
+            FROM venues
+            ORDER BY name ASC
+        ';
+
+        return $pdo->query($sql)->fetchAll();
+    }
 }

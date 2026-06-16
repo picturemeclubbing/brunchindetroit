@@ -4583,3 +4583,246 @@ a:hover {
 .gallery-empty-state .btn {
   margin-top: 0.75rem;
 }
+
+/* Phase 5A: Admin gallery management */
+.admin-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+    flex-wrap: wrap;
+}
+
+.admin-table__wrap {
+    width: 100%;
+    overflow-x: auto;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-sm);
+}
+
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 760px;
+}
+
+.admin-table th,
+.admin-table td {
+    padding: 0.9rem 1rem;
+    border-bottom: 1px solid var(--border);
+    text-align: left;
+    vertical-align: top;
+}
+
+.admin-table th {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+    background: rgba(44, 122, 123, 0.06);
+    font-weight: 800;
+}
+
+.admin-table tr:last-child td {
+    border-bottom: 0;
+}
+
+.admin-table tbody tr:hover {
+    background: rgba(44, 122, 123, 0.035);
+}
+
+.admin-table__title-cell {
+    font-weight: 800;
+    color: var(--primary-dark);
+    min-width: 14rem;
+}
+
+.admin-table__actions-col {
+    width: 15rem;
+}
+
+.admin-table__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+    align-items: center;
+}
+
+.admin-table__actions form {
+    display: inline-flex;
+    margin: 0;
+}
+
+.admin-table__badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+}
+
+.admin-table__muted {
+    display: block;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    line-height: 1.35;
+}
+
+.admin-form {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-sm);
+    padding: 1.5rem;
+}
+
+.admin-form__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem 1.25rem;
+}
+
+.admin-form__field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.admin-form__field--full {
+    grid-column: 1 / -1;
+}
+
+.admin-form__label {
+    font-size: 0.85rem;
+    font-weight: 800;
+    color: var(--primary-dark);
+}
+
+.admin-form__req {
+    color: #c2410c;
+}
+
+.admin-form__hint {
+    color: var(--text-muted);
+    font-size: 0.82rem;
+    line-height: 1.35;
+}
+
+.admin-form__error {
+    color: #b42318;
+    font-size: 0.82rem;
+    font-weight: 700;
+}
+
+.admin-form__actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.admin-checkbox {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.65rem;
+    padding: 0.85rem 1rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    background: rgba(44, 122, 123, 0.035);
+}
+
+.admin-checkbox input {
+    margin-top: 0.2rem;
+}
+
+.alert--success {
+    border-color: rgba(44, 122, 123, 0.25);
+    background: rgba(44, 122, 123, 0.08);
+    color: var(--primary-dark);
+}
+
+.badge--success {
+    background: rgba(44, 122, 123, 0.12);
+    color: var(--primary-dark);
+    border: 1px solid rgba(44, 122, 123, 0.22);
+}
+
+.badge--draft,
+.badge--muted {
+    background: rgba(100, 116, 139, 0.12);
+    color: #475569;
+    border: 1px solid rgba(100, 116, 139, 0.22);
+}
+
+.btn--sm {
+    padding: 0.45rem 0.7rem;
+    font-size: 0.78rem;
+    line-height: 1;
+    border-radius: 0.65rem;
+}
+
+.btn--outline {
+    background: var(--white);
+    color: var(--primary-dark);
+    border: 1px solid rgba(44, 122, 123, 0.28);
+}
+
+.btn--outline:hover {
+    background: rgba(44, 122, 123, 0.08);
+    color: var(--primary-dark);
+    border-color: var(--primary);
+}
+
+@media (max-width: 768px) {
+    .admin-toolbar {
+        align-items: stretch;
+    }
+
+    .admin-toolbar .btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .admin-form {
+        padding: 1.1rem;
+    }
+
+    .admin-form__grid {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-form__actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .admin-form__actions .btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .admin-table {
+        min-width: 680px;
+        font-size: 0.9rem;
+    }
+
+    .admin-table th,
+    .admin-table td {
+        padding: 0.7rem;
+    }
+}
+
+/* Phase 5A: Admin page header spacing refinement */
+.admin-page-header > .btn {
+    margin-top: 0.65rem;
+}
+
+/* Phase 5A: Gallery featured badge spacing */
+.gallery-card__badge-featured {
+    top: 0.85rem;
+    left: 0.85rem;
+    padding: 0.35rem 0.65rem;
+    border-radius: 999px;
+}

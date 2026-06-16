@@ -12,7 +12,7 @@ $activeNav = $activeNav ?? 'dashboard';
             <span class="admin-sidebar__link admin-sidebar__link--disabled" title="Available in a later phase">Venues</span>
             <span class="admin-sidebar__link admin-sidebar__link--disabled" title="Available in a later phase">Menu items</span>
             <span class="admin-sidebar__link admin-sidebar__link--disabled" title="Available in a later phase">Blog</span>
-            <span class="admin-sidebar__link admin-sidebar__link--disabled" title="Available in a later phase">Galleries</span>
+            <a href="<?= e(admin_url('galleries.php')) ?>" class="admin-sidebar__link<?= $activeNav === 'galleries' ? ' admin-sidebar__link--active' : '' ?>">Galleries</a>
             <span class="admin-sidebar__link admin-sidebar__link--disabled" title="Available in a later phase">Settings</span>
         </nav>
     </aside>
