@@ -4,8 +4,9 @@ declare(strict_types=1);
 /**
  * Blog detail view (Phase 4A).
  *
- * Renders one published blog post with breadcrumb, hero image, body content,
- * share buttons (Facebook, Twitter, Copy Link), and a related-posts section.
+ * Renders one published blog post with breadcrumb, contained article hero card,
+ * body content, share buttons (Facebook, Twitter, Copy Link), and a
+ * related-posts section with thumbnails.
  *
  * @var array<string, mixed>  $post
  * @var array<int, array<string, mixed>> $related
@@ -37,70 +38,70 @@ $readingMinutes = max(1, (int) round(str_word_count(strip_tags((string) ($post['
 ?>
 
 <main>
-    <!-- Breadcrumb -->
-    <section class="section section--tight section--muted">
-        <div class="container">
-            <nav class="breadcrumb" aria-label="Breadcrumb">
-                <a class="breadcrumb__link" href="<?= e(asset_url('blog.php')) ?>">
-                    <i class="fas fa-arrow-left" aria-hidden="true"></i>
-                    News & Blogs
+    <!-- Breadcrumb (above the article layout) -->
+    <div class="container">
+        <nav class="breadcrumb" aria-label="Breadcrumb">
+            <a class="breadcrumb__link" href="<?= e(asset_url('blog.php')) ?>">
+                <i class="fas fa-arrow-left" aria-hidden="true"></i>
+                News & Blogs
+            </a>
+            <?php if (!empty($post['category_name'])): ?>
+                <span class="breadcrumb__sep" aria-hidden="true">›</span>
+                <a class="breadcrumb__link" href="<?= e(asset_url('blog.php?category=' . urlencode((string) $post['category_slug']))) ?>">
+                    <?= e($post['category_name']) ?>
                 </a>
-                <?php if (!empty($post['category_name'])): ?>
-                    <span class="breadcrumb__sep" aria-hidden="true">›</span>
-                    <a class="breadcrumb__link" href="<?= e(asset_url('blog.php?category=' . urlencode((string) $post['category_slug']))) ?>">
-                        <?= e($post['category_name']) ?>
-                    </a>
-                <?php endif; ?>
-            </nav>
-        </div>
-    </section>
+            <?php endif; ?>
+        </nav>
+    </div>
 
-    <!-- Article hero -->
-    <article class="article-detail">
-        <header class="article-detail__header">
-            <div class="container">
-                <?php if (!empty($post['category_name'])): ?>
-                    <p class="eyebrow eyebrow--accent"><?= e($post['category_name']) ?></p>
-                <?php endif; ?>
-
-                <h1 class="article-detail__title"><?= e($post['title']) ?></h1>
-
-                <p class="article-meta article-meta--large">
-                    <?php if (!empty($post['author_name'])): ?>
-                        <span class="article-meta__item">
-                            <i class="fas fa-user-pen" aria-hidden="true"></i>
-                            By <?= e($post['author_name']) ?>
-                        </span>
+    <div class="article-layout">
+        <div class="article-main">
+            <!-- Contained article hero card: title + meta + featured image together -->
+            <section class="article-hero-card">
+                <div class="article-hero-card__header">
+                    <?php if (!empty($post['category_name'])): ?>
+                        <span class="badge badge--accent"><?= e($post['category_name']) ?></span>
                     <?php endif; ?>
-                    <?php if ($publishedDate !== ''): ?>
-                        <span class="article-meta__item">
-                            <i class="fas fa-calendar-day" aria-hidden="true"></i>
-                            <?= e($publishedDate) ?>
-                        </span>
-                    <?php endif; ?>
-                    <span class="article-meta__item">
-                        <i class="fas fa-clock" aria-hidden="true"></i>
-                        <?= $readingMinutes ?> min read
-                    </span>
-                </p>
-            </div>
-        </header>
 
-        <?php if (!empty($post['featured_image_path'])): ?>
-            <div class="article-detail__hero-wrap">
-                <div class="container">
-                    <div
-                        class="article-detail__hero"
-                        style="background-image:url('<?= e($post['featured_image_path']) ?>');"
-                        role="img"
-                        aria-label="<?= e($post['title']) ?>"
-                    ></div>
+                    <h1 class="article-detail__title"><?= e($post['title']) ?></h1>
+
+                    <p class="article-meta article-meta--large">
+                        <?php if (!empty($post['author_name'])): ?>
+                            <span class="article-meta__item">
+                                <i class="fas fa-user-pen" aria-hidden="true"></i>
+                                By <?= e($post['author_name']) ?>
+                            </span>
+                        <?php endif; ?>
+                        <?php if ($publishedDate !== ''): ?>
+                            <span class="article-meta__item">
+                                <i class="fas fa-calendar-day" aria-hidden="true"></i>
+                                <?= e($publishedDate) ?>
+                            </span>
+                        <?php endif; ?>
+                        <span class="article-meta__item">
+                            <i class="fas fa-clock" aria-hidden="true"></i>
+                            <?= $readingMinutes ?> min read
+                        </span>
+                    </p>
                 </div>
-            </div>
-        <?php endif; ?>
 
-        <div class="container container--narrow">
-            <!-- Share bar -->
+                <?php if (!empty($post['featured_image_path'])): ?>
+                    <div class="article-hero-card__image">
+                        <img
+                            src="<?= e($post['featured_image_path']) ?>"
+                            alt="<?= e($post['title']) ?>"
+                            loading="lazy"
+                        >
+                    </div>
+                <?php else: ?>
+                    <div class="article-hero-card__image article-featured-image--placeholder">
+                        <i class="fas fa-image" aria-hidden="true"></i>
+                        <span>Featured image coming soon</span>
+                    </div>
+                <?php endif; ?>
+            </section>
+
+            <!-- Share bar (top) -->
             <div class="article-share" aria-label="Share this article">
                 <span class="article-share__label">Share</span>
                 <a
@@ -134,8 +135,11 @@ $readingMinutes = max(1, (int) round(str_word_count(strip_tags((string) ($post['
                 <p class="article-detail__lede"><?= e($post['excerpt']) ?></p>
             <?php endif; ?>
 
-            <div class="article-detail__body">
-                <?= $post['body'] /* trusted admin content, rendered raw */ ?>
+            <!-- Article body inside a polished white card -->
+            <div class="article-card-shell">
+                <div class="article-detail__body article-prose">
+                    <?= $post['body'] /* trusted admin content, rendered raw */ ?>
+                </div>
             </div>
 
             <!-- Footer share (repeated for long articles) -->
@@ -167,82 +171,139 @@ $readingMinutes = max(1, (int) round(str_word_count(strip_tags((string) ($post['
                     <span>Copy Link</span>
                 </button>
             </div>
-        </div>
-    </article>
 
-    <!-- Related articles -->
-    <?php if (!empty($related)): ?>
-        <section class="section section--muted">
-            <div class="container">
-                <div class="section-header">
-                    <div>
-                        <h2 class="section-title">Related Stories</h2>
-                        <p class="section-subtitle">More from the Detroit brunch world.</p>
+            <!-- Related articles (full cards in main column) -->
+            <?php if (!empty($related)): ?>
+                <section class="related-articles-section">
+                    <div class="section-header">
+                        <div>
+                            <h2 class="section-title">Related Stories</h2>
+                            <p class="section-subtitle">More from the Detroit brunch world.</p>
+                        </div>
+                        <a class="btn btn--outline" href="<?= e(asset_url('blog.php')) ?>">
+                            All Stories
+                        </a>
                     </div>
-                    <a class="btn btn--outline" href="<?= e(asset_url('blog.php')) ?>">
-                        All Stories
-                    </a>
-                </div>
 
-                <div class="article-grid">
-                    <?php foreach ($related as $rp): ?>
-                        <article class="article-card card card--hover">
-                            <?php if (!empty($rp['featured_image_path'])): ?>
-                                <a
-                                    class="article-card__image"
-                                    href="<?= e($articleUrl((string) $rp['slug'])) ?>"
-                                    aria-label="<?= e('Read ' . $rp['title']) ?>"
-                                    style="background-image:url('<?= e($rp['featured_image_path']) ?>');"
-                                ></a>
-                            <?php endif; ?>
-
-                            <div class="article-card__body">
-                                <?php if (!empty($rp['category_name'])): ?>
-                                    <span class="badge badge--accent article-card__category">
-                                        <?= e($rp['category_name']) ?>
-                                    </span>
-                                <?php endif; ?>
-
-                                <h3 class="article-card__title">
-                                    <a href="<?= e($articleUrl((string) $rp['slug'])) ?>">
-                                        <?= e($rp['title']) ?>
+                    <div class="article-grid article-grid--2col">
+                        <?php foreach ($related as $rp): ?>
+                            <article class="article-card card card--hover">
+                                <?php if (!empty($rp['featured_image_path'])): ?>
+                                    <a
+                                        class="article-card__image"
+                                        href="<?= e($articleUrl((string) $rp['slug'])) ?>"
+                                        aria-label="<?= e('Read ' . $rp['title']) ?>"
+                                        style="background-image:url('<?= e($rp['featured_image_path']) ?>');"
+                                    ></a>
+                                <?php else: ?>
+                                    <a
+                                        class="article-card__image article-card__image--placeholder"
+                                        href="<?= e($articleUrl((string) $rp['slug'])) ?>"
+                                        aria-label="<?= e('Read ' . $rp['title']) ?>"
+                                    >
+                                        <i class="fas fa-image" aria-hidden="true"></i>
                                     </a>
-                                </h3>
-
-                                <?php if (!empty($rp['excerpt'])): ?>
-                                    <p class="article-card__excerpt"><?= e($rp['excerpt']) ?></p>
                                 <?php endif; ?>
 
-                                <p class="article-meta">
-                                    <?php if (!empty($rp['author_name'])): ?>
-                                        <span class="article-meta__item">
-                                            <i class="fas fa-user-pen" aria-hidden="true"></i>
-                                            <?= e($rp['author_name']) ?>
+                                <div class="article-card__body">
+                                    <?php if (!empty($rp['category_name'])): ?>
+                                        <span class="badge badge--accent article-card__category">
+                                            <?= e($rp['category_name']) ?>
                                         </span>
                                     <?php endif; ?>
-                                    <?php $rpd = $formatDate($rp['published_at'] ?? null); ?>
-                                    <?php if ($rpd !== ''): ?>
-                                        <span class="article-meta__item">
-                                            <i class="fas fa-calendar-day" aria-hidden="true"></i>
-                                            <?= e($rpd) ?>
-                                        </span>
-                                    <?php endif; ?>
-                                </p>
 
+                                    <h3 class="article-card__title">
+                                        <a href="<?= e($articleUrl((string) $rp['slug'])) ?>">
+                                            <?= e($rp['title']) ?>
+                                        </a>
+                                    </h3>
+
+                                    <?php if (!empty($rp['excerpt'])): ?>
+                                        <p class="article-card__excerpt"><?= e($rp['excerpt']) ?></p>
+                                    <?php endif; ?>
+
+                                    <p class="article-meta">
+                                        <?php if (!empty($rp['author_name'])): ?>
+                                            <span class="article-meta__item">
+                                                <i class="fas fa-user-pen" aria-hidden="true"></i>
+                                                <?= e($rp['author_name']) ?>
+                                            </span>
+                                        <?php endif; ?>
+                                        <?php $rpd = $formatDate($rp['published_at'] ?? null); ?>
+                                        <?php if ($rpd !== ''): ?>
+                                            <span class="article-meta__item">
+                                                <i class="fas fa-calendar-day" aria-hidden="true"></i>
+                                                <?= e($rpd) ?>
+                                            </span>
+                                        <?php endif; ?>
+                                    </p>
+
+                                    <a
+                                        class="btn btn--outline article-card__read-more"
+                                        href="<?= e($articleUrl((string) $rp['slug'])) ?>"
+                                    >
+                                        Read More
+                                        <i class="fas fa-arrow-right-long" aria-hidden="true"></i>
+                                    </a>
+                                </div>
+                            </article>
+                        <?php endforeach; ?>
+                    </div>
+                </section>
+            <?php endif; ?>
+        </div><!-- /.article-main -->
+
+        <aside class="article-sidebar" aria-label="Article sidebar">
+            <!-- Advertisement -->
+            <div class="ad-placeholder article-ad-placeholder">
+                <span class="ad-placeholder__label">Advertisement</span>
+                <span class="ad-placeholder__size">300 x 250</span>
+            </div>
+
+            <!-- Explore Directory -->
+            <div class="article-sidebar-card">
+                <h2 class="article-sidebar-card__title">Explore Directory</h2>
+                <p class="article-sidebar-card__text">
+                    Discover Detroit brunch spots, venue profiles, and allergy-aware menu details.
+                </p>
+                <a class="btn btn--primary btn--block" href="<?= e(asset_url('directory.php')) ?>">
+                    <i class="fas fa-compass" aria-hidden="true"></i>
+                    Browse Directory
+                </a>
+            </div>
+
+            <!-- Related Stories (compact links with thumbnails) -->
+            <?php if (!empty($related)): ?>
+                <div class="article-sidebar-card">
+                    <h2 class="article-sidebar-card__title">Related Stories</h2>
+                    <ul class="related-story-list">
+                        <?php foreach ($related as $rp): ?>
+                            <li>
                                 <a
-                                    class="btn btn--outline article-card__read-more"
+                                    class="related-story-link"
                                     href="<?= e($articleUrl((string) $rp['slug'])) ?>"
                                 >
-                                    Read More
-                                    <i class="fas fa-arrow-right-long" aria-hidden="true"></i>
+                                    <?php if (!empty($rp['featured_image_path'])): ?>
+                                        <span
+                                            class="related-story-link__thumb"
+                                            style="background-image:url('<?= e($rp['featured_image_path']) ?>');"
+                                        ></span>
+                                    <?php else: ?>
+                                        <span class="related-story-link__thumb related-story-link__placeholder">
+                                            <i class="fas fa-image" aria-hidden="true"></i>
+                                        </span>
+                                    <?php endif; ?>
+                                    <span class="related-story-link__body">
+                                        <?= e($rp['title']) ?>
+                                    </span>
                                 </a>
-                            </div>
-                        </article>
-                    <?php endforeach; ?>
+                            </li>
+                        <?php endforeach; ?>
+                    </ul>
                 </div>
-            </div>
-        </section>
-    <?php endif; ?>
+            <?php endif; ?>
+        </aside>
+    </div><!-- /.article-layout -->
 </main>
 
 <?php

@@ -27,18 +27,32 @@ $formatDate = static function (?string $raw): string {
     $ts = strtotime($raw);
     return $ts !== false ? date('F j, Y', $ts) : '';
 };
+
+/**
+ * Blog hero background image.
+ * Prefer the featured post's image when available so the hero reflects real
+ * blog content; otherwise fall back to a known project Unsplash brunch image.
+ */
+$blogHeroImage = 'https://images.unsplash.com/photo-1535400845297-314126c8e0f4?auto=format&fit=crop&w=1600&q=80';
+if (!empty($featured['featured_image_path'])) {
+    $blogHeroImage = (string) $featured['featured_image_path'];
+}
 ?>
 
 <main>
-    <!-- Page hero -->
-    <section class="page-hero blog-hero">
-        <div class="container">
-            <div class="page-hero__content">
-                <p class="eyebrow">Detroit Brunch Stories</p>
-                <h1>News & Blogs</h1>
-                <p>
+    <!-- Page hero: real background image (featured post image when available)
+         with a teal/yellow gradient overlay. Image visible, text readable. -->
+    <section class="main-page-hero main-page-hero--blog" style="--hero-bg-image:url('<?= e($blogHeroImage) ?>');">
+        <div class="container main-page-hero__inner">
+            <div class="main-page-hero__content">
+                <span class="main-page-hero__badge">
+                    <i class="fas fa-newspaper" aria-hidden="true"></i>
+                    Detroit Brunch Stories
+                </span>
+                <h1 class="main-page-hero__title">News & Blogs</h1>
+                <p class="main-page-hero__subtitle">
                     Detroit brunch guides, food stories, openings, and local dining culture
-                    — curated by the DetroitBrunch.com team.
+                    &mdash; curated by the DetroitBrunch.com team.
                 </p>
             </div>
         </div>
@@ -46,7 +60,9 @@ $formatDate = static function (?string $raw): string {
 
     <section class="section section--muted">
         <div class="container">
-            <!-- Category filter pills -->
+            <div class="blog-layout">
+                <div class="blog-main">
+                    <!-- Category filter pills -->
             <nav class="blog-categories" aria-label="Blog categories">
                 <a
                     class="blog-category-link<?= $selectedCategory === '' ? ' is-active' : '' ?>"
@@ -202,6 +218,53 @@ $formatDate = static function (?string $raw): string {
                     <?php endforeach; ?>
                 </div>
             <?php endif; ?>
+                </div><!-- /.blog-main -->
+
+                <aside class="blog-sidebar" aria-label="Blog sidebar">
+                    <!-- Advertisement -->
+                    <div class="ad-placeholder blog-ad-placeholder">
+                        <span class="ad-placeholder__label">Advertisement</span>
+                        <span class="ad-placeholder__size">300 x 250</span>
+                    </div>
+
+                    <!-- Explore Detroit Brunch -->
+                    <div class="blog-sidebar-card">
+                        <h2 class="blog-sidebar-card__title">Explore Detroit Brunch</h2>
+                        <p class="blog-sidebar-card__text">
+                            Find brunch spots, menus, and allergy-aware options across Detroit.
+                        </p>
+                        <a class="btn btn--primary btn--block" href="<?= e(asset_url('directory.php')) ?>">
+                            <i class="fas fa-compass" aria-hidden="true"></i>
+                            Browse Directory
+                        </a>
+                    </div>
+
+                    <!-- Categories -->
+                    <div class="blog-sidebar-card">
+                        <h2 class="blog-sidebar-card__title">Categories</h2>
+                        <ul class="blog-sidebar-links">
+                            <li>
+                                <a
+                                    class="blog-sidebar-links__link<?= $selectedCategory === '' ? ' is-active' : '' ?>"
+                                    href="<?= e(asset_url('blog.php')) ?>"
+                                >
+                                    All Stories
+                                </a>
+                            </li>
+                            <?php foreach ($categories as $cat): ?>
+                                <li>
+                                    <a
+                                        class="blog-sidebar-links__link<?= $selectedCategory === $cat['slug'] ? ' is-active' : '' ?>"
+                                        href="<?= e(asset_url('blog.php?category=' . urlencode((string) $cat['slug']))) ?>"
+                                    >
+                                        <?= e($cat['name']) ?>
+                                    </a>
+                                </li>
+                            <?php endforeach; ?>
+                        </ul>
+                    </div>
+                </aside>
+            </div><!-- /.blog-layout -->
         </div>
     </section>
 </main>

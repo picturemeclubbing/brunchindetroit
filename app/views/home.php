@@ -2,10 +2,17 @@
 
 declare(strict_types=1);
 ?>
-<section class="hero">
-    <div class="container hero__inner">
-        <h1 class="hero__title">Find Your Next Brunch Obsession</h1>
-        <p class="hero__subtitle">Search by culture, dietary needs, vibe, or allergies</p>
+<section class="main-page-hero main-page-hero--home" style="--hero-bg-image:url('https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=1600&q=80');">
+    <div class="container main-page-hero__inner">
+        <div class="main-page-hero__content">
+            <span class="main-page-hero__badge">
+                <i class="fas fa-utensils" aria-hidden="true"></i>
+                Detroit Brunch Guide
+            </span>
+            <h1 class="main-page-hero__title">Find Your Next Brunch Obsession</h1>
+            <p class="main-page-hero__subtitle">
+                Search by culture, dietary needs, vibe, or allergies
+            </p>
 
         <div class="hero-search" role="search" aria-label="Brunch search (preview)">
             <div class="hero-search__grid">
@@ -41,6 +48,7 @@ declare(strict_types=1);
             </div>
             <p class="hero-search__note">Full directory search coming soon. Browse the directory to explore spots.</p>
         </div>
+        </div><!-- /.main-page-hero__content -->
     </div>
 </section>
 

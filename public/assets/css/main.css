@@ -983,9 +983,328 @@ a:hover {
   max-width: 36rem;
 }
 
-/* -------------------------------------------------------------------------- */
-/* Admin (Phase 2)                                                            */
-/* -------------------------------------------------------------------------- */
+/* ========================================================================== */
+/* Directory Search + A–Z Browse panel                                        */
+/* A designed control card: white panel, teal accent, rounded search input    */
+/* with inline icon, teal search button, and A–Z letter pills.                */
+/* ========================================================================== */
+
+.directory-finder {
+  /* Subtle warm-white section background that bridges hero → directory */
+  background: linear-gradient(180deg, #fdfbf3 0%, #f7fafc 100%);
+  padding: 2rem 0 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.directory-finder__inner {
+  background: var(--white);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg);
+  padding: 2rem;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Subtle teal tint accent along the top edge of the card */
+.directory-finder__inner::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--primary) 0%, var(--primary-dark) 60%, var(--accent) 100%);
+}
+
+@media (min-width: 768px) {
+  .directory-finder__inner {
+    padding: 2.5rem;
+  }
+}
+
+.directory-finder__header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1.75rem;
+}
+
+@media (min-width: 768px) {
+  .directory-finder__header {
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1.5rem;
+  }
+}
+
+.directory-finder__heading {
+  flex: 1 1 auto;
+}
+
+.directory-finder__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--primary);
+  margin-bottom: 0.4rem;
+}
+
+.directory-finder__eyebrow i {
+  font-size: 0.9rem;
+}
+
+.directory-finder__title {
+  margin: 0 0 0.35rem;
+  font-size: clamp(1.5rem, 3vw, 1.9rem);
+  font-weight: 800;
+  color: var(--text);
+  line-height: 1.2;
+}
+
+.directory-finder__subtitle {
+  margin: 0;
+  color: var(--muted);
+  font-size: 1rem;
+  line-height: 1.5;
+  max-width: 42rem;
+}
+
+.directory-finder__status {
+  flex: 0 0 auto;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--primary-dark);
+  background: rgba(44, 122, 123, 0.08);
+  border: 1px solid rgba(44, 122, 123, 0.18);
+  padding: 0.45rem 0.85rem;
+  border-radius: 999px;
+  white-space: nowrap;
+  align-self: flex-start;
+}
+
+@media (min-width: 768px) {
+  .directory-finder__status {
+    align-self: flex-end;
+    margin-bottom: 0.2rem;
+  }
+}
+
+/* ---- Search form ---- */
+.directory-search-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  margin-bottom: 1.75rem;
+}
+
+.directory-search-form__control {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  width: 100%;
+}
+
+@media (min-width: 640px) {
+  .directory-search-form__control {
+    flex-direction: row;
+    align-items: stretch;
+  }
+}
+
+.directory-search-form__icon {
+  position: absolute;
+  left: 1.1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--muted);
+  font-size: 1.05rem;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.directory-search-form input[type="search"] {
+  flex: 1 1 auto;
+  width: 100%;
+  min-width: 0;
+  padding: 0.95rem 1.1rem 0.95rem 2.85rem;
+  font-family: inherit;
+  font-size: 1.02rem;
+  color: var(--text);
+  background: #f7fafc;
+  border: 2px solid var(--border);
+  border-radius: 999px;
+  transition: border-color var(--transition), background var(--transition),
+    box-shadow var(--transition);
+}
+
+.directory-search-form input[type="search"]::placeholder {
+  color: #a0aec0;
+}
+
+.directory-search-form input[type="search"]:focus {
+  outline: none;
+  background: var(--white);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px rgba(246, 224, 94, 0.35);
+}
+
+/* Hide the browser's native search cancel button (we have View All) */
+.directory-search-form input[type="search"]::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.directory-search-form .btn {
+  flex: 0 0 auto;
+  border-radius: 999px;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  white-space: nowrap;
+}
+
+/* Position is relative so the inline icon anchors to the input wrapper.
+   Using a wrapper on the input keeps the icon aligned in all layouts. */
+.directory-search-form__control {
+  position: relative;
+}
+
+/* When stacked (mobile), the button should be full-width */
+@media (max-width: 639px) {
+  .directory-search-form .btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+.directory-finder__clear {
+  margin-top: 0.25rem;
+}
+
+.directory-finder__clear a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--primary);
+  text-decoration: none;
+}
+
+.directory-finder__clear a:hover {
+  color: var(--primary-dark);
+  text-decoration: underline;
+}
+
+/* ---- A–Z browse ---- */
+.directory-alpha {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  border-top: 1px solid var(--border);
+  padding-top: 1.5rem;
+}
+
+@media (min-width: 640px) {
+  .directory-alpha {
+    flex-direction: row;
+    align-items: center;
+  }
+}
+
+.directory-alpha__label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  flex: 0 0 auto;
+}
+
+.directory-alpha__nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.directory-alpha__link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.1rem;
+  height: 2.1rem;
+  padding: 0 0.5rem;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text);
+  background: #edf2f7;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  text-decoration: none;
+  transition: background var(--transition), color var(--transition),
+    border-color var(--transition), transform var(--transition);
+}
+
+.directory-alpha__link:hover {
+  background: var(--white);
+  border-color: var(--primary);
+  color: var(--primary-dark);
+  text-decoration: none;
+  transform: translateY(-1px);
+}
+
+.directory-alpha__link.is-active {
+  background: var(--primary);
+  color: var(--white);
+  border-color: var(--primary);
+  box-shadow: var(--shadow-sm);
+}
+
+.directory-alpha__link.is-active:hover {
+  background: var(--primary-dark);
+  color: var(--white);
+}
+
+.directory-alpha__link.is-disabled {
+  color: #cbd5e0;
+  background: #f7fafc;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+/* Empty-state refinement for filtered-out results */
+.directory-empty-filtered {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  max-width: 32rem;
+}
+
+.directory-empty-filtered > i {
+  font-size: 2rem;
+  color: var(--primary);
+  opacity: 0.6;
+}
+
+.directory-empty-filtered h3 {
+  margin: 0;
+}
+
+.directory-empty-filtered p {
+  text-align: center;
+  margin: 0 0 0.5rem;
+}
+
+.directory-empty-filtered .btn {
+  margin-top: 0.5rem;
+}
+
+/* ---- Admin ---- */
 
 .admin-body {
   margin: 0;
@@ -3080,9 +3399,9 @@ a:hover {
 
 /* Article detail page */
 .article-detail {
-  max-width: 48rem;
-  margin: 0 auto;
-  padding: 1.5rem 1rem 3rem;
+  max-width: none; /* Width now controlled by .article-main within .article-layout */
+  margin: 0;
+  padding: 1.5rem 0 3rem;
 }
 
 .article-detail__hero {
@@ -3310,4 +3629,626 @@ a:hover {
   .breadcrumb__current {
     max-width: 10rem;
   }
+}
+
+/* -------------------------------------------------------------------------- */
+/* Blog + Article two-column sidebar layout (Phase 4A refinement)            */
+/* Desktop: main content column (left) + fixed-width sidebar (right).        */
+/* Mobile/tablet: sidebar stacks beneath main content. No horizontal overflow.*/
+/* -------------------------------------------------------------------------- */
+
+/* ---- Blog list layout ---- */
+.blog-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.75rem;
+  margin-top: 1rem;
+}
+
+@media (min-width: 900px) {
+  .blog-layout {
+    grid-template-columns: minmax(0, 1fr) 20rem;
+    align-items: start;
+    gap: 2rem;
+  }
+}
+
+.blog-main {
+  min-width: 0;
+}
+
+.blog-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  min-width: 0;
+}
+
+@media (min-width: 1024px) {
+  .blog-sidebar {
+    position: sticky;
+    top: 5.5rem;
+  }
+}
+
+/* Cap the post grid at 2 columns inside the narrower .blog-main */
+@media (min-width: 1024px) {
+  .blog-main .article-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* ---- Article detail layout ---- */
+/* Acts as both the grid container AND the page gutter wrapper (the detail
+   view has no .container around .article-layout, so this provides centering
+   + horizontal padding just like .container does elsewhere). */
+.article-layout {
+  width: 100%;
+  max-width: var(--container-max);
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0 1rem;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.75rem;
+  padding-top: 0.5rem;
+  padding-bottom: 3rem;
+}
+
+@media (min-width: 900px) {
+  .article-layout {
+    grid-template-columns: minmax(0, 1fr) 20rem;
+    align-items: start;
+    gap: 2rem;
+  }
+}
+
+.article-main {
+  min-width: 0;
+}
+
+.article-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  min-width: 0;
+}
+
+@media (min-width: 1024px) {
+  .article-sidebar {
+    position: sticky;
+    top: 5.5rem;
+  }
+}
+
+/* ---- Polished white card around the article body ---- */
+.article-card-shell {
+  background: var(--white);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-md);
+  padding: 2rem;
+  margin: 1.5rem 0;
+}
+
+@media (max-width: 480px) {
+  .article-card-shell {
+    padding: 1.25rem;
+  }
+}
+
+/* The body itself now lives inside the card shell; reset its own spacing */
+.article-detail__body {
+  margin: 0;
+}
+
+/* ---- Featured image section (article detail) ---- */
+.article-featured-image {
+  margin: 1.75rem 0 0.5rem;
+  width: 100%;
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+  background: #edf2f7;
+}
+
+.article-featured-image img {
+  display: block;
+  width: 100%;
+  height: clamp(16rem, 36vw, 28rem);
+  object-fit: cover;
+  object-position: center;
+}
+
+/* Placeholder when no featured image is present */
+.article-featured-image--placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  min-height: clamp(12rem, 28vw, 18rem);
+  padding: 2rem 1rem;
+  background: #f7fafc;
+  border: 1px dashed var(--border);
+  box-shadow: none;
+  text-align: center;
+  color: var(--muted);
+}
+
+.article-featured-image--placeholder i {
+  font-size: 2rem;
+  color: var(--primary);
+  opacity: 0.7;
+}
+
+.article-featured-image--placeholder span {
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+/* Mobile: shorter hero, lighter spacing */
+@media (max-width: 640px) {
+  .article-featured-image {
+    margin: 1.25rem 0 0.25rem;
+  }
+
+  .article-featured-image img {
+    height: clamp(12rem, 42vw, 16rem);
+  }
+
+  .article-featured-image--placeholder {
+    min-height: 10rem;
+    padding: 1.5rem 1rem;
+  }
+}
+
+/* Lede / excerpt — larger, readable intro paragraph */
+.article-detail__lede {
+  font-size: 1.15rem;
+  line-height: 1.7;
+  color: var(--text);
+  font-weight: 500;
+  margin: 1.5rem 0;
+}
+
+/* ---- Sidebar cards (shared look for blog + article) ---- */
+.blog-sidebar-card,
+.article-sidebar-card {
+  background: var(--white);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-md);
+  padding: 1.5rem;
+}
+
+.blog-sidebar-card__title,
+.article-sidebar-card__title {
+  margin: 0 0 0.75rem;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.blog-sidebar-card__text,
+.article-sidebar-card__text {
+  margin: 0 0 1rem;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--muted);
+}
+
+/* ---- Sidebar link lists (categories, compact related) ---- */
+.blog-sidebar-links {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.blog-sidebar-links__link {
+  display: block;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.92rem;
+  font-weight: 500;
+  color: var(--text);
+  text-decoration: none;
+  border-radius: var(--radius-sm);
+  border-left: 3px solid transparent;
+  transition: background var(--transition), color var(--transition),
+    border-color var(--transition);
+}
+
+.blog-sidebar-links__link:hover {
+  background: #f7fafc;
+  color: var(--primary-dark);
+  border-left-color: var(--primary);
+  text-decoration: none;
+}
+
+.blog-sidebar-links__link.is-active {
+  background: rgba(44, 122, 123, 0.08);
+  color: var(--primary-dark);
+  border-left-color: var(--primary);
+  font-weight: 700;
+}
+
+/* ---- Ad placeholders (contextual hooks; base styling from .ad-placeholder) ---- */
+.blog-ad-placeholder,
+.article-ad-placeholder {
+  /* Inherits layout/box from .ad-placeholder. Constrain to sidebar width. */
+  max-width: 100%;
+}
+
+/* ---- Teal eyebrow variant for light backgrounds (article header) ---- */
+.eyebrow--accent {
+  background: rgba(44, 122, 123, 0.12);
+  color: var(--primary-dark);
+}
+
+/* ---- Larger article meta (detail header) ---- */
+.article-meta--large {
+  font-size: 0.95rem;
+  gap: 1rem;
+  color: var(--muted);
+}
+
+.article-meta--large .article-meta__item {
+  font-weight: 500;
+}
+
+/* ---- Breadcrumb link + separator refinement (detail page) ---- */
+.breadcrumb__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: var(--primary);
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.breadcrumb__link:hover {
+  color: var(--primary-dark);
+  text-decoration: underline;
+}
+
+.breadcrumb__sep {
+  color: var(--muted);
+  opacity: 0.7;
+}
+
+/* ---- Share label (inline label before share buttons) ---- */
+.article-share__label {
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-right: 0.5rem;
+}
+
+/* The share bar is now inline-flex so buttons sit beside the label */
+.article-detail .article-share {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+/* ---- Related articles section inside the article main column ---- */
+.related-articles-section {
+  padding-top: 2rem;
+  margin-top: 1rem;
+  border-top: 1px solid var(--border);
+}
+
+/* Cap the related grid at 2 columns inside the narrower .article-main */
+.article-grid--2col {
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 640px) {
+  .article-grid--2col {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Source-order override: never let it go 3-wide in the narrower column */
+@media (min-width: 1024px) {
+  .article-grid--2col {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* ---- Mobile: reset double padding on .article-detail (gutters from layout) ---- */
+@media (max-width: 480px) {
+  .article-layout .article-detail {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
+/* ========================================================================== */
+/* Shared main-page hero system (Home / Directory / Blog index)               */
+/* Full-width banner: real background image + teal→yellow gradient overlay.   */
+/* Content (badge, title, subtitle, search) is horizontally centered.        */
+/* Uses two pseudo-elements: ::before = image layer, ::after = gradient.     */
+/* ========================================================================== */
+
+.main-page-hero {
+  position: relative;
+  color: var(--white);
+  overflow: hidden;
+  /* Fallback gradient if --hero-bg-image is missing */
+  background: linear-gradient(135deg, #2c7a7b 0%, #225e5f 60%, #f6ad3d 130%);
+}
+
+/* Image layer: fills the hero area with the page-specific background image.
+   Set inline via style="--hero-bg-image: url(...)" on each <section>. */
+.main-page-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: var(--hero-bg-image, none);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: 0;
+}
+
+/* Gradient overlay: sits on top of the image, below content.
+   Stronger teal in the center for text readability, warm yellow glow at edges.
+   Not so opaque that the image disappears. */
+.main-page-hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(34, 94, 95, 0.72) 0%,
+    rgba(34, 94, 95, 0.6) 35%,
+    rgba(44, 122, 123, 0.5) 60%,
+    rgba(246, 173, 61, 0.45) 100%
+  );
+  z-index: 1;
+}
+
+.main-page-hero__inner {
+  position: relative;
+  z-index: 2; /* Content sits above image (0) and overlay (1) */
+  display: flex;
+  justify-content: center;
+  padding: 3.5rem 1rem;
+}
+
+@media (min-width: 768px) {
+  .main-page-hero__inner {
+    padding: 4.5rem 1rem;
+  }
+}
+
+.main-page-hero__content {
+  width: 100%;
+  max-width: 44rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.main-page-hero__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: rgba(246, 224, 94, 0.28);
+  color: #fff;
+  padding: 0.35rem 0.85rem;
+  border-radius: 999px;
+  margin-bottom: 1rem;
+}
+
+.main-page-hero__badge i {
+  color: var(--accent);
+}
+
+.main-page-hero__title {
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 800;
+  line-height: 1.15;
+  margin: 0 0 0.75rem;
+  text-shadow: 0 2px 12px rgba(0,0,0,0.35);
+}
+
+.main-page-hero__subtitle {
+  font-size: 1.15rem;
+  line-height: 1.6;
+  margin: 0 0 0.5rem;
+  opacity: 0.97;
+  max-width: 36rem;
+  text-shadow: 0 1px 8px rgba(0,0,0,0.25);
+}
+
+/* Variant tweaks: subtly different overlay hues per page */
+.main-page-hero--home::after {
+  background: linear-gradient(
+    135deg,
+    rgba(34, 94, 95, 0.7) 0%,
+    rgba(34, 94, 95, 0.58) 35%,
+    rgba(44, 122, 123, 0.48) 60%,
+    rgba(246, 173, 61, 0.42) 100%
+  );
+}
+
+.main-page-hero--directory::after {
+  background: linear-gradient(
+    135deg,
+    rgba(34, 94, 95, 0.75) 0%,
+    rgba(34, 94, 95, 0.62) 35%,
+    rgba(44, 122, 123, 0.5) 60%,
+    rgba(214, 158, 46, 0.42) 100%
+  );
+}
+
+.main-page-hero--blog::after {
+  background: linear-gradient(
+    135deg,
+    rgba(44, 122, 123, 0.55) 0%,
+    rgba(34, 94, 95, 0.45) 35%,
+    rgba(34, 94, 95, 0.38) 60%,
+    rgba(183, 121, 31, 0.32) 100%
+  );
+}
+
+/* Home hero: center the existing search panel under the subtitle */
+.main-page-hero--home .hero-search {
+  margin-top: 1.5rem;
+  max-width: 48rem;
+  width: 100%;
+  text-align: left;
+}
+
+/* ========================================================================== */
+/* Contained article hero card (detail page visual anchor)                    */
+/* Title + meta + large featured image together in one white rounded card.    */
+/* ========================================================================== */
+
+.article-hero-card {
+  background: var(--white);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+  margin: 0;
+}
+
+.article-hero-card__header {
+  padding: 1.75rem 1.75rem 1.25rem;
+}
+
+@media (max-width: 640px) {
+  .article-hero-card__header {
+    padding: 1.25rem 1.25rem 1rem;
+  }
+}
+
+.article-hero-card__header .badge {
+  margin-bottom: 0.75rem;
+}
+
+.article-hero-card__header .article-detail__title {
+  margin: 0.25rem 0 0.85rem;
+}
+
+.article-hero-card__image {
+  width: 100%;
+  background: #edf2f7;
+  overflow: hidden;
+}
+
+.article-hero-card__image img {
+  display: block;
+  width: 100%;
+  height: clamp(16rem, 34vw, 26rem);
+  object-fit: cover;
+  object-position: center;
+}
+
+/* Placeholder variant reuses existing .article-featured-image--placeholder
+   flex styling; adjust height to sit nicely inside the hero card. */
+.article-hero-card__image.article-featured-image--placeholder {
+  min-height: clamp(11rem, 24vw, 16rem);
+  margin: 0;
+  border-radius: 0;
+  border: none;
+  border-top: 1px dashed var(--border);
+}
+
+/* ========================================================================== */
+/* Related stories — compact thumbnail links (sidebar)                        */
+/* ========================================================================== */
+
+.related-story-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.related-story-link {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem;
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  color: var(--text);
+  transition: background var(--transition), box-shadow var(--transition);
+}
+
+.related-story-link:hover {
+  background: #f7fafc;
+  text-decoration: none;
+  box-shadow: var(--shadow-sm);
+}
+
+.related-story-link__thumb {
+  flex: 0 0 3.5rem;
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: var(--radius-sm);
+  background-size: cover;
+  background-position: center;
+  background-color: #edf2f7;
+}
+
+.related-story-link__placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--muted);
+}
+
+.related-story-link__placeholder i {
+  font-size: 1rem;
+  opacity: 0.7;
+}
+
+.related-story-link__body {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--text);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.related-story-link:hover .related-story-link__body {
+  color: var(--primary-dark);
+}
+
+/* ========================================================================== */
+/* Article card image placeholder (main related grid)                         */
+/* ========================================================================== */
+
+.article-card__image--placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #edf2f7;
+  color: var(--muted);
+}
+
+.article-card__image--placeholder i {
+  font-size: 1.75rem;
+  opacity: 0.6;
 }
