@@ -277,6 +277,7 @@ CREATE TABLE IF NOT EXISTS galleries (
   location_label VARCHAR(200) NULL,
   description TEXT NULL,
   cover_image_path VARCHAR(500) NULL,
+  gallery_url VARCHAR(500) NULL,
   is_published TINYINT(1) NOT NULL DEFAULT 0,
   is_featured TINYINT(1) NOT NULL DEFAULT 0,
   created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -304,3 +305,10 @@ CREATE TABLE IF NOT EXISTS gallery_images (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 SET FOREIGN_KEY_CHECKS = 1;
+
+-- ---------------------------------------------------------------------------
+-- Phase 4B existing database upgrade:
+-- If your galleries table already exists, run:
+--   ALTER TABLE galleries ADD COLUMN gallery_url VARCHAR(500) NULL AFTER cover_image_path;
+-- (ADD COLUMN IF NOT EXISTS is intentionally avoided for MariaDB/XAMPP
+--  compatibility. Fresh imports get the column from the CREATE TABLE above.)
