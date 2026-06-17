@@ -52,69 +52,85 @@ declare(strict_types=1);
     </div>
 </section>
 
-<section class="section section--white">
+<section class="section section--spotlight home-spotlight-section">
     <div class="container">
-        <div class="section-header">
-            <h2 class="section-title">Featured Brunch Spots</h2>
-            <div class="slider-controls">
-                <button type="button" class="slider-controls__btn slider-prev" aria-label="Previous featured spot">
-                    <i class="fas fa-chevron-left" aria-hidden="true"></i>
-                </button>
-                <button type="button" class="slider-controls__btn slider-next" aria-label="Next featured spot">
-                    <i class="fas fa-chevron-right" aria-hidden="true"></i>
-                </button>
-            </div>
-        </div>
-
-        <div class="slider">
-            <div class="slider__viewport">
-                <div class="slider__track">
-                    <article class="slider__slide">
-                        <div class="card card--venue card--hover">
-                            <div class="card__media" style="background-image: url('https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&amp;fit=crop&amp;w=1074&amp;q=80');"></div>
-                            <div class="card__body">
-                                <div class="tag-list">
-                                    <span class="badge badge--accent">Rooftop</span>
-                                    <span class="badge">Vegan Options</span>
-                                    <span class="badge">DJ Brunch</span>
-                                </div>
-                                <h3 class="card__title">The Garden Rooftop</h3>
-                                <p class="card__text">Elevated brunch experience with panoramic city views and botanical cocktails.</p>
-                                <a href="<?= e(asset_url('directory.php')) ?>" class="card__link">View Details</a>
+        <div class="home-spotlight-layout">
+            <div class="home-spotlight__slider">
+                <div class="slider__viewport">
+                    <div class="slider__track">
+                        <?php if (!empty($spotlightItems)):
+                            foreach ($spotlightItems as $item):
+                                $spotImg = !empty($item['image'])
+                                    ? $item['image']
+                                    : 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=1200&q=80';
+                                $spotTitle = (string) ($item['title'] ?? '');
+                                $spotDesc  = (string) ($item['description'] ?? '');
+                                $spotMeta  = is_array($item['meta'] ?? null) ? $item['meta'] : [];
+                                $isExternal = !empty($item['external']);
+                        ?>
+                            <div class="slider__slide">
+                                <article class="home-feature-card home-feature-card--overlay" style="background-image:url('<?= e($spotImg) ?>');">
+                                    <div class="home-feature-card__overlay" aria-hidden="true"></div>
+                                    <div class="home-feature-card__body">
+                                        <?php if (!empty($item['meta_badge'])): ?>
+                                            <div class="home-feature-card__badges">
+                                                <span class="badge badge--accent"><?= e($item['meta_badge']) ?></span>
+                                            </div>
+                                        <?php endif; ?>
+                                        <h3 class="home-feature-card__title"><?= e($spotTitle) ?></h3>
+                                        <?php if ($spotDesc !== ''): ?>
+                                            <p class="home-feature-card__text"><?= e($spotDesc) ?></p>
+                                        <?php endif; ?>
+                                        <?php if (!empty($spotMeta)): ?>
+                                            <p class="home-feature-card__meta">
+                                                <?php foreach ($spotMeta as $i => $part): ?>
+                                                    <?= $i > 0 ? ' <span class="home-feature-card__meta-sep" aria-hidden="true">•</span> ' : '' ?>
+                                                    <?= e((string) $part) ?>
+                                                <?php endforeach; ?>
+                                            </p>
+                                        <?php endif; ?>
+                                        <div class="home-feature-card__actions">
+                                            <a href="<?= e($item['url']) ?>" class="btn btn--primary"<?php if (!empty($isExternal)): ?> target="_blank" rel="noopener"<?php endif; ?>>
+                                                <?= e($item['cta_label'] ?? 'View Details') ?>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </article>
                             </div>
-                        </div>
-                    </article>
-                    <article class="slider__slide">
-                        <div class="card card--venue card--hover">
-                            <div class="card__media" style="background-image: url('https://images.unsplash.com/photo-1559847844-5315695dadae?auto=format&amp;fit=crop&amp;w=1198&amp;q=80');"></div>
-                            <div class="card__body">
-                                <div class="tag-list">
-                                    <span class="badge badge--accent">Soul Food</span>
-                                    <span class="badge">Bottomless Mimosas</span>
-                                </div>
-                                <h3 class="card__title">Sweet Maple Cafe</h3>
-                                <p class="card__text">Authentic Detroit soul food brunch with legendary chicken &amp; waffles.</p>
-                                <a href="<?= e(asset_url('directory.php')) ?>" class="card__link">View Details</a>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <div class="slider__slide">
+                                <article class="home-feature-card home-feature-card--overlay home-feature-card--fallback">
+                                    <div class="home-feature-card__overlay" aria-hidden="true"></div>
+                                    <div class="home-feature-card__body">
+                                        <h3 class="home-feature-card__title">Featured stories coming soon</h3>
+                                        <p class="home-feature-card__text">We're curating Detroit brunch spots, stories, and galleries for this space.</p>
+                                        <div class="home-feature-card__actions">
+                                            <a href="<?= e(asset_url('directory.php')) ?>" class="btn btn--primary">Browse the Directory</a>
+                                        </div>
+                                    </div>
+                                </article>
                             </div>
-                        </div>
-                    </article>
-                    <article class="slider__slide">
-                        <div class="card card--venue card--hover">
-                            <div class="card__media" style="background-image: url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&amp;fit=crop&amp;w=1170&amp;q=80');"></div>
-                            <div class="card__body">
-                                <div class="tag-list">
-                                    <span class="badge badge--accent">Latin Fusion</span>
-                                    <span class="badge">Gluten-Free</span>
-                                    <span class="badge">Vegan</span>
-                                </div>
-                                <h3 class="card__title">Casa del Sol</h3>
-                                <p class="card__text">Vibrant Latin-inspired brunch with bottomless sangria and live music.</p>
-                                <a href="<?= e(asset_url('directory.php')) ?>" class="card__link">View Details</a>
-                            </div>
-                        </div>
-                    </article>
+                        <?php endif; ?>
+                    </div>
                 </div>
+
+                <?php if (count($spotlightItems) > 1): ?>
+                    <button type="button" class="home-spotlight__arrow home-spotlight__arrow--prev spotlight-prev" aria-label="Previous spotlight">
+                        <i class="fas fa-chevron-left" aria-hidden="true"></i>
+                    </button>
+                    <button type="button" class="home-spotlight__arrow home-spotlight__arrow--next spotlight-next" aria-label="Next spotlight">
+                        <i class="fas fa-chevron-right" aria-hidden="true"></i>
+                    </button>
+                <?php endif; ?>
             </div>
+
+            <aside class="home-sponsor-card">
+                <span class="home-sponsor-card__badge">Sponsor</span>
+                <h3 class="home-sponsor-card__title">Put Your Brand in Front of Hungry Brunch Lovers</h3>
+                <p class="home-sponsor-card__text">Promote your business to locals exploring Detroit's best brunch spots.</p>
+                <a href="mailto:hello@brunchindetroit.com" class="btn home-sponsor-card__button">Advertise With Us</a>
+            </aside>
         </div>
     </div>
 </section>

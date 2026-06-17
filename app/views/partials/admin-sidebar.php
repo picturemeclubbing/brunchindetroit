@@ -9,7 +9,7 @@ $activeNav = $activeNav ?? 'dashboard';
     <aside class="admin-sidebar" aria-label="Admin navigation">
         <nav class="admin-sidebar__nav">
             <a href="<?= e(admin_url('dashboard.php')) ?>" class="admin-sidebar__link<?= $activeNav === 'dashboard' ? ' admin-sidebar__link--active' : '' ?>">Dashboard</a>
-            <span class="admin-sidebar__link admin-sidebar__link--disabled" title="Available in a later phase">Venues</span>
+            <a href="<?= e(admin_url('venues.php')) ?>" class="admin-sidebar__link<?= $activeNav === 'venues' ? ' admin-sidebar__link--active' : '' ?>">Venues</a>
             <span class="admin-sidebar__link admin-sidebar__link--disabled" title="Available in a later phase">Menu items</span>
             <span class="admin-sidebar__link admin-sidebar__link--disabled" title="Available in a later phase">Blog</span>
             <a href="<?= e(admin_url('galleries.php')) ?>" class="admin-sidebar__link<?= $activeNav === 'galleries' ? ' admin-sidebar__link--active' : '' ?>">Galleries</a>

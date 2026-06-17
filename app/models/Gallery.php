@@ -104,6 +104,47 @@ final class Gallery
     }
 
     /**
+     * Up to $limit published galleries for the home Featured Spotlight slider.
+     * Prefers featured galleries first, then newest event_date/created_at.
+     * Read-only, additive.
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    public static function featuredForHome(int $limit = 2): array
+    {
+        $pdo = db();
+
+        $sql = "
+            SELECT
+                g.id,
+                g.slug,
+                g.title,
+                g.description,
+                g.cover_image_path,
+                g.gallery_url,
+                g.event_date,
+                g.location_label,
+                g.is_featured,
+                v.name AS venue_name,
+                n.name AS neighborhood_name
+            FROM galleries g
+            LEFT JOIN venues v        ON v.id = g.venue_id
+            LEFT JOIN neighborhoods n ON n.id = v.neighborhood_id
+            WHERE g.is_published = 1
+            ORDER BY g.is_featured DESC,
+                     g.event_date DESC,
+                     g.created_at DESC
+            LIMIT :limit
+        ";
+
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindValue(':limit', max(1, $limit), PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $stmt->fetchAll();
+    }
+
+    /**
      * Distinct location labels available for the filter dropdown.
      * Combines galleries.location_label and neighborhood names from venues.
      *
