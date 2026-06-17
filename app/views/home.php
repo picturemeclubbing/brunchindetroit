@@ -72,11 +72,6 @@ declare(strict_types=1);
                                 <article class="home-feature-card home-feature-card--overlay" style="background-image:url('<?= e($spotImg) ?>');">
                                     <div class="home-feature-card__overlay" aria-hidden="true"></div>
                                     <div class="home-feature-card__body">
-                                        <?php if (!empty($item['meta_badge'])): ?>
-                                            <div class="home-feature-card__badges">
-                                                <span class="badge badge--accent"><?= e($item['meta_badge']) ?></span>
-                                            </div>
-                                        <?php endif; ?>
                                         <h3 class="home-feature-card__title"><?= e($spotTitle) ?></h3>
                                         <?php if ($spotDesc !== ''): ?>
                                             <p class="home-feature-card__text"><?= e($spotDesc) ?></p>

@@ -6081,3 +6081,175 @@ section:has(.home-feature-layout) .section-header {
     height: 100% !important;
     min-height: 0 !important;
 }
+
+/* ==========================================================================
+   Phase 5D final polish: lighter spotlight band and larger cards
+   - Replaces the heavier teal block with a warm cream / pale-teal gradient
+     and a subtle teal accent glow. Premium contrast without the dark green.
+   - Restores the wide cinematic spotlight card + square-ish sponsor card.
+   - Keeps the dark gradient overlay INSIDE the image card for readability.
+   - Sponsor card stays dark teal; only the section background is lighter.
+   - Slider controls use teal/dark text so they read on the lighter band.
+   ========================================================================== */
+
+/* Lighter premium contrast band: warm cream → pale teal with teal/yellow glow */
+.home-spotlight-section {
+    background:
+        radial-gradient(circle at 86% 14%, rgba(246, 224, 94, 0.20) 0%, transparent 42%),
+        radial-gradient(circle at 10% 86%, rgba(44, 122, 123, 0.12) 0%, transparent 52%),
+        linear-gradient(135deg, #fffdf7 0%, #f7fbfa 55%, #eef7f4 100%) !important;
+    color: var(--text) !important;
+    padding: 4rem 0 !important;
+}
+
+/* Wide ~86rem lane: spotlight card (cinematic) + square-ish sponsor card */
+.home-spotlight-layout {
+    width: min(100vw - 8rem, 86rem) !important;
+    max-width: 86rem !important;
+    margin-left: 50% !important;
+    transform: translateX(-50%) !important;
+    display: grid !important;
+    grid-template-columns: minmax(0, 2.5fr) 20rem !important;
+    gap: 2rem !important;
+    align-items: stretch !important;
+}
+
+/* Spotlight slider fills its wider grid cell */
+.home-spotlight-section .home-spotlight__slider {
+    width: 100% !important;
+    min-width: 0 !important;
+}
+
+.home-spotlight-section .slider__viewport {
+    width: 100% !important;
+    border-radius: 1.25rem !important;
+    box-shadow: 0 16px 40px rgba(15, 23, 42, 0.12) !important;
+}
+
+/* Wide cinematic spotlight card */
+.home-spotlight-section .home-feature-card--overlay {
+    min-height: 370px !important;
+    border-radius: 1.25rem !important;
+    width: 100% !important;
+    background-size: cover !important;
+    background-position: center !important;
+}
+
+@media (min-width: 768px) {
+    .home-spotlight-section .home-feature-card--overlay {
+        min-height: 390px !important;
+    }
+}
+
+/* Dark gradient overlay stays INSIDE the image card for text readability */
+.home-spotlight-section .home-feature-card__overlay {
+    inset: 0 !important;
+    background: linear-gradient(
+        100deg,
+        rgba(15, 23, 42, 0.72) 0%,
+        rgba(15, 23, 42, 0.42) 45%,
+        rgba(15, 23, 42, 0.12) 100%
+    ) !important;
+}
+
+/* Content column anchored inside the cinematic card */
+.home-spotlight-section .home-feature-card__body {
+    padding: 2.5rem !important;
+    max-width: 34rem !important;
+    margin-left: auto !important;
+    color: #fff !important;
+}
+
+.home-spotlight-section .home-feature-card__title {
+    color: #fff !important;
+}
+
+.home-spotlight-section .home-feature-card__text,
+.home-spotlight-section .home-feature-card__meta {
+    color: rgba(255, 255, 255, 0.92) !important;
+}
+
+/* Square-ish dark teal sponsor card stays on the right */
+.home-spotlight-section .home-sponsor-card {
+    min-height: 360px !important;
+    width: 100% !important;
+    aspect-ratio: 1 / 1 !important;
+    align-self: stretch !important;
+}
+
+/* Embedded prev/next arrows — tuned to read over the image (kept) */
+.home-spotlight-section .home-spotlight__arrow {
+    background: rgba(15, 23, 42, 0.42) !important;
+    color: #fff !important;
+    border: 1px solid rgba(255, 255, 255, 0.45) !important;
+    backdrop-filter: blur(4px) !important;
+    -webkit-backdrop-filter: blur(4px) !important;
+}
+
+.home-spotlight-section .home-spotlight__arrow:hover,
+.home-spotlight-section .home-spotlight__arrow:focus-visible {
+    background: var(--primary) !important;
+    border-color: rgba(246, 224, 94, 0.7) !important;
+    color: #fff !important;
+}
+
+/* Legacy above-card controls (if present): teal/dark text on the light band */
+.home-spotlight-section .slider-controls--spotlight .slider-controls__btn {
+    background: rgba(44, 122, 123, 0.10) !important;
+    color: var(--primary-dark) !important;
+    border: 1px solid rgba(44, 122, 123, 0.28) !important;
+    backdrop-filter: none !important;
+}
+
+.home-spotlight-section .slider-controls--spotlight .slider-controls__btn:hover {
+    background: var(--primary) !important;
+    border-color: var(--primary) !important;
+    color: var(--white) !important;
+}
+
+/* Mid-size screens: keep the wide lane inside the viewport */
+@media (max-width: 1180px) {
+    .home-spotlight-layout {
+        width: min(100% - 2rem, 78rem) !important;
+        margin-left: auto !important;
+        transform: none !important;
+        grid-template-columns: minmax(0, 2.1fr) 18rem !important;
+    }
+
+    .home-spotlight-section .home-feature-card--overlay {
+        min-height: 360px !important;
+    }
+
+    .home-spotlight-section .home-sponsor-card {
+        min-height: 340px !important;
+    }
+}
+
+/* Mobile: clean single-column stack */
+@media (max-width: 900px) {
+    .home-spotlight-layout {
+        width: min(100% - 2rem, 46rem) !important;
+        margin-left: auto !important;
+        transform: none !important;
+        grid-template-columns: 1fr !important;
+    }
+
+    .home-spotlight-section {
+        padding: 2.75rem 0 !important;
+    }
+
+    .home-spotlight-section .home-feature-card--overlay {
+        min-height: 420px !important;
+    }
+
+    .home-spotlight-section .home-feature-card__body {
+        padding: 1.75rem !important;
+        max-width: 100% !important;
+        margin-left: 0 !important;
+    }
+
+    .home-spotlight-section .home-sponsor-card {
+        aspect-ratio: auto !important;
+        min-height: 260px !important;
+    }
+}
