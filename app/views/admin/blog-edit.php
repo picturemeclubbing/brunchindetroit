@@ -27,7 +27,7 @@ declare(strict_types=1);
     </div>
 <?php endif; ?>
 
-<form class="admin-form" method="post" action="<?= e(admin_url('blog-edit.php')) ?>">
+<form class="admin-form admin-blog-edit-form" method="post" action="<?= e(admin_url('blog-edit.php')) ?>" enctype="multipart/form-data">
     <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
     <?php if ($isEdit): ?>
         <input type="hidden" name="id" value="<?= e((string) $id) ?>">
@@ -81,7 +81,6 @@ declare(strict_types=1);
                 <span class="admin-form__error"><?= e($errors['category_id']) ?></span>
             <?php endif; ?>
         </div>
-
         <div class="admin-form__field admin-form__field--full">
             <label class="admin-form__label" for="featured_image_path">Featured Image URL / Path</label>
             <input
@@ -93,9 +92,31 @@ declare(strict_types=1);
                 maxlength="500"
                 placeholder="https://... or /assets/images/..."
             >
-            <span class="admin-form__hint">Use an http(s) image URL or a root-relative image path.</span>
+            <span class="admin-form__hint">Use an http(s) image URL or a root-relative image path. Uploading a file below will replace this value on save.</span>
             <?php if (!empty($errors['featured_image_path'])): ?>
                 <span class="admin-form__error"><?= e($errors['featured_image_path']) ?></span>
+            <?php endif; ?>
+
+            <?php if (!empty($form['featured_image_path'])): ?>
+                <div class="admin-blog-image-preview">
+                    <span class="admin-blog-image-preview__label">Current image</span>
+                    <img src="<?= e($form['featured_image_path']) ?>" alt="" loading="lazy">
+                </div>
+            <?php endif; ?>
+        </div>
+
+        <div class="admin-form__field admin-form__field--full">
+            <label class="admin-form__label" for="featured_image_upload">Upload Featured Image</label>
+            <input
+                class="admin-form__input"
+                type="file"
+                id="featured_image_upload"
+                name="featured_image_upload"
+                accept="image/jpeg,image/png,image/webp"
+            >
+            <span class="admin-form__hint">Optional. JPG, PNG, or WEBP. Max 5MB. If selected, this upload becomes the featured image.</span>
+            <?php if (!empty($errors['featured_image_upload'])): ?>
+                <span class="admin-form__error"><?= e($errors['featured_image_upload']) ?></span>
             <?php endif; ?>
         </div>
 
@@ -119,24 +140,23 @@ declare(strict_types=1);
 
             <label class="admin-check">
                 <input type="checkbox" name="is_published" value="1" <?= (string) ($form['is_published'] ?? '0') === '1' ? 'checked' : '' ?>>
-                <span><strong>Published</strong> — show this article publicly.</span>
+                <span><strong>Published</strong> - show this article publicly.</span>
             </label>
 
             <label class="admin-check">
                 <input type="checkbox" name="is_featured" value="1" <?= (string) ($form['is_featured'] ?? '0') === '1' ? 'checked' : '' ?>>
-                <span><strong>Featured</strong> — prioritize this article in the homepage spotlight.</span>
+                <span><strong>Featured</strong> - prioritize this article in the homepage spotlight.</span>
             </label>
         </div>
 
         <div class="admin-form__field admin-form__field--full">
-            <label class="admin-form__label" for="excerpt">Excerpt</label>
+            <label class="admin-form__label" for="excerpt">Intro / Card &amp; SEO Summary</label>
             <textarea
                 class="admin-form__input"
                 id="excerpt"
-                name="excerpt"
-                rows="4"
+                name="excerpt" rows="3" maxlength="180"
             ><?= e($form['excerpt'] ?? '') ?></textarea>
-            <span class="admin-form__hint">Short summary for cards and previews.</span>
+            <span class="admin-form__hint">80-180 characters. Used for blog cards, featured sliders, homepage spotlight, and SEO/social previews. Drafts may leave this blank.</span>
             <?php if (!empty($errors['excerpt'])): ?>
                 <span class="admin-form__error"><?= e($errors['excerpt']) ?></span>
             <?php endif; ?>
@@ -150,7 +170,7 @@ declare(strict_types=1);
                 name="body"
                 rows="14"
             ><?= e($form['body'] ?? '') ?></textarea>
-            <span class="admin-form__hint">HTML is allowed. No rich text editor or upload field is included in this phase.</span>
+            <span class="admin-form__hint">HTML is allowed. The intro field above controls cards, featured sliders, and SEO/social previews.</span>
         </div>
     </div>
 
@@ -162,3 +182,38 @@ declare(strict_types=1);
         <a class="btn btn--outline" href="<?= e(admin_url('blog.php')) ?>">Cancel</a>
     </div>
 </form>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    var intro = document.getElementById('excerpt');
+    if (!intro || document.querySelector('.admin-blog-intro-counter')) {
+        return;
+    }
+
+    var counter = document.createElement('div');
+    counter.className = 'admin-blog-intro-counter';
+    intro.insertAdjacentElement('afterend', counter);
+
+    function updateIntroCounter() {
+        var length = intro.value.trim().length;
+        counter.textContent = length + ' / 180 characters';
+
+        counter.classList.remove('is-low', 'is-good', 'is-over');
+
+        if (length === 0) {
+            return;
+        }
+
+        if (length < 80) {
+            counter.classList.add('is-low');
+        } else if (length <= 180) {
+            counter.classList.add('is-good');
+        } else {
+            counter.classList.add('is-over');
+        }
+    }
+
+    intro.addEventListener('input', updateIntroCounter);
+    updateIntroCounter();
+});
+</script>

@@ -30,13 +30,30 @@ $formatDate = static function (?string $raw): string {
 
 /**
  * Blog hero background image.
- * Prefer the featured post's image when available so the hero reflects real
- * blog content; otherwise fall back to a known project Unsplash brunch image.
+ * Keep this page hero static so the News & Blogs landing has consistent branding.
+ * Featured article images are used in the featured slider/cards instead.
  */
 $blogHeroImage = 'https://images.unsplash.com/photo-1535400845297-314126c8e0f4?auto=format&fit=crop&w=1600&q=80';
-if (!empty($featured['featured_image_path'])) {
-    $blogHeroImage = (string) $featured['featured_image_path'];
-}
+
+$blogCardFallbackImage = asset_url('assets/images/blog-card-fallback.png');
+
+$resolveBlogImage = static function (?string $imagePath) use ($blogCardFallbackImage): string {
+    $imagePath = trim((string) $imagePath);
+
+    if ($imagePath === '') {
+        return $blogCardFallbackImage;
+    }
+
+    if (str_starts_with($imagePath, '/')) {
+        $publicFile = dirname(APP_ROOT) . '/public' . str_replace('/', DIRECTORY_SEPARATOR, $imagePath);
+
+        if (!is_file($publicFile)) {
+            return $blogCardFallbackImage;
+        }
+    }
+
+    return $imagePath;
+};
 ?>
 
 <main>
@@ -87,14 +104,13 @@ if (!empty($featured['featured_image_path'])) {
                             <?php foreach ($featuredPosts as $featuredItem): ?>
                                 <div class="slider__slide blog-featured-slider__slide">
                                     <article class="featured-article card card--hover">
-                                        <?php if (!empty($featuredItem['featured_image_path'])): ?>
-                                            <a
-                                                class="featured-article__image"
-                                                href="<?= e($articleUrl((string) $featuredItem['slug'])) ?>"
-                                                aria-label="<?= e('Read ' . $featuredItem['title']) ?>"
-                                                style="background-image:url('<?= e($featuredItem['featured_image_path']) ?>');"
-                                            ></a>
-                                        <?php endif; ?>
+                                        <?php $featuredImage = $resolveBlogImage((string) ($featuredItem['featured_image_path'] ?? '')); ?>
+                                        <a
+                                            class="featured-article__image"
+                                            href="<?= e($articleUrl((string) $featuredItem['slug'])) ?>"
+                                            aria-label="<?= e('Read ' . $featuredItem['title']) ?>"
+                                            style="background-image:url('<?= e($featuredImage) ?>');"
+                                        ></a>
 
                                         <div class="featured-article__content">
                                             <?php if (!empty($featuredItem['category_name'])): ?>
@@ -182,14 +198,13 @@ if (!empty($featured['featured_image_path'])) {
                 <div class="article-grid">
                     <?php foreach ($posts as $post): ?>
                         <article class="article-card card card--hover">
-                            <?php if (!empty($post['featured_image_path'])): ?>
-                                <a
-                                    class="article-card__image"
-                                    href="<?= e($articleUrl((string) $post['slug'])) ?>"
-                                    aria-label="<?= e('Read ' . $post['title']) ?>"
-                                    style="background-image:url('<?= e($post['featured_image_path']) ?>');"
-                                ></a>
-                            <?php endif; ?>
+                            <?php $postImage = $resolveBlogImage((string) ($post['featured_image_path'] ?? '')); ?>
+                            <a
+                                class="article-card__image"
+                                href="<?= e($articleUrl((string) $post['slug'])) ?>"
+                                aria-label="<?= e('Read ' . $post['title']) ?>"
+                                style="background-image:url('<?= e($postImage) ?>');"
+                            ></a>
 
                             <div class="article-card__body">
                                 <?php if (!empty($post['category_name'])): ?>
