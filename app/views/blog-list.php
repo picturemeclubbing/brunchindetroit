@@ -79,59 +79,77 @@ if (!empty($featured['featured_image_path'])) {
                     </a>
                 <?php endforeach; ?>
             </nav>
+            <!-- Featured articles slider/card (only on unfiltered landing) -->
+            <?php if ($showFeaturedBanner && !empty($featuredPosts)): ?>
+                <section class="blog-featured-slider" aria-label="Featured stories">
+                    <div class="slider__viewport blog-featured-slider__viewport">
+                        <div class="slider__track blog-featured-slider__track">
+                            <?php foreach ($featuredPosts as $featuredItem): ?>
+                                <div class="slider__slide blog-featured-slider__slide">
+                                    <article class="featured-article card card--hover">
+                                        <?php if (!empty($featuredItem['featured_image_path'])): ?>
+                                            <a
+                                                class="featured-article__image"
+                                                href="<?= e($articleUrl((string) $featuredItem['slug'])) ?>"
+                                                aria-label="<?= e('Read ' . $featuredItem['title']) ?>"
+                                                style="background-image:url('<?= e($featuredItem['featured_image_path']) ?>');"
+                                            ></a>
+                                        <?php endif; ?>
 
-            <!-- Featured article (only on unfiltered landing) -->
-            <?php if ($showFeaturedBanner && $featured !== null): ?>
-                <article class="featured-article card card--hover">
-                    <?php if (!empty($featured['featured_image_path'])): ?>
-                        <a
-                            class="featured-article__image"
-                            href="<?= e($articleUrl((string) $featured['slug'])) ?>"
-                            aria-label="<?= e('Read ' . $featured['title']) ?>"
-                            style="background-image:url('<?= e($featured['featured_image_path']) ?>');"
-                        ></a>
-                    <?php endif; ?>
+                                        <div class="featured-article__content">
+                                            <?php if (!empty($featuredItem['category_name'])): ?>
+                                                <span class="badge badge--accent"><?= e($featuredItem['category_name']) ?></span>
+                                            <?php endif; ?>
 
-                    <div class="featured-article__content">
-                        <?php if (!empty($featured['category_name'])): ?>
-                            <span class="badge badge--accent"><?= e($featured['category_name']) ?></span>
-                        <?php endif; ?>
+                                            <h2 class="featured-article__title">
+                                                <a href="<?= e($articleUrl((string) $featuredItem['slug'])) ?>">
+                                                    <?= e($featuredItem['title']) ?>
+                                                </a>
+                                            </h2>
 
-                        <h2 class="featured-article__title">
-                            <a href="<?= e($articleUrl((string) $featured['slug'])) ?>">
-                                <?= e($featured['title']) ?>
-                            </a>
-                        </h2>
+                                            <?php if (!empty($featuredItem['excerpt'])): ?>
+                                                <p class="featured-article__excerpt"><?= e($featuredItem['excerpt']) ?></p>
+                                            <?php endif; ?>
 
-                        <?php if (!empty($featured['excerpt'])): ?>
-                            <p class="featured-article__excerpt"><?= e($featured['excerpt']) ?></p>
-                        <?php endif; ?>
+                                            <p class="article-meta">
+                                                <?php if (!empty($featuredItem['author_name'])): ?>
+                                                    <span class="article-meta__item">
+                                                        <i class="fas fa-user-pen" aria-hidden="true"></i>
+                                                        <?= e($featuredItem['author_name']) ?>
+                                                    </span>
+                                                <?php endif; ?>
+                                                <?php $fd = $formatDate($featuredItem['published_at'] ?? null); ?>
+                                                <?php if ($fd !== ''): ?>
+                                                    <span class="article-meta__item">
+                                                        <i class="fas fa-calendar-day" aria-hidden="true"></i>
+                                                        <?= e($fd) ?>
+                                                    </span>
+                                                <?php endif; ?>
+                                            </p>
 
-                        <p class="article-meta">
-                            <?php if (!empty($featured['author_name'])): ?>
-                                <span class="article-meta__item">
-                                    <i class="fas fa-user-pen" aria-hidden="true"></i>
-                                    <?= e($featured['author_name']) ?>
-                                </span>
-                            <?php endif; ?>
-                            <?php $fd = $formatDate($featured['published_at'] ?? null); ?>
-                            <?php if ($fd !== ''): ?>
-                                <span class="article-meta__item">
-                                    <i class="fas fa-calendar-day" aria-hidden="true"></i>
-                                    <?= e($fd) ?>
-                                </span>
-                            <?php endif; ?>
-                        </p>
-
-                        <a
-                            class="btn btn--primary"
-                            href="<?= e($articleUrl((string) $featured['slug'])) ?>"
-                        >
-                            <i class="fas fa-arrow-right-long" aria-hidden="true"></i>
-                            Read Featured Story
-                        </a>
+                                            <a
+                                                class="btn btn--primary"
+                                                href="<?= e($articleUrl((string) $featuredItem['slug'])) ?>"
+                                            >
+                                                <i class="fas fa-arrow-right-long" aria-hidden="true"></i>
+                                                Read Featured Story
+                                            </a>
+                                        </div>
+                                    </article>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
                     </div>
-                </article>
+
+                    <?php if (count($featuredPosts) > 1): ?>
+                        <button type="button" class="slider-prev blog-featured-slider__arrow blog-featured-slider__arrow--prev" aria-label="Previous featured story">
+                            <i class="fas fa-chevron-left" aria-hidden="true"></i>
+                        </button>
+                        <button type="button" class="slider-next blog-featured-slider__arrow blog-featured-slider__arrow--next" aria-label="Next featured story">
+                            <i class="fas fa-chevron-right" aria-hidden="true"></i>
+                        </button>
+                    <?php endif; ?>
+                </section>
             <?php endif; ?>
 
             <!-- Posts grid -->

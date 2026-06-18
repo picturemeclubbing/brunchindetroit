@@ -6,7 +6,7 @@ declare(strict_types=1);
  *
  * Loads bootstrap + Blog model, reads an optional ?category=<slug> filter,
  * pulls the featured post + published posts, sets SEO metadata, and renders
- * the blog list view. Read-only â€” no form handling, no comments, no ratings.
+ * the blog list view. Read-only Ã¢â‚¬â€ no form handling, no comments, no ratings.
  */
 
 require_once __DIR__ . '/../app/bootstrap.php';
@@ -23,18 +23,26 @@ if (isset($_GET['category'])) {
 
 // --- Data ---------------------------------------------------------------------
 $categories = Blog::categories();
-$featured   = Blog::featuredPost();
+$featuredPosts = Blog::featuredPosts(5);
+$featured = $featuredPosts[0] ?? null;
 
 // When a category filter is active, don't double-show the featured post;
 // the list below already reflects the filter.
 $posts = Blog::publishedPosts($selectedCategory !== '' ? $selectedCategory : null);
 
-if ($featured !== null && $selectedCategory === '') {
-    $featuredId = (int) ($featured['id'] ?? 0);
-    if ($featuredId > 0) {
+if (!empty($featuredPosts) && $selectedCategory === '') {
+    $featuredIds = [];
+    foreach ($featuredPosts as $featuredPost) {
+        $featuredId = (int) ($featuredPost['id'] ?? 0);
+        if ($featuredId > 0) {
+            $featuredIds[$featuredId] = true;
+        }
+    }
+
+    if (!empty($featuredIds)) {
         $posts = array_values(array_filter(
             $posts,
-            static fn (array $post): bool => (int) ($post['id'] ?? 0) !== $featuredId
+            static fn (array $post): bool => !isset($featuredIds[(int) ($post['id'] ?? 0)])
         ));
     }
 }

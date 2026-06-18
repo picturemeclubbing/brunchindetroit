@@ -34,7 +34,7 @@
     }
 
     Array.prototype.forEach.call(allTracks, function (track) {
-      // Skip the spotlight track — it is handled separately.
+      // Skip the spotlight track â€” it is handled separately.
       if (track.closest(".home-spotlight-section")) {
         return;
       }
@@ -236,4 +236,57 @@
   }
 
   initSpotlightSlider();
+
+  /* ---------------------------------------------------------------------- */
+  /* Phase 5F: Blog featured article slider                                  */
+  /* One featured article visible at a time on the Blog page.                */
+  /* ---------------------------------------------------------------------- */
+  function initBlogFeaturedSlider() {
+    var section = document.querySelector(".blog-featured-slider");
+    if (!section) {
+      return;
+    }
+
+    var track = section.querySelector(".blog-featured-slider__track");
+    var slides = section.querySelectorAll(".blog-featured-slider__slide");
+    var prevButton = section.querySelector(".blog-featured-slider__arrow--prev");
+    var nextButton = section.querySelector(".blog-featured-slider__arrow--next");
+
+    if (!track || slides.length <= 1) {
+      return;
+    }
+
+    var currentIndex = 0;
+
+    function maxIndex() {
+      return slides.length - 1;
+    }
+
+    function updateSlider() {
+      track.style.transform = "translateX(-" + (currentIndex * 100) + "%)";
+    }
+
+    function goNext() {
+      currentIndex = currentIndex >= maxIndex() ? 0 : currentIndex + 1;
+      updateSlider();
+    }
+
+    function goPrev() {
+      currentIndex = currentIndex <= 0 ? maxIndex() : currentIndex - 1;
+      updateSlider();
+    }
+
+    if (nextButton) {
+      nextButton.addEventListener("click", goNext);
+    }
+
+    if (prevButton) {
+      prevButton.addEventListener("click", goPrev);
+    }
+
+    window.addEventListener("resize", updateSlider);
+    updateSlider();
+  }
+
+  initBlogFeaturedSlider();
 })();

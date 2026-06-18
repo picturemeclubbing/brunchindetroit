@@ -122,6 +122,47 @@ final class Blog
         return $stmt->fetchAll();
     }
 
+
+    /**
+     * Published featured posts for the public Blog page featured area.
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    public static function featuredPosts(int $limit = 5): array
+    {
+        $pdo = db();
+
+        $sql = "
+            SELECT
+                bp.id,
+                bp.slug,
+                bp.title,
+                bp.excerpt,
+                bp.body,
+                bp.featured_image_path,
+                bp.published_at,
+                bp.is_featured,
+                bc.id   AS category_id,
+                bc.name AS category_name,
+                bc.slug AS category_slug,
+                a.display_name AS author_name
+            FROM blog_posts bp
+            LEFT JOIN blog_categories bc ON bc.id = bp.category_id
+            LEFT JOIN admins a           ON a.id  = bp.author_admin_id
+            WHERE bp.is_published = 1
+              AND bp.published_at IS NOT NULL
+              AND bp.is_featured = 1
+            ORDER BY bp.published_at DESC, bp.created_at DESC
+            LIMIT :limit
+        ";
+
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindValue(':limit', max(1, $limit), PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $stmt->fetchAll();
+    }
+
     /**
      * One published featured post (the most recent featured), or null.
      *
