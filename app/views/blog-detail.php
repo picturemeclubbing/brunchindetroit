@@ -33,6 +33,28 @@ $articleUrl = static function (string $slug): string {
     return asset_url('article.php?slug=' . urlencode($slug));
 };
 
+$blogCardFallbackImage = asset_url('assets/images/blog-card-fallback.png');
+
+$resolveBlogImage = static function (?string $imagePath) use ($blogCardFallbackImage): string {
+    $imagePath = trim((string) $imagePath);
+
+    if ($imagePath === '') {
+        return $blogCardFallbackImage;
+    }
+
+    if (str_starts_with($imagePath, '/')) {
+        $publicFile = dirname(APP_ROOT) . '/public' . str_replace('/', DIRECTORY_SEPARATOR, $imagePath);
+
+        if (!is_file($publicFile)) {
+            return $blogCardFallbackImage;
+        }
+    }
+
+    return $imagePath;
+};
+
+$articleImage = $resolveBlogImage((string) ($post['featured_image_path'] ?? ''));
+
 $publishedDate = $formatDate($post['published_at'] ?? null);
 $readingMinutes = max(1, (int) round(str_word_count(strip_tags((string) ($post['body'] ?? ''))) / 200));
 ?>
@@ -41,15 +63,19 @@ $readingMinutes = max(1, (int) round(str_word_count(strip_tags((string) ($post['
     <!-- Breadcrumb (above the article layout) -->
     <div class="container">
         <nav class="breadcrumb" aria-label="Breadcrumb">
-            <a class="breadcrumb__link" href="<?= e(asset_url('blog.php')) ?>">
+            <a href="<?= e(asset_url('blog.php')) ?>">
                 <i class="fas fa-arrow-left" aria-hidden="true"></i>
-                News & Blogs
+                News &amp; Blogs
             </a>
-            <?php if (!empty($post['category_name'])): ?>
-                <span class="breadcrumb__sep" aria-hidden="true">›</span>
-                <a class="breadcrumb__link" href="<?= e(asset_url('blog.php?category=' . urlencode((string) $post['category_slug']))) ?>">
-                    <?= e($post['category_name']) ?>
+
+            <?php if (!empty($post['category_name']) && !empty($post['category_slug'])): ?>
+                <span class="breadcrumb__separator" aria-hidden="true">/</span>
+                <a href="<?= e(asset_url('blog.php?category=' . urlencode((string) $post['category_slug']))) ?>">
+                    <?= e((string) $post['category_name']) ?>
                 </a>
+            <?php elseif (!empty($post['category_name'])): ?>
+                <span class="breadcrumb__separator" aria-hidden="true">/</span>
+                <span><?= e((string) $post['category_name']) ?></span>
             <?php endif; ?>
         </nav>
     </div>
@@ -84,21 +110,13 @@ $readingMinutes = max(1, (int) round(str_word_count(strip_tags((string) ($post['
                         </span>
                     </p>
                 </div>
-
-                <?php if (!empty($post['featured_image_path'])): ?>
-                    <div class="article-hero-card__image">
-                        <img
-                            src="<?= e($post['featured_image_path']) ?>"
-                            alt="<?= e($post['title']) ?>"
-                            loading="lazy"
-                        >
-                    </div>
-                <?php else: ?>
-                    <div class="article-hero-card__image article-featured-image--placeholder">
-                        <i class="fas fa-image" aria-hidden="true"></i>
-                        <span>Featured image coming soon</span>
-                    </div>
-                <?php endif; ?>
+                <div class="article-hero-card__image">
+                    <img
+                        src="<?= e($articleImage) ?>"
+                        alt="<?= e($post['title']) ?>"
+                        loading="lazy"
+                    >
+                </div>
             </section>
 
             <!-- Share bar (top) -->
@@ -188,22 +206,13 @@ $readingMinutes = max(1, (int) round(str_word_count(strip_tags((string) ($post['
                     <div class="article-grid article-grid--2col">
                         <?php foreach ($related as $rp): ?>
                             <article class="article-card card card--hover">
-                                <?php if (!empty($rp['featured_image_path'])): ?>
-                                    <a
-                                        class="article-card__image"
-                                        href="<?= e($articleUrl((string) $rp['slug'])) ?>"
-                                        aria-label="<?= e('Read ' . $rp['title']) ?>"
-                                        style="background-image:url('<?= e($rp['featured_image_path']) ?>');"
-                                    ></a>
-                                <?php else: ?>
-                                    <a
-                                        class="article-card__image article-card__image--placeholder"
-                                        href="<?= e($articleUrl((string) $rp['slug'])) ?>"
-                                        aria-label="<?= e('Read ' . $rp['title']) ?>"
-                                    >
-                                        <i class="fas fa-image" aria-hidden="true"></i>
-                                    </a>
-                                <?php endif; ?>
+                                <?php $relatedImage = $resolveBlogImage((string) ($rp['featured_image_path'] ?? '')); ?>
+                                <a
+                                    class="article-card__image"
+                                    href="<?= e($articleUrl((string) $rp['slug'])) ?>"
+                                    aria-label="<?= e('Read ' . $rp['title']) ?>"
+                                    style="background-image:url('<?= e($relatedImage) ?>');"
+                                ></a>
 
                                 <div class="article-card__body">
                                     <?php if (!empty($rp['category_name'])): ?>
@@ -283,16 +292,11 @@ $readingMinutes = max(1, (int) round(str_word_count(strip_tags((string) ($post['
                                     class="related-story-link"
                                     href="<?= e($articleUrl((string) $rp['slug'])) ?>"
                                 >
-                                    <?php if (!empty($rp['featured_image_path'])): ?>
-                                        <span
-                                            class="related-story-link__thumb"
-                                            style="background-image:url('<?= e($rp['featured_image_path']) ?>');"
-                                        ></span>
-                                    <?php else: ?>
-                                        <span class="related-story-link__thumb related-story-link__placeholder">
-                                            <i class="fas fa-image" aria-hidden="true"></i>
-                                        </span>
-                                    <?php endif; ?>
+                                    <?php $relatedThumb = $resolveBlogImage((string) ($rp['featured_image_path'] ?? '')); ?>
+                                    <span
+                                        class="related-story-link__thumb"
+                                        style="background-image:url('<?= e($relatedThumb) ?>');"
+                                    ></span>
                                     <span class="related-story-link__body">
                                         <?= e($rp['title']) ?>
                                     </span>

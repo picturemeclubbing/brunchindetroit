@@ -605,4 +605,149 @@ final class Blog
         $stmt->bindValue(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
     }
+
+    /**
+     * Admin: all blog categories with post counts.
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    public static function categoriesWithCounts(): array
+    {
+        $pdo = db();
+
+        $sql = "
+            SELECT
+                bc.id,
+                bc.name,
+                bc.slug,
+                bc.sort_order,
+                COUNT(bp.id) AS post_count
+            FROM blog_categories bc
+            LEFT JOIN blog_posts bp ON bp.category_id = bc.id
+            GROUP BY bc.id, bc.name, bc.slug, bc.sort_order
+            ORDER BY bc.sort_order ASC, bc.name ASC
+        ";
+
+        return $pdo->query($sql)->fetchAll();
+    }
+
+    /**
+     * Admin: find one blog category by id.
+     *
+     * @return array<string, mixed>|null
+     */
+    public static function categoryFind(int $id): ?array
+    {
+        $pdo = db();
+
+        $stmt = $pdo->prepare("
+            SELECT id, name, slug, sort_order
+            FROM blog_categories
+            WHERE id = :id
+            LIMIT 1
+        ");
+        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+
+        $row = $stmt->fetch();
+
+        return $row !== false ? $row : null;
+    }
+
+    public static function categorySlugExists(string $slug, ?int $ignoreId = null): bool
+    {
+        $pdo = db();
+
+        $sql = "
+            SELECT COUNT(*)
+            FROM blog_categories
+            WHERE slug = :slug
+        ";
+
+        if ($ignoreId !== null) {
+            $sql .= " AND id <> :ignore_id";
+        }
+
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindValue(':slug', $slug);
+
+        if ($ignoreId !== null) {
+            $stmt->bindValue(':ignore_id', $ignoreId, PDO::PARAM_INT);
+        }
+
+        $stmt->execute();
+
+        return (int) $stmt->fetchColumn() > 0;
+    }
+
+    public static function categoryCreate(array $data): int
+    {
+        $pdo = db();
+
+        $stmt = $pdo->prepare("
+            INSERT INTO blog_categories (name, slug, sort_order)
+            VALUES (:name, :slug, :sort_order)
+        ");
+
+        $stmt->bindValue(':name', (string) ($data['name'] ?? ''));
+        $stmt->bindValue(':slug', (string) ($data['slug'] ?? ''));
+        $stmt->bindValue(':sort_order', (int) ($data['sort_order'] ?? 0), PDO::PARAM_INT);
+        $stmt->execute();
+
+        return (int) $pdo->lastInsertId();
+    }
+
+    public static function categoryUpdate(int $id, array $data): bool
+    {
+        $pdo = db();
+
+        $stmt = $pdo->prepare("
+            UPDATE blog_categories
+            SET
+                name = :name,
+                slug = :slug,
+                sort_order = :sort_order
+            WHERE id = :id
+        ");
+
+        $stmt->bindValue(':name', (string) ($data['name'] ?? ''));
+        $stmt->bindValue(':slug', (string) ($data['slug'] ?? ''));
+        $stmt->bindValue(':sort_order', (int) ($data['sort_order'] ?? 0), PDO::PARAM_INT);
+        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+
+        return $stmt->execute();
+    }
+
+    public static function categoryPostCount(int $id): int
+    {
+        $pdo = db();
+
+        $stmt = $pdo->prepare("
+            SELECT COUNT(*)
+            FROM blog_posts
+            WHERE category_id = :id
+        ");
+        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+
+        return (int) $stmt->fetchColumn();
+    }
+
+    public static function categoryDelete(int $id): bool
+    {
+        if (self::categoryPostCount($id) > 0) {
+            throw new RuntimeException('This category has blog posts assigned to it and cannot be deleted.');
+        }
+
+        $pdo = db();
+
+        $stmt = $pdo->prepare("
+            DELETE FROM blog_categories
+            WHERE id = :id
+        ");
+        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+
+        return $stmt->execute();
+    }
+
 }

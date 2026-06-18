@@ -6,7 +6,7 @@ declare(strict_types=1);
  *
  * Loads a single published blog post by slug, builds dynamic SEO metadata
  * (canonical, Open Graph, Twitter, JSON-LD BlogPosting), loads related posts,
- * and renders the article detail view. Read-only — no comments, no ratings.
+ * and renders the article detail view. Read-only Ã¢â‚¬â€ no comments, no ratings.
  */
 
 require_once __DIR__ . '/../app/bootstrap.php';
@@ -71,7 +71,7 @@ if ($metaDescription === '') {
     // Fallback: strip HTML from body and truncate for description.
     $plain = trim(preg_replace('/\s+/', ' ', strip_tags((string) ($post['body'] ?? ''))));
     $metaDescription = mb_strlen($plain) > 155
-        ? trim(mb_substr($plain, 0, 152)) . '…'
+        ? trim(mb_substr($plain, 0, 152)) . 'Ã¢â‚¬Â¦'
         : $plain;
 }
 
