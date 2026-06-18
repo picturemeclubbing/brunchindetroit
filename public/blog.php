@@ -6,7 +6,7 @@ declare(strict_types=1);
  *
  * Loads bootstrap + Blog model, reads an optional ?category=<slug> filter,
  * pulls the featured post + published posts, sets SEO metadata, and renders
- * the blog list view. Read-only — no form handling, no comments, no ratings.
+ * the blog list view. Read-only â€” no form handling, no comments, no ratings.
  */
 
 require_once __DIR__ . '/../app/bootstrap.php';
@@ -28,6 +28,16 @@ $featured   = Blog::featuredPost();
 // When a category filter is active, don't double-show the featured post;
 // the list below already reflects the filter.
 $posts = Blog::publishedPosts($selectedCategory !== '' ? $selectedCategory : null);
+
+if ($featured !== null && $selectedCategory === '') {
+    $featuredId = (int) ($featured['id'] ?? 0);
+    if ($featuredId > 0) {
+        $posts = array_values(array_filter(
+            $posts,
+            static fn (array $post): bool => (int) ($post['id'] ?? 0) !== $featuredId
+        ));
+    }
+}
 
 // If a category slug was provided but doesn't match any category, reset it
 // so the "All" pill shows as active instead of a phantom category.

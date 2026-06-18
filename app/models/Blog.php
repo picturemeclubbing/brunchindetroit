@@ -58,7 +58,8 @@ final class Blog
             LEFT JOIN admins a           ON a.id  = bp.author_admin_id
             WHERE bp.is_published = 1
               AND bp.published_at IS NOT NULL
-            ORDER BY bp.is_featured DESC, bp.published_at DESC, bp.created_at DESC
+              AND bp.is_featured = 1
+            ORDER BY bp.published_at DESC, bp.created_at DESC
             LIMIT :limit
         ";
 
@@ -149,7 +150,8 @@ final class Blog
             LEFT JOIN admins a           ON a.id  = bp.author_admin_id
             WHERE bp.is_published = 1
               AND bp.published_at IS NOT NULL
-            ORDER BY bp.is_featured DESC, bp.published_at DESC
+              AND bp.is_featured = 1
+            ORDER BY bp.published_at DESC
             LIMIT 1
         ";
 
@@ -284,5 +286,282 @@ final class Blog
         }
 
         return $rows;
+    }
+    /**
+     * Phase 5E admin CRUD methods.
+     *
+     * These methods are additive and include drafts/unpublished posts for admin use.
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    public static function all(): array
+    {
+        $pdo = db();
+
+        $sql = "
+            SELECT
+                bp.id,
+                bp.slug,
+                bp.title,
+                bp.excerpt,
+                bp.featured_image_path,
+                bp.category_id,
+                bp.author_admin_id,
+                bp.is_published,
+                bp.is_featured,
+                bp.published_at,
+                bp.created_at,
+                bp.updated_at,
+                bc.name AS category_name,
+                bc.slug AS category_slug,
+                a.display_name AS author_name
+            FROM blog_posts bp
+            LEFT JOIN blog_categories bc ON bc.id = bp.category_id
+            LEFT JOIN admins a           ON a.id  = bp.author_admin_id
+            ORDER BY COALESCE(bp.published_at, bp.created_at) DESC, bp.id DESC
+        ";
+
+        return $pdo->query($sql)->fetchAll();
+    }
+
+    /**
+     * Find one blog post by id for admin editing.
+     *
+     * @return array<string, mixed>|null
+     */
+    public static function find(int $id): ?array
+    {
+        $pdo = db();
+
+        $sql = "
+            SELECT
+                bp.id,
+                bp.slug,
+                bp.title,
+                bp.excerpt,
+                bp.body,
+                bp.featured_image_path,
+                bp.category_id,
+                bp.author_admin_id,
+                bp.is_published,
+                bp.is_featured,
+                bp.published_at,
+                bp.created_at,
+                bp.updated_at,
+                bc.name AS category_name,
+                bc.slug AS category_slug,
+                a.display_name AS author_name
+            FROM blog_posts bp
+            LEFT JOIN blog_categories bc ON bc.id = bp.category_id
+            LEFT JOIN admins a           ON a.id  = bp.author_admin_id
+            WHERE bp.id = :id
+            LIMIT 1
+        ";
+
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+
+        $row = $stmt->fetch();
+        return $row !== false ? $row : null;
+    }
+
+    /**
+     * Check whether a blog slug already exists.
+     */
+    public static function slugExists(string $slug, ?int $ignoreId = null): bool
+    {
+        $pdo = db();
+
+        $sql = "SELECT COUNT(*) FROM blog_posts WHERE slug = :slug";
+        if ($ignoreId !== null && $ignoreId > 0) {
+            $sql .= " AND id <> :ignoreId";
+        }
+
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindValue(':slug', $slug);
+
+        if ($ignoreId !== null && $ignoreId > 0) {
+            $stmt->bindValue(':ignoreId', $ignoreId, PDO::PARAM_INT);
+        }
+
+        $stmt->execute();
+
+        return (int) $stmt->fetchColumn() > 0;
+    }
+
+    /**
+     * Create a blog post and return its new id.
+     */
+    public static function create(array $data): int
+    {
+        $pdo = db();
+
+        $excerpt = trim((string) ($data['excerpt'] ?? ''));
+        $body = trim((string) ($data['body'] ?? ''));
+        $featuredImagePath = trim((string) ($data['featured_image_path'] ?? ''));
+        $publishedAt = trim((string) ($data['published_at'] ?? ''));
+
+        $isPublished = !empty($data['is_published']) ? 1 : 0;
+        $isFeatured = !empty($data['is_featured']) ? 1 : 0;
+
+        if ($isPublished === 1 && $publishedAt === '') {
+            $publishedAt = date('Y-m-d H:i:s');
+        }
+
+        $categoryId = isset($data['category_id']) && (int) $data['category_id'] > 0
+            ? (int) $data['category_id']
+            : null;
+
+        $authorAdminId = isset($data['author_admin_id']) && (int) $data['author_admin_id'] > 0
+            ? (int) $data['author_admin_id']
+            : null;
+
+        $sql = "
+            INSERT INTO blog_posts (
+                slug,
+                title,
+                excerpt,
+                body,
+                featured_image_path,
+                category_id,
+                author_admin_id,
+                is_published,
+                is_featured,
+                published_at
+            ) VALUES (
+                :slug,
+                :title,
+                :excerpt,
+                :body,
+                :featured_image_path,
+                :category_id,
+                :author_admin_id,
+                :is_published,
+                :is_featured,
+                :published_at
+            )
+        ";
+
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindValue(':slug', (string) ($data['slug'] ?? ''));
+        $stmt->bindValue(':title', (string) ($data['title'] ?? ''));
+        $stmt->bindValue(':excerpt', $excerpt !== '' ? $excerpt : null, $excerpt !== '' ? PDO::PARAM_STR : PDO::PARAM_NULL);
+        $stmt->bindValue(':body', $body !== '' ? $body : null, $body !== '' ? PDO::PARAM_STR : PDO::PARAM_NULL);
+        $stmt->bindValue(':featured_image_path', $featuredImagePath !== '' ? $featuredImagePath : null, $featuredImagePath !== '' ? PDO::PARAM_STR : PDO::PARAM_NULL);
+        $stmt->bindValue(':category_id', $categoryId, $categoryId !== null ? PDO::PARAM_INT : PDO::PARAM_NULL);
+        $stmt->bindValue(':author_admin_id', $authorAdminId, $authorAdminId !== null ? PDO::PARAM_INT : PDO::PARAM_NULL);
+        $stmt->bindValue(':is_published', $isPublished, PDO::PARAM_INT);
+        $stmt->bindValue(':is_featured', $isFeatured, PDO::PARAM_INT);
+        $stmt->bindValue(':published_at', $publishedAt !== '' ? $publishedAt : null, $publishedAt !== '' ? PDO::PARAM_STR : PDO::PARAM_NULL);
+        $stmt->execute();
+
+        return (int) $pdo->lastInsertId();
+    }
+
+    /**
+     * Update a blog post.
+     */
+    public static function update(int $id, array $data): void
+    {
+        $pdo = db();
+
+        $excerpt = trim((string) ($data['excerpt'] ?? ''));
+        $body = trim((string) ($data['body'] ?? ''));
+        $featuredImagePath = trim((string) ($data['featured_image_path'] ?? ''));
+        $publishedAt = trim((string) ($data['published_at'] ?? ''));
+
+        $isPublished = !empty($data['is_published']) ? 1 : 0;
+        $isFeatured = !empty($data['is_featured']) ? 1 : 0;
+
+        if ($isPublished === 1 && $publishedAt === '') {
+            $publishedAt = date('Y-m-d H:i:s');
+        }
+
+        $categoryId = isset($data['category_id']) && (int) $data['category_id'] > 0
+            ? (int) $data['category_id']
+            : null;
+
+        $authorAdminId = isset($data['author_admin_id']) && (int) $data['author_admin_id'] > 0
+            ? (int) $data['author_admin_id']
+            : null;
+
+        $sql = "
+            UPDATE blog_posts
+            SET
+                slug = :slug,
+                title = :title,
+                excerpt = :excerpt,
+                body = :body,
+                featured_image_path = :featured_image_path,
+                category_id = :category_id,
+                author_admin_id = :author_admin_id,
+                is_published = :is_published,
+                is_featured = :is_featured,
+                published_at = :published_at
+            WHERE id = :id
+            LIMIT 1
+        ";
+
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindValue(':slug', (string) ($data['slug'] ?? ''));
+        $stmt->bindValue(':title', (string) ($data['title'] ?? ''));
+        $stmt->bindValue(':excerpt', $excerpt !== '' ? $excerpt : null, $excerpt !== '' ? PDO::PARAM_STR : PDO::PARAM_NULL);
+        $stmt->bindValue(':body', $body !== '' ? $body : null, $body !== '' ? PDO::PARAM_STR : PDO::PARAM_NULL);
+        $stmt->bindValue(':featured_image_path', $featuredImagePath !== '' ? $featuredImagePath : null, $featuredImagePath !== '' ? PDO::PARAM_STR : PDO::PARAM_NULL);
+        $stmt->bindValue(':category_id', $categoryId, $categoryId !== null ? PDO::PARAM_INT : PDO::PARAM_NULL);
+        $stmt->bindValue(':author_admin_id', $authorAdminId, $authorAdminId !== null ? PDO::PARAM_INT : PDO::PARAM_NULL);
+        $stmt->bindValue(':is_published', $isPublished, PDO::PARAM_INT);
+        $stmt->bindValue(':is_featured', $isFeatured, PDO::PARAM_INT);
+        $stmt->bindValue(':published_at', $publishedAt !== '' ? $publishedAt : null, $publishedAt !== '' ? PDO::PARAM_STR : PDO::PARAM_NULL);
+        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+    }
+
+    /**
+     * Toggle published state for a blog post.
+     */
+    public static function setPublished(int $id, bool $published): void
+    {
+        $pdo = db();
+
+        if ($published) {
+            $sql = "
+                UPDATE blog_posts
+                SET is_published = 1,
+                    published_at = COALESCE(published_at, NOW())
+                WHERE id = :id
+                LIMIT 1
+            ";
+        } else {
+            $sql = "
+                UPDATE blog_posts
+                SET is_published = 0
+                WHERE id = :id
+                LIMIT 1
+            ";
+        }
+
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+    }
+
+    /**
+     * Toggle featured state for a blog post.
+     */
+    public static function setFeatured(int $id, bool $featured): void
+    {
+        $pdo = db();
+
+        $stmt = $pdo->prepare("
+            UPDATE blog_posts
+            SET is_featured = :is_featured
+            WHERE id = :id
+            LIMIT 1
+        ");
+        $stmt->bindValue(':is_featured', $featured ? 1 : 0, PDO::PARAM_INT);
+        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+        $stmt->execute();
     }
 }

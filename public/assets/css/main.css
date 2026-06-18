@@ -1,4 +1,4 @@
-/* brunchindetroit.com — shared styles (Phase 1: home foundation) */
+/* brunchindetroit.com ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â shared styles (Phase 1: home foundation) */
 
 :root {
   --primary: #2c7a7b;
@@ -984,13 +984,13 @@ a:hover {
 }
 
 /* ========================================================================== */
-/* Directory Search + A–Z Browse panel                                        */
+/* Directory Search + AÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã…â€œZ Browse panel                                        */
 /* A designed control card: white panel, teal accent, rounded search input    */
-/* with inline icon, teal search button, and A–Z letter pills.                */
+/* with inline icon, teal search button, and AÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã…â€œZ letter pills.                */
 /* ========================================================================== */
 
 .directory-finder {
-  /* Subtle warm-white section background that bridges hero → directory */
+  /* Subtle warm-white section background that bridges hero ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ directory */
   background: linear-gradient(180deg, #fdfbf3 0%, #f7fafc 100%);
   padding: 2rem 0 1rem;
   border-bottom: 1px solid var(--border);
@@ -1200,7 +1200,7 @@ a:hover {
   text-decoration: underline;
 }
 
-/* ---- A–Z browse ---- */
+/* ---- AÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã…â€œZ browse ---- */
 .directory-alpha {
   display: flex;
   flex-direction: column;
@@ -1812,7 +1812,7 @@ a:hover {
 }
 
 /* -------------------------------------------------------------------------- */
-/* Venue profile page (Phase 3B — richer read-only layout)                    */
+/* Venue profile page (Phase 3B ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â richer read-only layout)                    */
 /* -------------------------------------------------------------------------- */
 
 /* Overall page section spacing for the profile */
@@ -1919,7 +1919,7 @@ a:hover {
 }
 
 /* CSS gradient fallback when no main_image_path is present.
-   Matches the existing .page-hero / .hero site gradient (teal → yellow). */
+   Matches the existing .page-hero / .hero site gradient (teal ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ yellow). */
 .venue-profile-hero--fallback {
   background-image: linear-gradient(
     135deg,
@@ -2072,7 +2072,7 @@ a:hover {
   min-width: 0;
 }
 
-/* Sidebar column — looks sticky but does not require JS */
+/* Sidebar column ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â looks sticky but does not require JS */
 .venue-profile-sidebar {
   display: flex;
   flex-direction: column;
@@ -2264,7 +2264,7 @@ a:hover {
 }
 
 /* -------------------------------------------------------------------------- */
-/* Venue profile — Interior Gallery (visual placeholder)                      */
+/* Venue profile ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â Interior Gallery (visual placeholder)                      */
 /* -------------------------------------------------------------------------- */
 
 .venue-profile-gallery {
@@ -2340,7 +2340,7 @@ a:hover {
 }
 
 /* -------------------------------------------------------------------------- */
-/* Venue profile — Recent Event Galleries (visual placeholder)                */
+/* Venue profile ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â Recent Event Galleries (visual placeholder)                */
 /* -------------------------------------------------------------------------- */
 
 .venue-profile-events {
@@ -2388,7 +2388,7 @@ a:hover {
   color: var(--muted);
 }
 
-/* Disabled "coming soon" affordance — muted, not clickable */
+/* Disabled "coming soon" affordance ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â muted, not clickable */
 .venue-profile-event-card__action {
   margin-top: auto;
   display: inline-flex;
@@ -2405,7 +2405,7 @@ a:hover {
 }
 
 /* -------------------------------------------------------------------------- */
-/* Venue profile — Sidebar note panels (e.g. Upcoming Events)                 */
+/* Venue profile ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â Sidebar note panels (e.g. Upcoming Events)                 */
 /* -------------------------------------------------------------------------- */
 
 .venue-profile-panel--note {
@@ -2425,7 +2425,7 @@ a:hover {
 }
 
 /* -------------------------------------------------------------------------- */
-/* Venue profile — Interior Gallery grid (mockup-aligned, image placeholders) */
+/* Venue profile ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â Interior Gallery grid (mockup-aligned, image placeholders) */
 /* One large image tile on the left, a 2x2 grid of small image tiles right.  */
 /* Image URLs are reused from home.php / DeepSite references. On mobile the  */
 /* tiles stack into a single readable column.                                */
@@ -2491,7 +2491,7 @@ a:hover {
 }
 
 /* -------------------------------------------------------------------------- */
-/* Venue profile — Recent Event Galleries (image-backed placeholder cards)    */
+/* Venue profile ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â Recent Event Galleries (image-backed placeholder cards)    */
 /* Each card has an image header + body with disabled "coming soon" action.   */
 /* -------------------------------------------------------------------------- */
 
@@ -2518,7 +2518,7 @@ a:hover {
   overflow: hidden;
 }
 
-/* Card image header — crops nicely, rounded only at the top (card corners) */
+/* Card image header ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â crops nicely, rounded only at the top (card corners) */
 .venue-event-gallery-card__image {
   display: block;
   width: 100%;
@@ -2562,7 +2562,7 @@ a:hover {
   color: var(--muted);
 }
 
-/* Disabled "coming soon" affordance — muted, not clickable */
+/* Disabled "coming soon" affordance ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â muted, not clickable */
 .venue-event-gallery-card__action {
   margin-top: auto;
   display: inline-flex;
@@ -2578,7 +2578,7 @@ a:hover {
   align-self: flex-start;
 }
 /* -------------------------------------------------------------------------- */
-/* Venue profile â€” Menu & Allergy Filtering (Phase 3C, read-only)             */
+/* Venue profile ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â Menu & Allergy Filtering (Phase 3C, read-only)             */
 /* -------------------------------------------------------------------------- */
 
 /* Disclaimer banner above the filter */
@@ -2876,7 +2876,7 @@ a:hover {
   margin-top: 0.25rem;
 }
 
-/* Collapsible full allergen list — closed by default */
+/* Collapsible full allergen list ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â closed by default */
 .allergen-details {
   margin-top: 0.5rem;
   font-size: 0.85rem;
@@ -3023,7 +3023,7 @@ a:hover {
 }
 
 /* -------------------------------------------------------------------------- */
-/* Venue profile — Tabbed main content (Overview / Photos / Menu / Events)    */
+/* Venue profile ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â Tabbed main content (Overview / Photos / Menu / Events)    */
 /* Progressive enhancement: without JS all panels are visible (server emits   */
 /* no `hidden` attributes); venue-tabs.js hides inactive panels on load.     */
 /* -------------------------------------------------------------------------- */
@@ -3034,7 +3034,7 @@ a:hover {
   gap: 1.5rem;
 }
 
-/* Tab navigation bar — horizontal on all sizes; scrolls horizontally on
+/* Tab navigation bar ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â horizontal on all sizes; scrolls horizontally on
    narrow screens instead of causing page overflow. */
 .venue-tabs__nav {
   display: flex;
@@ -3058,7 +3058,7 @@ a:hover {
   border-radius: 3px;
 }
 
-/* Individual tab button — looks like a pill chip; active turns teal */
+/* Individual tab button ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â looks like a pill chip; active turns teal */
 .venue-tabs__button {
   display: inline-flex;
   align-items: center;
@@ -3094,7 +3094,7 @@ a:hover {
   outline-offset: 2px;
 }
 
-/* Active tab — solid teal background, white text, subtle shadow */
+/* Active tab ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â solid teal background, white text, subtle shadow */
 .venue-tabs__button.is-active {
   background: var(--primary);
   color: var(--white);
@@ -3176,7 +3176,7 @@ a:hover {
 /* -------------------------------------------------------------------------- */
 
 .blog-hero {
-  /* Uses the existing .page-hero teal→yellow gradient via .page-hero */
+  /* Uses the existing .page-hero tealÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢yellow gradient via .page-hero */
 }
 
 /* Category filter pills */
@@ -3803,7 +3803,7 @@ a:hover {
   }
 }
 
-/* Lede / excerpt — larger, readable intro paragraph */
+/* Lede / excerpt ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â larger, readable intro paragraph */
 .article-detail__lede {
   font-size: 1.15rem;
   line-height: 1.7;
@@ -3971,7 +3971,7 @@ a:hover {
 
 /* ========================================================================== */
 /* Shared main-page hero system (Home / Directory / Blog index)               */
-/* Full-width banner: real background image + teal→yellow gradient overlay.   */
+/* Full-width banner: real background image + tealÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢yellow gradient overlay.   */
 /* Content (badge, title, subtitle, search) is horizontally centered.        */
 /* Uses two pseudo-elements: ::before = image layer, ::after = gradient.     */
 /* ========================================================================== */
@@ -4168,7 +4168,7 @@ a:hover {
 }
 
 /* ========================================================================== */
-/* Related stories — compact thumbnail links (sidebar)                        */
+/* Related stories ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â compact thumbnail links (sidebar)                        */
 /* ========================================================================== */
 
 .related-story-list {
@@ -4260,7 +4260,7 @@ a:hover {
 /* teal buttons, yellow accent badges, rounded corners, soft shadows.         */
 /* ========================================================================== */
 
-/* Main page hero modifier — visible background image + teal/yellow overlay.
+/* Main page hero modifier ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â visible background image + teal/yellow overlay.
    The base .main-page-hero styles are defined elsewhere; this only adds the
    gallery-specific background overlay so the hero feels branded like Blog. */
 .main-page-hero--gallery {
@@ -4984,8 +4984,8 @@ a:hover {
 
 /* ==========================================================================
    Phase 5C refinement: premium sizing for featured venue + sponsor layout
-   Desktop-only overrides (≥901px). Mobile rules above continue to stack
-   featured image → body → sponsor with no horizontal overflow.
+   Desktop-only overrides (ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â°Ãƒâ€šÃ‚Â¥901px). Mobile rules above continue to stack
+   featured image ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ body ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ sponsor with no horizontal overflow.
    - Wider, centered premium row
    - Featured card ~70% (image ~48-55% of the card)
    - Sponsor card ~30%, square-ish and matching height
@@ -5319,7 +5319,7 @@ section:has(.home-feature-layout) {
     background-image: linear-gradient(135deg, #2c7a7b 0%, #225e5f 55%, #f6e05e 120%) !important;
 }
 
-/* Dark gradient overlay — strongest on the right where text sits */
+/* Dark gradient overlay ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â strongest on the right where text sits */
 .home-feature-card__overlay {
     position: absolute !important;
     inset: 0 !important;
@@ -5335,7 +5335,7 @@ section:has(.home-feature-layout) {
     pointer-events: none !important;
 }
 
-/* Content layer — right-aligned column on top of the overlay */
+/* Content layer ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â right-aligned column on top of the overlay */
 .home-feature-card--overlay .home-feature-card__body {
     position: relative !important;
     z-index: 2 !important;
@@ -5394,7 +5394,7 @@ section:has(.home-feature-layout) {
     border-color: rgba(246, 224, 94, 0.92) !important;
 }
 
-/* Title — large, white, tight */
+/* Title ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â large, white, tight */
 .home-feature-card--overlay .home-feature-card__title {
     margin: 0 !important;
     color: #fff !important;
@@ -5404,7 +5404,7 @@ section:has(.home-feature-layout) {
     text-shadow: 0 2px 12px rgba(0, 0, 0, 0.35) !important;
 }
 
-/* Description — readable near-white */
+/* Description ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â readable near-white */
 .home-feature-card--overlay .home-feature-card__text {
     margin: 0 !important;
     color: rgba(255, 255, 255, 0.92) !important;
@@ -5592,7 +5592,7 @@ section:has(.home-feature-layout) .section-header {
     padding: 0 !important;
 }
 
-/* Spotlight slide card — reuse the Phase 5C overlay-card internals but ensure
+/* Spotlight slide card ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â reuse the Phase 5C overlay-card internals but ensure
    it fills the slide and sits at a cinematic height. */
 .home-spotlight-section .home-feature-card--overlay {
     min-height: 400px;
@@ -5636,14 +5636,14 @@ section:has(.home-feature-layout) .section-header {
     margin: 0 0.35rem;
 }
 
-/* Fallback slide (empty state) — use a warm internal gradient. */
+/* Fallback slide (empty state) ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â use a warm internal gradient. */
 .home-spotlight-section .home-feature-card--fallback {
     background:
         linear-gradient(135deg, rgba(44, 122, 123, 0.85), rgba(246, 224, 94, 0.55)),
         var(--primary-dark);
 }
 
-/* Sponsor card tweaks on the dark band — keep it light and square-ish. */
+/* Sponsor card tweaks on the dark band ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â keep it light and square-ish. */
 .home-spotlight-section .home-sponsor-card {
     align-self: stretch;
     min-height: 320px;
@@ -5818,7 +5818,7 @@ section:has(.home-feature-layout) .section-header {
    - Restores the wide cinematic spotlight card + square-ish sponsor card.
    ========================================================================== */
 
-/* Medium teal contrast band — pale teal wash with a deeper teal glow and
+/* Medium teal contrast band ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â pale teal wash with a deeper teal glow and
    a warm cream/yellow accent. Provides contrast without the heavy dark block. */
 .home-spotlight-section {
     background:
@@ -5881,7 +5881,7 @@ section:has(.home-feature-layout) .section-header {
     margin-left: auto !important;
 }
 
-/* Embedded prev/next arrows — circular, translucent, over the image */
+/* Embedded prev/next arrows ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â circular, translucent, over the image */
 .home-spotlight-section .home-spotlight__arrow {
     position: absolute !important;
     top: 50% !important;
@@ -6063,7 +6063,7 @@ section:has(.home-feature-layout) .section-header {
     min-height: 0 !important;
 }
 
-/* Card fills its slide completely — no gap below it */
+/* Card fills its slide completely ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â no gap below it */
 .home-spotlight-section .home-feature-card--overlay {
     height: 100% !important;
     min-height: 0 !important;
@@ -6092,7 +6092,7 @@ section:has(.home-feature-layout) .section-header {
    - Slider controls use teal/dark text so they read on the lighter band.
    ========================================================================== */
 
-/* Lighter premium contrast band: warm cream → pale teal with teal/yellow glow */
+/* Lighter premium contrast band: warm cream ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ pale teal with teal/yellow glow */
 .home-spotlight-section {
     background:
         radial-gradient(circle at 86% 14%, rgba(246, 224, 94, 0.20) 0%, transparent 42%),
@@ -6177,7 +6177,7 @@ section:has(.home-feature-layout) .section-header {
     align-self: stretch !important;
 }
 
-/* Embedded prev/next arrows — tuned to read over the image (kept) */
+/* Embedded prev/next arrows ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â tuned to read over the image (kept) */
 .home-spotlight-section .home-spotlight__arrow {
     background: rgba(15, 23, 42, 0.42) !important;
     color: #fff !important;
@@ -6253,3 +6253,118 @@ section:has(.home-feature-layout) .section-header {
         min-height: 260px !important;
     }
 }
+
+/* Phase 5E: Admin blog management contrast */
+.admin-blog-row {
+    background: #ffffff;
+    border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+.admin-blog-row td {
+    padding-top: 1.05rem;
+    padding-bottom: 1.05rem;
+}
+
+.admin-blog-row:hover {
+    background: rgba(45, 140, 137, 0.055);
+}
+
+.admin-blog-row--draft {
+    background: rgba(248, 250, 252, 0.92);
+}
+
+.admin-blog-row--draft .admin-table__title-cell strong {
+    color: rgba(30, 41, 59, 0.72);
+}
+
+.admin-blog-row--featured {
+    background: linear-gradient(90deg, rgba(250, 204, 21, 0.18), #ffffff 38%);
+    box-shadow: inset 4px 0 0 #facc15;
+}
+
+.admin-blog-row--featured .admin-table__title-cell strong {
+    color: var(--primary-dark);
+}
+
+.admin-table__badges .badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 0.35rem;
+    margin-bottom: 0.25rem;
+}
+
+.badge--draft {
+    background: rgba(100, 116, 139, 0.14);
+    color: #475569;
+}
+
+.badge--accent {
+    background: #facc15;
+    color: #1f2937;
+    border-color: rgba(202, 138, 4, 0.35);
+}
+
+.badge--success {
+    background: rgba(45, 140, 137, 0.16);
+    color: var(--primary-dark);
+    border-color: rgba(45, 140, 137, 0.25);
+}
+
+/* Phase 5E final: stronger admin blog row contrast */
+.admin-table:has(.admin-blog-row) {
+    border-collapse: separate !important;
+    border-spacing: 0 0.65rem !important;
+}
+
+.admin-table:has(.admin-blog-row) thead th {
+    padding-bottom: 0.85rem !important;
+}
+
+.admin-blog-row td {
+    background: #ffffff !important;
+    border-top: 1px solid rgba(15, 23, 42, 0.08) !important;
+    border-bottom: 1px solid rgba(15, 23, 42, 0.08) !important;
+}
+
+.admin-blog-row td:first-child {
+    border-left: 1px solid rgba(15, 23, 42, 0.08) !important;
+    border-top-left-radius: 0.85rem !important;
+    border-bottom-left-radius: 0.85rem !important;
+    padding-left: 1.1rem !important;
+}
+
+.admin-blog-row td:last-child {
+    border-right: 1px solid rgba(15, 23, 42, 0.08) !important;
+    border-top-right-radius: 0.85rem !important;
+    border-bottom-right-radius: 0.85rem !important;
+    padding-right: 1.1rem !important;
+}
+
+.admin-blog-row:hover td {
+    background: rgba(45, 140, 137, 0.06) !important;
+}
+
+.admin-blog-row--draft td {
+    background: #f8fafc !important;
+}
+
+.admin-blog-row--draft:hover td {
+    background: rgba(226, 232, 240, 0.9) !important;
+}
+
+.admin-blog-row--featured td {
+    background: #fffbea !important;
+    border-top-color: rgba(202, 138, 4, 0.24) !important;
+    border-bottom-color: rgba(202, 138, 4, 0.24) !important;
+}
+
+.admin-blog-row--featured td:first-child {
+    border-left: 5px solid #facc15 !important;
+}
+
+.admin-blog-row--featured:hover td {
+    background: #fef3c7 !important;
+}
+
+
