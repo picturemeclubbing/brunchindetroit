@@ -4,6 +4,7 @@ declare(strict_types=1);
 require_once __DIR__ . '/../app/bootstrap.php';
 require_once APP_ROOT . '/models/Venue.php';
 require_once APP_ROOT . '/models/Menu.php';
+require_once APP_ROOT . '/models/Gallery.php';
 
 // Read & validate the slug from the query string.
 $slug = isset($_GET['slug']) ? trim((string) $_GET['slug']) : '';
@@ -98,6 +99,8 @@ $allergyDisclaimer =
     'DetroitBrunch.com does not guarantee that any menu item is ' .
     'allergen-free. Always confirm ingredients and cross-contact risks ' .
     'directly with the restaurant before ordering.';
+
+$recentVenueGallery = Gallery::recentForVenue((int) $venue['id']);
 
 $pageTitle = $venue['name'];
 require APP_ROOT . '/views/venue-detail.php';

@@ -56,7 +56,7 @@ $resolveBlogImage = static function (?string $imagePath) use ($blogCardFallbackI
 };
 ?>
 
-<main>
+<div class="blog-list-page">
     <!-- Page hero: real background image (featured post image when available)
          with a teal/yellow gradient overlay. Image visible, text readable. -->
     <section class="main-page-hero main-page-hero--blog" style="--hero-bg-image:url('<?= e($blogHeroImage) ?>');">
@@ -300,7 +300,7 @@ $resolveBlogImage = static function (?string $imagePath) use ($blogCardFallbackI
             </div><!-- /.blog-layout -->
         </div>
     </section>
-</main>
+</div>
 
 <?php
 require APP_ROOT . '/views/partials/footer.php';

@@ -10,6 +10,7 @@ $activeNav = $activeNav ?? 'dashboard';
         <nav class="admin-sidebar__nav">
             <a href="<?= e(admin_url('dashboard.php')) ?>" class="admin-sidebar__link<?= $activeNav === 'dashboard' ? ' admin-sidebar__link--active' : '' ?>">Dashboard</a>
             <a href="<?= e(admin_url('venues.php')) ?>" class="admin-sidebar__link<?= $activeNav === 'venues' ? ' admin-sidebar__link--active' : '' ?>">Venues</a>
+            <a href="<?= e(admin_url('neighborhoods.php')) ?>" class="admin-sidebar__link<?= $activeNav === 'neighborhoods' ? ' admin-sidebar__link--active' : '' ?>">Neighborhoods</a>
             <span class="admin-sidebar__link admin-sidebar__link--disabled" title="Available in a later phase">Menu items</span>
             <a href="<?= e(admin_url('blog.php')) ?>" class="admin-sidebar__link<?= $activeNav === 'blog' ? ' admin-sidebar__link--active' : '' ?>">Blog</a>
         <a href="<?= e(admin_url('blog-categories.php')) ?>" class="admin-sidebar__link<?= $activeNav === 'blog' ? ' admin-sidebar__link--active' : '' ?>">Blog Categories</a>

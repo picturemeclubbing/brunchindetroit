@@ -75,7 +75,7 @@ if (!$hasActiveFilters) {
 $galleryHeroImage = 'https://images.unsplash.com/photo-1559056199-641a0ac8b55e?auto=format&fit=crop&w=1600&q=80';
 ?>
 
-<main>
+<div class="gallery-list-page">
     <!-- Page hero: same system as Home/Directory/Blog -->
     <section class="main-page-hero main-page-hero--gallery" style="--hero-bg-image:url('<?= e($galleryHeroImage) ?>');">
         <div class="container main-page-hero__inner">
@@ -300,7 +300,7 @@ $galleryHeroImage = 'https://images.unsplash.com/photo-1559056199-641a0ac8b55e?a
             <?php endif; ?>
         </div>
     </section>
-</main>
+</div>
 
 <?php
 require APP_ROOT . '/views/partials/footer.php';

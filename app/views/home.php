@@ -11,47 +11,177 @@ declare(strict_types=1);
             </span>
             <h1 class="main-page-hero__title">Find Your Next Brunch Obsession</h1>
             <p class="main-page-hero__subtitle">
-                Search by culture, dietary needs, vibe, or allergies
+                Start with where you want to brunch, then narrow it down by style, menu favorites, or time.
             </p>
 
-        <div class="hero-search" role="search" aria-label="Brunch search (preview)">
-            <div class="hero-search__grid">
-                <label class="sr-only" for="hero-neighborhood">Neighborhood</label>
-                <select id="hero-neighborhood" class="form-control" disabled>
-                    <option>Neighborhood</option>
-                    <option>Downtown</option>
-                    <option>Midtown</option>
-                    <option>Corktown</option>
-                    <option>Eastern Market</option>
-                </select>
+        <div class="hero-search hero-search--simple" role="search" aria-label="Brunch search">
+                <form class="hero-search__simple-form" method="get" action="<?= e(asset_url('directory.php')) ?>">
+                    <label class="sr-only" for="hero-location-search">Search by location</label>
 
-                <label class="sr-only" for="hero-culture">Culture</label>
-                <select id="hero-culture" class="form-control" disabled>
-                    <option>Culture</option>
-                    <option>Soul Food</option>
-                    <option>Latin</option>
-                    <option>Middle Eastern</option>
-                    <option>Asian Fusion</option>
-                </select>
+                    <div class="hero-search__simple-control">
+                        <span class="hero-search__location-icon" aria-hidden="true">
+                            <i class="fas fa-location-dot"></i>
+                        </span>
+                        <input
+                            id="hero-location-search"
+                            type="search"
+                            name="q"
+                            class="form-control hero-search__location-input"
+                            placeholder="Brunch near me, city, address, zip, or venue..."
+                            maxlength="80"
+                            autocomplete="off"
+                        >
+                    </div>
 
-                <label class="sr-only" for="hero-dietary">Dietary needs</label>
-                <select id="hero-dietary" class="form-control" disabled>
-                    <option>Dietary Needs</option>
-                    <option>Vegan</option>
-                    <option>Vegetarian</option>
-                    <option>Gluten-Free</option>
-                </select>
+                    <button type="submit" class="btn btn--primary hero-search__submit">
+                        Search <i class="fas fa-search" aria-hidden="true"></i>
+                    </button>
 
-                <a href="<?= e(asset_url('directory.php')) ?>" class="btn btn--primary btn--block">
-                    Search <i class="fas fa-search" aria-hidden="true"></i>
-                </a>
+                    <button type="button" class="btn btn--outline hero-search__advanced-button" data-advanced-search-open>
+                        Advanced
+                        <i class="fas fa-sliders" aria-hidden="true"></i>
+                    </button>
+                </form>
+
+                <p class="hero-search__note">Start with location. Use advanced search to narrow by featured spots, categories, menu favorites, and timing.</p>
             </div>
-            <p class="hero-search__note">Full directory search coming soon. Browse the directory to explore spots.</p>
-        </div>
+
+            <div class="advanced-search-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="advanced-search-title">
+                <div class="advanced-search-modal__overlay" data-advanced-search-close></div>
+
+                <section class="advanced-search-modal__panel" role="document">
+                    <header class="advanced-search-modal__header">
+                        <div>
+                            <p class="advanced-search-modal__eyebrow">Advanced Search</p>
+                            <h2 id="advanced-search-title" class="advanced-search-modal__title">Find the right brunch faster</h2>
+                        </div>
+
+                        <button type="button" class="advanced-search-modal__close" data-advanced-search-close aria-label="Close advanced search">
+                            <i class="fas fa-xmark" aria-hidden="true"></i>
+                        </button>
+                    </header>
+
+                    <div class="advanced-search-modal__body">
+                        <section class="advanced-search-modal__section">
+                            <div class="advanced-search-modal__section-header">
+                                <h3>Featured Brunch Spots</h3>
+                                <a href="<?= e(asset_url('directory.php?featured=1')) ?>">View featured</a>
+                            </div>
+
+                            <div class="advanced-featured-grid">
+                                <?php
+                                $advancedFeaturedItems = array_slice($spotlightItems ?? [], 0, 3);
+                                ?>
+
+                                <?php if (!empty($advancedFeaturedItems)): ?>
+                                    <?php foreach ($advancedFeaturedItems as $item): ?>
+                                        <?php
+                                            $featuredTitle = (string) ($item['title'] ?? 'Featured Brunch Spot');
+                                            $featuredUrl = (string) ($item['url'] ?? asset_url('directory.php'));
+                                            $featuredImage = !empty($item['image'])
+                                                ? (string) $item['image']
+                                                : 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=800&q=80';
+                                        ?>
+                                        <a class="advanced-featured-card" href="<?= e($featuredUrl) ?>">
+                                            <span class="advanced-featured-card__image" style="background-image:url('<?= e($featuredImage) ?>');"></span>
+                                            <span class="advanced-featured-card__content">
+                                                <strong><?= e($featuredTitle) ?></strong>
+                                                <small>View details</small>
+                                            </span>
+                                        </a>
+                                    <?php endforeach; ?>
+                                <?php else: ?>
+                                    <a class="advanced-featured-card advanced-featured-card--empty" href="<?= e(asset_url('directory.php')) ?>">
+                                        <span class="advanced-featured-card__content">
+                                            <strong>Featured spots coming soon</strong>
+                                            <small>Browse the full directory</small>
+                                        </span>
+                                    </a>
+                                <?php endif; ?>
+                            </div>
+                        </section>
+
+                        <section class="advanced-search-modal__section">
+                            <div class="advanced-search-modal__section-header">
+                                <h3>Quick Categories</h3>
+                            </div>
+
+                            <div class="advanced-category-grid">
+                                <a href="<?= e(asset_url('directory.php?q=Vegan%20Brunch')) ?>"><i class="fas fa-leaf"></i> Vegan Brunch</a>
+                                <a href="<?= e(asset_url('directory.php?q=Soul%20Food')) ?>"><i class="fas fa-music"></i> Soul Food</a>
+                                <a href="<?= e(asset_url('directory.php?q=Rooftop')) ?>"><i class="fas fa-umbrella-beach"></i> Rooftop</a>
+                                <a href="<?= e(asset_url('directory.php?q=Boozy%20Brunch')) ?>"><i class="fas fa-glass-cheers"></i> Boozy Brunch</a>
+                                <a href="<?= e(asset_url('directory.php?q=Family%20Friendly')) ?>"><i class="fas fa-child"></i> Family Friendly</a>
+                                <a href="<?= e(asset_url('directory.php?q=Bottomless')) ?>"><i class="fas fa-wine-glass-alt"></i> Bottomless</a>
+                            </div>
+                        </section>
+
+                        <section class="advanced-search-modal__section">
+                            <div class="advanced-search-modal__section-header">
+                                <h3>More Filters</h3>
+                            </div>
+
+                            <form class="advanced-search-form" method="get" action="<?= e(asset_url('directory.php')) ?>">
+                                <div class="advanced-search-form__grid">
+                                    <label>
+                                        <span>Brunch Style</span>
+                                        <select name="style" class="form-control">
+                                            <option value="">Any style</option>
+                                            <option value="Classic Brunch">Classic Brunch</option>
+                                            <option value="Soul Food">Soul Food</option>
+                                            <option value="Rooftop">Rooftop / Patio</option>
+                                            <option value="Upscale">Upscale</option>
+                                            <option value="Casual">Casual</option>
+                                            <option value="Day Party">Day Party</option>
+                                            <option value="Date Spot">Date Spot</option>
+                                            <option value="Family Friendly">Family Friendly</option>
+                                            <option value="Sports Bar">Sports Bar</option>
+                                            <option value="Cafe">Cafe</option>
+                                        </select>
+                                    </label>
+
+                                    <label>
+                                        <span>Menu Favorites</span>
+                                        <select name="favorite" class="form-control">
+                                            <option value="">Any menu favorite</option>
+                                            <option value="Chicken and Waffles">Chicken &amp; Waffles</option>
+                                            <option value="Pancakes">Pancakes</option>
+                                            <option value="Omelets">Omelets</option>
+                                            <option value="Seafood">Seafood</option>
+                                            <option value="Vegan Options">Vegan Options</option>
+                                            <option value="Mimosas">Mimosas</option>
+                                            <option value="Cocktails">Cocktails</option>
+                                            <option value="Coffee">Coffee</option>
+                                        </select>
+                                    </label>
+
+                                    <label>
+                                        <span>When</span>
+                                        <select name="when" class="form-control">
+                                            <option value="">Any time</option>
+                                            <option value="Open Today">Open Today</option>
+                                            <option value="Saturday">Saturday</option>
+                                            <option value="Sunday">Sunday</option>
+                                            <option value="Weekday">Weekday</option>
+                                            <option value="Late Brunch">Late Brunch</option>
+                                        </select>
+                                    </label>
+                                </div>
+
+                                <div class="advanced-search-form__actions">
+                                    <a class="btn btn--outline" href="<?= e(asset_url('directory.php')) ?>">View All</a>
+                                    <button type="submit" class="btn btn--primary">
+                                        Apply Filters <i class="fas fa-search" aria-hidden="true"></i>
+                                    </button>
+                                </div>
+                            </form>
+                        </section>
+                    </div>
+                </section>
+            </div>
         </div><!-- /.main-page-hero__content -->
     </div>
 </section>
-
 <section class="section section--spotlight home-spotlight-section">
     <div class="container">
         <div class="home-spotlight-layout">
@@ -80,7 +210,7 @@ declare(strict_types=1);
                                             <p class="home-feature-card__meta">
                                                 <?php foreach ($spotMeta as $i => $part): ?>
                                                     <?= $i > 0 ? ' <span class="home-feature-card__meta-sep" aria-hidden="true">•</span> ' : '' ?>
-                                                    <?= e((string) $part) ?>
+                                                    <span class="home-feature-card__meta-item"><?= e((string) $part) ?></span>
                                                 <?php endforeach; ?>
                                             </p>
                                         <?php endif; ?>
@@ -323,3 +453,52 @@ declare(strict_types=1);
         </div>
     </div>
 </section>
+
+
+<script>
+/* Phase 5R.2: Advanced Search Modal JS */
+document.addEventListener('DOMContentLoaded', function () {
+    const modal = document.querySelector('.advanced-search-modal');
+    const openButton = document.querySelector('[data-advanced-search-open]');
+
+    if (!modal || !openButton) {
+        return;
+    }
+
+    const openModal = function () {
+        modal.classList.add('is-open');
+        modal.setAttribute('aria-hidden', 'false');
+        document.body.classList.add('advanced-search-open');
+
+        const firstFocusable = modal.querySelector('button, a, select, input');
+        if (firstFocusable) {
+            firstFocusable.focus();
+        }
+    };
+
+    const closeModal = function () {
+        modal.classList.remove('is-open');
+        modal.setAttribute('aria-hidden', 'true');
+        document.body.classList.remove('advanced-search-open');
+        openButton.focus();
+    };
+
+    openButton.addEventListener('click', function (event) {
+        event.preventDefault();
+        openModal();
+    });
+
+    modal.addEventListener('click', function (event) {
+        if (event.target.closest('[data-advanced-search-close]')) {
+            event.preventDefault();
+            closeModal();
+        }
+    });
+
+    document.addEventListener('keydown', function (event) {
+        if (event.key === 'Escape' && modal.classList.contains('is-open')) {
+            closeModal();
+        }
+    });
+});
+</script>

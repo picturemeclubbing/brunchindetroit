@@ -3,44 +3,167 @@ declare(strict_types=1);
 
 /**
  * @var array  $venues
+ * @var array  $visibleVenues
  * @var array  $availableLetters
- * @var string $selectedLetter
  * @var string $searchQuery
+ * @var string $selectedLetter
+ * @var string $styleFilter
+ * @var string $favoriteFilter
+ * @var string $whenFilter
+ * @var bool   $featuredFilter
  * @var int    $totalVenueCount
  * @var int    $filteredVenueCount
+ * @var bool   $hasMore
+ * @var int    $nextPage
  */
 
 require APP_ROOT . '/views/partials/header.php';
 
-// Helper: build a directory URL preserving the current search query (q) when needed.
-$directoryUrl = static function (string $letter = '') use ($searchQuery): string {
+$buildDirectoryUrl = static function (array $overrides = [], array $clear = []) use (
+    $searchQuery,
+    $selectedLetter,
+    $styleFilter,
+    $favoriteFilter,
+    $whenFilter,
+    $featuredFilter
+): string {
     $params = [];
+
     if ($searchQuery !== '') {
         $params['q'] = $searchQuery;
     }
-    if ($letter !== '') {
-        $params['letter'] = $letter;
+
+    if ($selectedLetter !== '') {
+        $params['letter'] = $selectedLetter;
     }
+
+    if ($styleFilter !== '') {
+        $params['style'] = $styleFilter;
+    }
+
+    if ($favoriteFilter !== '') {
+        $params['favorite'] = $favoriteFilter;
+    }
+
+    if ($whenFilter !== '') {
+        $params['when'] = $whenFilter;
+    }
+
+    if ($featuredFilter) {
+        $params['featured'] = '1';
+    }
+
+    foreach ($clear as $key) {
+        unset($params[$key]);
+    }
+
+    foreach ($overrides as $key => $value) {
+        if ($value === null || $value === '' || $value === false) {
+            unset($params[$key]);
+            continue;
+        }
+
+        $params[$key] = (string) $value;
+    }
+
     return $params === []
         ? asset_url('directory.php')
         : asset_url('directory.php?' . http_build_query($params));
 };
 
-$hasActiveFilter = ($searchQuery !== '') || ($selectedLetter !== '');
+$directoryUrl = static function (string $letter = '') use ($buildDirectoryUrl): string {
+    return $buildDirectoryUrl(
+        ['letter' => $letter],
+        ['q', 'page']
+    );
+};
 
-// Natural-language result status line.
+$pageUrl = static function (int $targetPage) use ($buildDirectoryUrl): string {
+    return $buildDirectoryUrl(['page' => max(1, $targetPage)]);
+};
+
+$venueCardFallbackImage = asset_url('assets/images/blog-card-fallback.png');
+
+$resolveVenueImage = static function (?string $imagePath) use ($venueCardFallbackImage): string {
+    $imagePath = trim((string) $imagePath);
+
+    if ($imagePath === '') {
+        return $venueCardFallbackImage;
+    }
+
+    if (str_starts_with($imagePath, '/')) {
+        $publicFile = dirname(APP_ROOT) . '/public' . str_replace('/', DIRECTORY_SEPARATOR, $imagePath);
+
+        if (!is_file($publicFile)) {
+            return $venueCardFallbackImage;
+        }
+    }
+
+    return $imagePath;
+};
+
+$formatVenueHours = static function (?string $hours): string {
+    $hours = trim((string) $hours);
+
+    $genericValues = [
+        'Breakfast and brunch service; check official site for current daily hours.',
+        'Breakfast and brunch service; check official site for current daily hours',
+        'Check official site for current daily hours.',
+        'Check official site for current daily hours',
+    ];
+
+    if ($hours === '' || in_array($hours, $genericValues, true)) {
+        return 'N/A';
+    }
+
+    return str_ireplace(
+        ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+        ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+        $hours
+    );
+};
+
+$hasActiveFilter = ($searchQuery !== '')
+    || ($selectedLetter !== '')
+    || ($styleFilter !== '')
+    || ($favoriteFilter !== '')
+    || ($whenFilter !== '')
+    || $featuredFilter;
+
+$activeLabels = [];
+
+if ($featuredFilter) {
+    $activeLabels[] = 'featured spots';
+}
+
+if ($searchQuery !== '') {
+    $activeLabels[] = '"' . $searchQuery . '"';
+}
+
+if ($selectedLetter !== '') {
+    $activeLabels[] = 'A-Z: ' . $selectedLetter;
+}
+
+if ($styleFilter !== '') {
+    $activeLabels[] = 'style: ' . $styleFilter;
+}
+
+if ($favoriteFilter !== '') {
+    $activeLabels[] = 'favorite: ' . $favoriteFilter;
+}
+
+if ($whenFilter !== '') {
+    $activeLabels[] = 'when: ' . $whenFilter;
+}
+
 if (!$hasActiveFilter) {
     $statusText = 'Showing all ' . $filteredVenueCount . ' brunch spot' . ($filteredVenueCount === 1 ? '' : 's') . '.';
-} elseif ($searchQuery !== '' && $selectedLetter !== '') {
-    $statusText = 'Showing ' . $filteredVenueCount . ' result' . ($filteredVenueCount === 1 ? '' : 's') . ' for “' . $searchQuery . '” under ' . $selectedLetter . '.';
-} elseif ($searchQuery !== '') {
-    $statusText = 'Showing ' . $filteredVenueCount . ' result' . ($filteredVenueCount === 1 ? '' : 's') . ' for “' . $searchQuery . '”.';
 } else {
-    $statusText = 'Showing ' . $filteredVenueCount . ' brunch spot' . ($filteredVenueCount === 1 ? '' : 's') . ' under ' . $selectedLetter . '.';
+    $statusText = 'Showing ' . $filteredVenueCount . ' result' . ($filteredVenueCount === 1 ? '' : 's') . ' for ' . implode(', ', $activeLabels) . '.';
 }
 ?>
 
-<main>
+<div class="directory-page">
     <section class="main-page-hero main-page-hero--directory" style="--hero-bg-image:url('https://images.unsplash.com/photo-1551218808-94e220e084d2?auto=format&fit=crop&w=1600&q=80');">
         <div class="container main-page-hero__inner">
             <div class="main-page-hero__content">
@@ -57,7 +180,7 @@ if (!$hasActiveFilter) {
         </div>
     </section>
 
-    <!-- Designed Directory Search + A–Z Browse panel -->
+    <!-- Designed Directory Search + A-Z Browse panel -->
     <section class="directory-finder" aria-label="Find a brunch spot">
         <div class="container directory-finder__inner">
             <div class="directory-finder__header">
@@ -68,7 +191,7 @@ if (!$hasActiveFilter) {
                     </span>
                     <h2 class="directory-finder__title">Find a Brunch Spot</h2>
                     <p class="directory-finder__subtitle">
-                        Search by name or browse Detroit brunch spots alphabetically.
+                        Search by location, address, venue name, dish, or vibe.
                     </p>
                 </div>
                 <div class="directory-finder__status"><?= e($statusText) ?></div>
@@ -78,8 +201,20 @@ if (!$hasActiveFilter) {
                 <?php if ($selectedLetter !== ''): ?>
                     <input type="hidden" name="letter" value="<?= e($selectedLetter) ?>">
                 <?php endif; ?>
+                <?php if ($styleFilter !== ''): ?>
+                    <input type="hidden" name="style" value="<?= e($styleFilter) ?>">
+                <?php endif; ?>
+                <?php if ($favoriteFilter !== ''): ?>
+                    <input type="hidden" name="favorite" value="<?= e($favoriteFilter) ?>">
+                <?php endif; ?>
+                <?php if ($whenFilter !== ''): ?>
+                    <input type="hidden" name="when" value="<?= e($whenFilter) ?>">
+                <?php endif; ?>
+                <?php if ($featuredFilter): ?>
+                    <input type="hidden" name="featured" value="1">
+                <?php endif; ?>
 
-                <label for="directory-search" class="sr-only">Search venues by name</label>
+                <label for="directory-search" class="sr-only">Search venues by location, address, or name</label>
                 <div class="directory-search-form__control">
                     <span class="directory-search-form__icon" aria-hidden="true">
                         <i class="fas fa-magnifying-glass"></i>
@@ -89,7 +224,7 @@ if (!$hasActiveFilter) {
                         type="search"
                         name="q"
                         value="<?= e($searchQuery) ?>"
-                        placeholder="Search by venue name&hellip;"
+                        placeholder="Brunch near me, city, address, zip, or venue..."
                         maxlength="80"
                         autocomplete="off"
                     >
@@ -97,20 +232,17 @@ if (!$hasActiveFilter) {
                         <i class="fas fa-magnifying-glass" aria-hidden="true"></i>
                         <span>Search</span>
                     </button>
-                </div>
-
-                <?php if ($hasActiveFilter): ?>
-                    <div class="directory-finder__clear">
-                        <a href="<?= e($directoryUrl('')) ?>">
+                    <?php if ($hasActiveFilter): ?>
+                        <a class="btn btn--outline directory-search-form__reset" href="<?= e(asset_url('directory.php')) ?>">
                             <i class="fas fa-arrow-rotate-left" aria-hidden="true"></i>
-                            View All
+                            <span>Reset</span>
                         </a>
-                    </div>
-                <?php endif; ?>
+                    <?php endif; ?>
+                </div>
             </form>
 
             <div class="directory-alpha">
-                <span class="directory-alpha__label">Browse A–Z</span>
+                <span class="directory-alpha__label">BROWSE A-Z</span>
                 <nav class="directory-alpha__nav" aria-label="A to Z venue filter">
                     <a
                         class="directory-alpha__link<?= $selectedLetter === '' ? ' is-active' : '' ?>"
@@ -163,15 +295,15 @@ if (!$hasActiveFilter) {
                         <i class="fas fa-magnifying-glass" aria-hidden="true"></i>
                         <h3>No brunch spots matched your search</h3>
                         <p>Try a different name or letter, or browse the full directory.</p>
-                        <a class="btn btn--primary" href="<?= e($directoryUrl('')) ?>">
+                        <a class="btn btn--primary" href="<?= e(asset_url('directory.php')) ?>">
                             <i class="fas fa-arrow-rotate-left" aria-hidden="true"></i>
                             View All
                         </a>
                     </div>
                 <?php endif; ?>
             <?php else: ?>
-                <div class="directory-grid">
-                    <?php foreach ($venues as $venue): ?>
+                <div class="directory-grid" id="directory-grid">
+                    <?php foreach ($visibleVenues as $venue): ?>
                         <?php
                         // Build an optional single-line address from whatever fields are present.
                         $addressParts = array_filter([
@@ -180,34 +312,17 @@ if (!$hasActiveFilter) {
                             trim((($venue['city'] ?? '') . ' ' . ($venue['state'] ?? '') . ' ' . ($venue['zip'] ?? ''))),
                         ], static fn ($v) => trim((string) $v) !== '');
                         $addressLine = implode(', ', $addressParts);
-                        ?>
-                        <article class="card card--hover venue-card">
+                        $venueHoursDisplay = $formatVenueHours((string) ($venue['brunch_hours_note'] ?? ''));
+
+                        $venueImage = $resolveVenueImage((string) ($venue['main_image_path'] ?? ''));
+                        $venueCardTone = !empty($venue['is_featured']) ? 'venue-card--featured-image' : 'venue-card--standard-image';?>
+                        <article class="card card--hover venue-card venue-card--image <?= e($venueCardTone) ?>" style="--venue-card-bg:url('<?= e($venueImage) ?>');">
                             <div class="venue-card__body">
                                 <?php if (!empty($venue['is_featured'])): ?>
                                     <span class="badge badge--accent venue-card__featured">Featured</span>
                                 <?php endif; ?>
 
                                 <h3 class="venue-card__title"><?= e($venue['name']) ?></h3>
-
-                                <?php
-                                $hasNeighborhood = !empty($venue['neighborhood_name']);
-                                $hasPrice = !empty($venue['price_range']);
-                                if ($hasNeighborhood || $hasPrice):
-                                ?>
-                                    <p class="venue-card__meta">
-                                        <?php if ($hasNeighborhood): ?>
-                                            <span class="venue-card__meta-item">
-                                                <i class="fas fa-map-marker-alt" aria-hidden="true"></i>
-                                                <?= e($venue['neighborhood_name']) ?>
-                                            </span>
-                                        <?php endif; ?>
-                                        <?php if ($hasPrice): ?>
-                                            <span class="venue-card__meta-item venue-card__price">
-                                                <?= e($venue['price_range']) ?>
-                                            </span>
-                                        <?php endif; ?>
-                                    </p>
-                                <?php endif; ?>
 
                                 <?php if (!empty($venue['description'])): ?>
                                     <p class="venue-card__description"><?= e($venue['description']) ?></p>
@@ -220,12 +335,10 @@ if (!$hasActiveFilter) {
                                     </p>
                                 <?php endif; ?>
 
-                                <?php if (!empty($venue['brunch_hours_note'])): ?>
-                                    <p class="venue-card__hours">
-                                        <i class="fas fa-clock" aria-hidden="true"></i>
-                                        <strong>Brunch:</strong> <?= e($venue['brunch_hours_note']) ?>
-                                    </p>
-                                <?php endif; ?>
+                                <p class="venue-card__hours">
+                                    <i class="fas fa-clock" aria-hidden="true"></i>
+                                    <strong>Brunch:</strong> <?= e($venueHoursDisplay) ?>
+                                </p>
 
                                 <div class="venue-card__actions">
                                     <a
@@ -235,27 +348,28 @@ if (!$hasActiveFilter) {
                                         <i class="fas fa-circle-info" aria-hidden="true"></i>
                                         View Profile
                                     </a>
-
-                                    <?php if (!empty($venue['website_url'])): ?>
-                                        <a
-                                            class="btn btn--outline venue-card__website"
-                                            href="<?= e($venue['website_url']) ?>"
-                                            target="_blank"
-                                            rel="noopener"
-                                        >
-                                            <i class="fas fa-up-right-from-square" aria-hidden="true"></i>
-                                            Website
-                                        </a>
-                                    <?php endif; ?>
+                                    <button type="button" class="btn btn--outline venue-card__rsvp-placeholder" disabled aria-disabled="true">
+                                        <i class="fas fa-calendar-check" aria-hidden="true"></i>
+                                        RSVP
+                                    </button>
                                 </div>
                             </div>
                         </article>
                     <?php endforeach; ?>
                 </div>
+
+                <?php if ($hasMore): ?>
+                    <div class="directory-load-more">
+                        <a class="btn btn--primary directory-load-more__btn" href="<?= e($pageUrl($nextPage)) ?>#directory-grid">
+                            <i class="fas fa-plus" aria-hidden="true"></i>
+                            Load More
+                        </a>
+                    </div>
+                <?php endif; ?>
             <?php endif; ?>
         </div>
     </section>
-</main>
+</div>
 
 <?php
 require APP_ROOT . '/views/partials/footer.php';

@@ -59,7 +59,7 @@ $publishedDate = $formatDate($post['published_at'] ?? null);
 $readingMinutes = max(1, (int) round(str_word_count(strip_tags((string) ($post['body'] ?? ''))) / 200));
 ?>
 
-<main>
+<div class="blog-detail-page">
     <!-- Breadcrumb (above the article layout) -->
     <div class="container">
         <nav class="breadcrumb" aria-label="Breadcrumb">
@@ -308,7 +308,7 @@ $readingMinutes = max(1, (int) round(str_word_count(strip_tags((string) ($post['
             <?php endif; ?>
         </aside>
     </div><!-- /.article-layout -->
-</main>
+</div>
 
 <?php
 require APP_ROOT . '/views/partials/footer.php';

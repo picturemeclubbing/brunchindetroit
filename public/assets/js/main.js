@@ -34,7 +34,7 @@
     }
 
     Array.prototype.forEach.call(allTracks, function (track) {
-      // Skip the spotlight track â€” it is handled separately.
+      // Skip the spotlight track - it is handled separately.
       if (track.closest(".home-spotlight-section")) {
         return;
       }
@@ -289,4 +289,39 @@
   }
 
   initBlogFeaturedSlider();
+
+  /* ---------------------------------------------------------------------- */
+  /* Mobile: reveal spotlight arrows only while the carousel is being touched */
+  /* Desktop is unaffected (arrows stay visible via CSS).                    */
+  /* ---------------------------------------------------------------------- */
+  function initSpotlightTouchArrows() {
+    var slider = document.querySelector(
+      ".home-spotlight-section .home-spotlight__slider"
+    );
+    if (!slider) {
+      return;
+    }
+
+    var hideTimer = null;
+
+    function reveal() {
+      slider.classList.add("is-touched");
+      if (hideTimer) {
+        window.clearTimeout(hideTimer);
+      }
+      hideTimer = window.setTimeout(function () {
+        slider.classList.remove("is-touched");
+        hideTimer = null;
+      }, 3000);
+    }
+
+    slider.addEventListener("touchstart", reveal, { passive: true });
+    slider.addEventListener("pointerdown", function (e) {
+      if (e.pointerType === "touch" || e.pointerType === "pen") {
+        reveal();
+      }
+    });
+  }
+
+  initSpotlightTouchArrows();
 })();

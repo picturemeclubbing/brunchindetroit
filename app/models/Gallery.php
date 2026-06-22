@@ -25,7 +25,7 @@ final class Gallery
      * @param string|null $location Location filter over location_label,
      *                              venue name, or neighborhood name.
      * @param int|null    $year     Optional event_date year filter.
-     * @param int|null    $month    Optional event_date month filter (1–12).
+     * @param int|null        Optional event_date month filter (1-12).
      *
      * @return array<int, array<string, mixed>>
      */
@@ -70,11 +70,14 @@ final class Gallery
 
         if ($location !== null && $location !== '') {
             $sql .= " AND (
-                g.location_label LIKE :location
-                OR v.name LIKE :location
-                OR n.name LIKE :location
+                g.location_label LIKE :location_label
+                OR v.name LIKE :location_venue
+                OR n.name LIKE :location_neighborhood
             )";
-            $params[':location'] = '%' . $location . '%';
+            $locationLike = '%' . $location . '%';
+            $params[':location_label'] = $locationLike;
+            $params[':location_venue'] = $locationLike;
+            $params[':location_neighborhood'] = $locationLike;
         }
 
         if ($year !== null && $year > 0) {
@@ -220,7 +223,7 @@ final class Gallery
     }
 
     // --------------------------------------------------------------------------
-    // Phase 5A — admin CRUD methods (do not affect public reads above).
+    // Phase 5A - admin CRUD methods (do not affect public reads above).
     // --------------------------------------------------------------------------
 
     /**
@@ -424,5 +427,47 @@ final class Gallery
             ':id' => $id,
             ':value' => $featured ? 1 : 0,
         ]);
+    }
+
+
+    /**
+     * Most recent published gallery for a venue.
+     *
+     * @return array<string, mixed>|null
+     */
+    public static function recentForVenue(int $venueId): ?array
+    {
+        $pdo = db();
+
+        $stmt = $pdo->prepare("
+            SELECT
+                g.id,
+                g.slug,
+                g.title,
+                g.description,
+                g.cover_image_path,
+                g.gallery_url,
+                g.event_date,
+                g.location_label,
+                g.is_featured,
+                v.name AS venue_name,
+                n.name AS neighborhood_name
+            FROM galleries g
+            LEFT JOIN venues v        ON v.id = g.venue_id
+            LEFT JOIN neighborhoods n ON n.id = v.neighborhood_id
+            WHERE g.is_published = 1
+              AND g.venue_id = :venue_id
+            ORDER BY
+                g.event_date DESC,
+                g.created_at DESC
+            LIMIT 1
+        ");
+
+        $stmt->bindValue(':venue_id', $venueId, PDO::PARAM_INT);
+        $stmt->execute();
+
+        $row = $stmt->fetch();
+
+        return $row !== false ? $row : null;
     }
 }

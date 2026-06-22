@@ -233,7 +233,7 @@ $heading = $isEdit ? 'Edit Venue' : 'Add Venue';
                 <label class="form-label" for="brunch_hours_note">Brunch Hours Note</label>
                 <textarea id="brunch_hours_note" name="brunch_hours_note" class="form-control"
                           rows="2"><?= e($form['brunch_hours_note']) ?></textarea>
-                <span class="admin-form__hint">Free-text brunch hours shown on the venue profile (e.g. "Sat & Sun 10am–2pm").</span>
+                <span class="admin-form__hint">Enter real brunch hours only. Leave blank to show N/A publicly. Use short days, e.g. "Sat-Sun 10am-2pm".</span>
             </div>
 
             <!-- Description -->

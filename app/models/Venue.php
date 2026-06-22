@@ -42,7 +42,7 @@ final class Venue
 
     /**
      * Featured, published venues for the Home page "Featured Brunch Spots"
-     * slider (Phase 5C). Additive only — does not affect published(),
+     * slider (Phase 5C). Additive only - does not affect published(),
      * findBySlug(), or admin methods.
      *
      * Returns published venues where is_featured = 1, ordered by
@@ -149,7 +149,7 @@ final class Venue
     }
 
     // --------------------------------------------------------------------------
-    // Phase 5B — admin CRUD methods (do not affect public reads above).
+    // Phase 5B - admin CRUD methods (do not affect public reads above).
     // --------------------------------------------------------------------------
 
     /**
@@ -416,7 +416,7 @@ final class Venue
             $neighborhoodId = $candidate > 0 ? $candidate : null;
         }
 
-        // city/state are NOT NULL columns with defaults — never bind null.
+        // city/state are NOT NULL columns with defaults - never bind null.
         $city  = $nullable($data['city'] ?? '') ?? 'Detroit';
         $state = $nullable($data['state'] ?? '') ?? 'MI';
 
@@ -442,4 +442,153 @@ final class Venue
             ':featured_sort'     => (int) ($data['featured_sort'] ?? 0),
         ];
     }
+
+    /**
+     * Admin: all neighborhoods with assigned venue counts.
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    public static function neighborhoodsWithCounts(): array
+    {
+        $pdo = db();
+
+        $sql = "
+            SELECT
+                n.id,
+                n.name,
+                n.slug,
+                n.sort_order,
+                n.is_active,
+                COUNT(v.id) AS venue_count
+            FROM neighborhoods n
+            LEFT JOIN venues v ON v.neighborhood_id = n.id
+            GROUP BY n.id, n.name, n.slug, n.sort_order, n.is_active
+            ORDER BY n.sort_order ASC, n.name ASC
+        ";
+
+        return $pdo->query($sql)->fetchAll();
+    }
+
+    /**
+     * Admin: find one neighborhood by id.
+     *
+     * @return array<string, mixed>|null
+     */
+    public static function neighborhoodFind(int $id): ?array
+    {
+        $pdo = db();
+
+        $stmt = $pdo->prepare("
+            SELECT id, name, slug, sort_order, is_active
+            FROM neighborhoods
+            WHERE id = :id
+            LIMIT 1
+        ");
+        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+
+        $row = $stmt->fetch();
+
+        return $row !== false ? $row : null;
+    }
+
+    public static function neighborhoodSlugExists(string $slug, ?int $ignoreId = null): bool
+    {
+        $pdo = db();
+
+        $sql = "
+            SELECT COUNT(*)
+            FROM neighborhoods
+            WHERE slug = :slug
+        ";
+
+        if ($ignoreId !== null) {
+            $sql .= " AND id <> :ignore_id";
+        }
+
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindValue(':slug', $slug);
+
+        if ($ignoreId !== null) {
+            $stmt->bindValue(':ignore_id', $ignoreId, PDO::PARAM_INT);
+        }
+
+        $stmt->execute();
+
+        return (int) $stmt->fetchColumn() > 0;
+    }
+
+    public static function neighborhoodCreate(array $data): int
+    {
+        $pdo = db();
+
+        $stmt = $pdo->prepare("
+            INSERT INTO neighborhoods (name, slug, sort_order, is_active)
+            VALUES (:name, :slug, :sort_order, :is_active)
+        ");
+
+        $stmt->bindValue(':name', (string) ($data['name'] ?? ''));
+        $stmt->bindValue(':slug', (string) ($data['slug'] ?? ''));
+        $stmt->bindValue(':sort_order', (int) ($data['sort_order'] ?? 0), PDO::PARAM_INT);
+        $stmt->bindValue(':is_active', !empty($data['is_active']) ? 1 : 0, PDO::PARAM_INT);
+        $stmt->execute();
+
+        return (int) $pdo->lastInsertId();
+    }
+
+    public static function neighborhoodUpdate(int $id, array $data): bool
+    {
+        $pdo = db();
+
+        $stmt = $pdo->prepare("
+            UPDATE neighborhoods
+            SET
+                name = :name,
+                slug = :slug,
+                sort_order = :sort_order,
+                is_active = :is_active
+            WHERE id = :id
+        ");
+
+        $stmt->bindValue(':name', (string) ($data['name'] ?? ''));
+        $stmt->bindValue(':slug', (string) ($data['slug'] ?? ''));
+        $stmt->bindValue(':sort_order', (int) ($data['sort_order'] ?? 0), PDO::PARAM_INT);
+        $stmt->bindValue(':is_active', !empty($data['is_active']) ? 1 : 0, PDO::PARAM_INT);
+        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+
+        return $stmt->execute();
+    }
+
+    public static function neighborhoodVenueCount(int $id): int
+    {
+        $pdo = db();
+
+        $stmt = $pdo->prepare("
+            SELECT COUNT(*)
+            FROM venues
+            WHERE neighborhood_id = :id
+        ");
+        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+
+        return (int) $stmt->fetchColumn();
+    }
+
+    public static function neighborhoodDelete(int $id): bool
+    {
+        if (self::neighborhoodVenueCount($id) > 0) {
+            throw new RuntimeException('This neighborhood has venues assigned to it and cannot be deleted.');
+        }
+
+        $pdo = db();
+
+        $stmt = $pdo->prepare("
+            DELETE FROM neighborhoods
+            WHERE id = :id
+        ");
+        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+
+        return $stmt->execute();
+    }
+
 }
