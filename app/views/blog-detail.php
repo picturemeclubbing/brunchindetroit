@@ -60,6 +60,7 @@ $readingMinutes = max(1, (int) round(str_word_count(strip_tags((string) ($post['
 ?>
 
 <div class="blog-detail-page">
+    <?php require APP_ROOT . '/views/partials/frontend-admin-bar.php'; ?>
     <!-- Breadcrumb (above the article layout) -->
     <div class="container">
         <nav class="breadcrumb" aria-label="Breadcrumb">

@@ -61,6 +61,30 @@ if ($venue === null) {
     return;
 }
 
+// --- Frontend admin quick-edit links -----------------------------------------
+$frontendAdminActions = [];
+$frontendAdminTitle = 'Venue admin';
+
+$adminSessionName = (string) (app_config()['session']['name'] ?? 'brunch_admin_session');
+if (!empty($_COOKIE[$adminSessionName]) && admin_is_logged_in()) {
+    $frontendAdminActions = [
+        [
+            'label' => 'Edit Venue',
+            'url'   => admin_url('venue-edit.php?id=' . (int) $venue['id']),
+            'icon'  => 'fas fa-pen-to-square',
+        ],
+        [
+            'label' => 'Galleries',
+            'url'   => admin_url('galleries.php'),
+            'icon'  => 'fas fa-images',
+        ],
+        [
+            'label' => 'Venue Admin',
+            'url'   => admin_url('venues.php'),
+            'icon'  => 'fas fa-store',
+        ],
+    ];
+}
 // Read the optional allergen filter from the query string and sanitize it
 // to a simple slug (lowercase letters, digits, hyphens).
 $selectedAllergen = '';

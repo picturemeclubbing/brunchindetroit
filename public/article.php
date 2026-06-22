@@ -6,7 +6,7 @@ declare(strict_types=1);
  *
  * Loads a single published blog post by slug, builds dynamic SEO metadata
  * (canonical, Open Graph, Twitter, JSON-LD BlogPosting), loads related posts,
- * and renders the article detail view. Read-only Ã¢â‚¬â€ no comments, no ratings.
+ * and renders the article detail view. Read-only ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â no comments, no ratings.
  */
 
 require_once __DIR__ . '/../app/bootstrap.php';
@@ -62,6 +62,25 @@ $related = Blog::relatedPosts(
     3
 );
 
+// --- Frontend admin quick-edit links -----------------------------------------
+$frontendAdminActions = [];
+$frontendAdminTitle = 'Blog admin';
+
+$adminSessionName = (string) (app_config()['session']['name'] ?? 'brunch_admin_session');
+if (!empty($_COOKIE[$adminSessionName]) && admin_is_logged_in()) {
+    $frontendAdminActions = [
+        [
+            'label' => 'Edit Blog Post',
+            'url'   => admin_url('blog-edit.php?id=' . (int) $post['id']),
+            'icon'  => 'fas fa-pen-to-square',
+        ],
+        [
+            'label' => 'Blog Admin',
+            'url'   => admin_url('blog.php'),
+            'icon'  => 'fas fa-newspaper',
+        ],
+    ];
+}
 // --- SEO metadata -------------------------------------------------------------
 $canonicalUrl = canonical_url('article.php?slug=' . urlencode($slug));
 
@@ -71,7 +90,7 @@ if ($metaDescription === '') {
     // Fallback: strip HTML from body and truncate for description.
     $plain = trim(preg_replace('/\s+/', ' ', strip_tags((string) ($post['body'] ?? ''))));
     $metaDescription = mb_strlen($plain) > 155
-        ? trim(mb_substr($plain, 0, 152)) . 'Ã¢â‚¬Â¦'
+        ? trim(mb_substr($plain, 0, 152)) . 'ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦'
         : $plain;
 }
 

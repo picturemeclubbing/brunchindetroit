@@ -8480,3 +8480,70 @@ body .main-page-hero--home .hero-search--simple {
         padding: 1rem 1rem 1.1rem !important;
     }
 }
+
+/* Frontend admin quick-edit bar */
+.frontend-admin-bar {
+    margin: 0 0 1rem;
+    padding: 0.75rem 0;
+    background: rgba(20, 20, 20, 0.94);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    color: #fff;
+}
+
+.frontend-admin-bar__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.frontend-admin-bar__title {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+}
+
+.frontend-admin-bar__actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.frontend-admin-bar__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.45rem 0.7rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 700;
+}
+
+.frontend-admin-bar__link:hover,
+.frontend-admin-bar__link:focus {
+    background: rgba(255, 255, 255, 0.18);
+    color: #fff;
+}
+
+@media (max-width: 640px) {
+    .frontend-admin-bar__inner {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .frontend-admin-bar__actions {
+        width: 100%;
+    }
+
+    .frontend-admin-bar__link {
+        flex: 1 1 auto;
+        justify-content: center;
+    }
+}

@@ -210,6 +210,7 @@ require APP_ROOT . '/views/partials/header.php';
 ?>
 
 <div class="venue-detail-page">
+    <?php require APP_ROOT . '/views/partials/frontend-admin-bar.php'; ?>
     <section class="section section--muted venue-profile">
         <div class="container">
 
