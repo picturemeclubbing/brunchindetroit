@@ -11,7 +11,7 @@ declare(strict_types=1);
  * Filtering rule: when an allergen slug is supplied, only menu items that
  * have an explicit status of 'does_not_contain' for that allergen are kept.
  * Items with any other status (contains / may_contain / cross_contact_risk /
- * unknown) — or no status row at all — are excluded.
+ * unknown) â€” or no status row at all â€” are excluded.
  */
 final class Menu
 {
@@ -176,6 +176,232 @@ final class Menu
         return array_values(array_filter($byId, static fn ($cat) => $cat['items'] !== []));
     }
 
+    /**
+     * Admin: categories for a venue with item counts.
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    public static function adminCategoriesForVenue(int $venueId): array
+    {
+        $pdo = db();
+
+        $stmt = $pdo->prepare("
+            SELECT
+                mc.id,
+                mc.venue_id,
+                mc.name,
+                mc.sort_order,
+                COUNT(mi.id) AS item_count
+            FROM menu_categories mc
+            LEFT JOIN menu_items mi ON mi.category_id = mc.id
+            WHERE mc.venue_id = :venue_id
+            GROUP BY mc.id, mc.venue_id, mc.name, mc.sort_order
+            ORDER BY mc.sort_order ASC, mc.name ASC
+        ");
+        $stmt->execute([':venue_id' => $venueId]);
+
+        return $stmt->fetchAll();
+    }
+
+    /**
+     * Admin: all menu items for a venue.
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    public static function adminItemsForVenue(int $venueId): array
+    {
+        $pdo = db();
+
+        $stmt = $pdo->prepare("
+            SELECT
+                mi.id,
+                mi.venue_id,
+                mi.category_id,
+                mi.name,
+                mi.description,
+                mi.price,
+                mi.sort_order,
+                mi.is_published,
+                mc.name AS category_name
+            FROM menu_items mi
+            LEFT JOIN menu_categories mc ON mc.id = mi.category_id
+            WHERE mi.venue_id = :venue_id
+            ORDER BY mc.sort_order ASC, mc.name ASC, mi.sort_order ASC, mi.name ASC
+        ");
+        $stmt->execute([':venue_id' => $venueId]);
+
+        return $stmt->fetchAll();
+    }
+
+    public static function findCategory(int $id): ?array
+    {
+        $pdo = db();
+
+        $stmt = $pdo->prepare("SELECT * FROM menu_categories WHERE id = :id LIMIT 1");
+        $stmt->execute([':id' => $id]);
+        $row = $stmt->fetch();
+
+        return $row !== false ? $row : null;
+    }
+
+    public static function createCategory(array $data): int
+    {
+        $pdo = db();
+
+        $stmt = $pdo->prepare("
+            INSERT INTO menu_categories (venue_id, name, sort_order)
+            VALUES (:venue_id, :name, :sort_order)
+        ");
+        $stmt->execute([
+            ':venue_id' => (int) $data['venue_id'],
+            ':name' => (string) $data['name'],
+            ':sort_order' => (int) $data['sort_order'],
+        ]);
+
+        return (int) $pdo->lastInsertId();
+    }
+
+    public static function updateCategory(int $id, array $data): void
+    {
+        $pdo = db();
+
+        $stmt = $pdo->prepare("
+            UPDATE menu_categories
+            SET name = :name,
+                sort_order = :sort_order
+            WHERE id = :id
+              AND venue_id = :venue_id
+            LIMIT 1
+        ");
+        $stmt->execute([
+            ':id' => $id,
+            ':venue_id' => (int) $data['venue_id'],
+            ':name' => (string) $data['name'],
+            ':sort_order' => (int) $data['sort_order'],
+        ]);
+    }
+
+    public static function deleteCategoryIfEmpty(int $id, int $venueId): bool
+    {
+        $pdo = db();
+
+        $countStmt = $pdo->prepare("
+            SELECT COUNT(*)
+            FROM menu_items
+            WHERE category_id = :category_id
+        ");
+        $countStmt->execute([':category_id' => $id]);
+
+        if ((int) $countStmt->fetchColumn() > 0) {
+            return false;
+        }
+
+        $stmt = $pdo->prepare("
+            DELETE FROM menu_categories
+            WHERE id = :id
+              AND venue_id = :venue_id
+            LIMIT 1
+        ");
+        $stmt->execute([
+            ':id' => $id,
+            ':venue_id' => $venueId,
+        ]);
+
+        return $stmt->rowCount() > 0;
+    }
+
+    public static function findItem(int $id): ?array
+    {
+        $pdo = db();
+
+        $stmt = $pdo->prepare("SELECT * FROM menu_items WHERE id = :id LIMIT 1");
+        $stmt->execute([':id' => $id]);
+        $row = $stmt->fetch();
+
+        return $row !== false ? $row : null;
+    }
+
+    public static function createItem(array $data): int
+    {
+        $pdo = db();
+
+        $stmt = $pdo->prepare("
+            INSERT INTO menu_items (
+                venue_id,
+                category_id,
+                name,
+                description,
+                price,
+                sort_order,
+                is_published
+            ) VALUES (
+                :venue_id,
+                :category_id,
+                :name,
+                :description,
+                :price,
+                :sort_order,
+                :is_published
+            )
+        ");
+        $stmt->execute([
+            ':venue_id' => (int) $data['venue_id'],
+            ':category_id' => $data['category_id'] !== null ? (int) $data['category_id'] : null,
+            ':name' => (string) $data['name'],
+            ':description' => $data['description'],
+            ':price' => $data['price'],
+            ':sort_order' => (int) $data['sort_order'],
+            ':is_published' => !empty($data['is_published']) ? 1 : 0,
+        ]);
+
+        return (int) $pdo->lastInsertId();
+    }
+
+    public static function updateItem(int $id, array $data): void
+    {
+        $pdo = db();
+
+        $stmt = $pdo->prepare("
+            UPDATE menu_items
+            SET category_id = :category_id,
+                name = :name,
+                description = :description,
+                price = :price,
+                sort_order = :sort_order,
+                is_published = :is_published
+            WHERE id = :id
+              AND venue_id = :venue_id
+            LIMIT 1
+        ");
+        $stmt->execute([
+            ':id' => $id,
+            ':venue_id' => (int) $data['venue_id'],
+            ':category_id' => $data['category_id'] !== null ? (int) $data['category_id'] : null,
+            ':name' => (string) $data['name'],
+            ':description' => $data['description'],
+            ':price' => $data['price'],
+            ':sort_order' => (int) $data['sort_order'],
+            ':is_published' => !empty($data['is_published']) ? 1 : 0,
+        ]);
+    }
+
+    public static function setItemPublished(int $id, int $venueId, bool $published): void
+    {
+        $pdo = db();
+
+        $stmt = $pdo->prepare("
+            UPDATE menu_items
+            SET is_published = :is_published
+            WHERE id = :id
+              AND venue_id = :venue_id
+            LIMIT 1
+        ");
+        $stmt->execute([
+            ':id' => $id,
+            ':venue_id' => $venueId,
+            ':is_published' => $published ? 1 : 0,
+        ]);
+    }
     /**
      * Resolve an allergen slug to its id (or null if unknown).
      */

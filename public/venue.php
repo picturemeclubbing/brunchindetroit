@@ -74,6 +74,11 @@ if (!empty($_COOKIE[$adminSessionName]) && admin_is_logged_in()) {
             'icon'  => 'fas fa-pen-to-square',
         ],
         [
+            'label' => 'Edit Menu',
+            'url'   => admin_url('menu.php?venue_id=' . (int) $venue['id']),
+            'icon'  => 'fas fa-utensils',
+        ],
+        [
             'label' => 'Galleries',
             'url'   => admin_url('galleries.php'),
             'icon'  => 'fas fa-images',
