@@ -22,6 +22,17 @@ INSERT INTO allergens (name, slug) VALUES
   ('Sesame', 'sesame')
 ON DUPLICATE KEY UPDATE name = VALUES(name);
 
+INSERT INTO dietary_tags (name, slug, sort_order) VALUES
+  ('Vegan', 'vegan', 10),
+  ('Vegetarian', 'vegetarian', 20),
+  ('Gluten-Free', 'gluten-free', 30),
+  ('Dairy-Free', 'dairy-free', 40),
+  ('Keto', 'keto', 50)
+ON DUPLICATE KEY UPDATE
+  name = VALUES(name),
+  sort_order = VALUES(sort_order);
+
+
 -- Default admin for local dev only (Phase 2): password `password` — change before production
 INSERT INTO admins (email, password_hash, display_name) VALUES
   (
