@@ -110,7 +110,7 @@ $isEdit = !empty($form['id']);
         </form>
     </section>
 
-    <section class="admin-category-panel admin-category-panel--list">
+    <section class="admin-category-panel admin-category-panel--list admin-blog-categories-panel">
         <div class="admin-category-panel__header">
             <div>
                 <h2>Current Categories</h2>
@@ -125,13 +125,12 @@ $isEdit = !empty($form['id']);
                 <p>Add a category to organize blog posts.</p>
             </div>
         <?php else: ?>
-            <div class="admin-table-wrap">
-                <table class="admin-table">
+            <div class="admin-table-wrap admin-blog-categories-table-wrap">
+                <table class="admin-table admin-blog-categories-table">
                     <thead>
                         <tr>
                             <th scope="col">Category</th>
                             <th scope="col">Slug</th>
-                            <th scope="col">Sort</th>
                             <th scope="col">Posts</th>
                             <th scope="col" class="admin-table__actions-col">Actions</th>
                         </tr>
@@ -147,34 +146,101 @@ $isEdit = !empty($form['id']);
                                     <strong><?= e((string) ($category['name'] ?? 'Untitled Category')) ?></strong>
                                 </td>
                                 <td><code><?= e((string) ($category['slug'] ?? '')) ?></code></td>
-                                <td><?= e((string) ($category['sort_order'] ?? '0')) ?></td>
                                 <td>
                                     <span class="badge <?= $postCount > 0 ? 'badge--success' : 'badge--draft' ?>">
                                         <?= $postCount ?> <?= $postCount === 1 ? 'post' : 'posts' ?>
                                     </span>
                                 </td>
-                                <td class="admin-table__actions">
-                                    <a class="btn btn--sm btn--outline" href="<?= e(admin_url('blog-categories.php?edit=' . $categoryId)) ?>">
-                                        Edit
+                                <td class="admin-menu-icon-actions admin-blog-category-actions">
+                                    <a class="admin-icon-action" href="<?= e(admin_url('blog-categories.php?edit=' . $categoryId)) ?>" aria-label="Edit blog category">
+                                        <i class="fas fa-pen" aria-hidden="true"></i>
                                     </a>
 
-                                    <?php if ($postCount === 0): ?>
-                                        <form method="post" action="<?= e(admin_url('blog-categories.php')) ?>" onsubmit="return confirm('Delete this category?');">
-                                            <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
-                                            <input type="hidden" name="action" value="delete">
-                                            <input type="hidden" name="id" value="<?= e((string) $categoryId) ?>">
-                                            <button type="submit" class="btn btn--sm btn--danger">Delete</button>
-                                        </form>
-                                    <?php else: ?>
-                                        <button type="button" class="btn btn--sm btn--outline" disabled title="Categories with posts cannot be deleted.">
-                                            Locked
-                                        </button>
-                                    <?php endif; ?>
+                                    <form method="post" action="<?= e(admin_url('blog-categories.php')) ?>">
+                                        <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
+                                        <input type="hidden" name="action" value="delete">
+                                        <input type="hidden" name="id" value="<?= e((string) $categoryId) ?>">
+
+                                        <?php if ($postCount === 0): ?>
+                                            <button
+                                                type="submit"
+                                                class="admin-icon-action admin-icon-action--danger"
+                                                aria-label="Delete blog category"
+                                                onclick="return confirm('Delete this category?');"
+                                            >
+                                                <i class="fas fa-trash" aria-hidden="true"></i>
+                                            </button>
+                                        <?php else: ?>
+                                            <button
+                                                type="button"
+                                                class="admin-icon-action admin-icon-action--disabled"
+                                                aria-label="Category has posts and cannot be deleted"
+                                                title="Categories with posts cannot be deleted."
+                                                disabled
+                                            >
+                                                <i class="fas fa-lock" aria-hidden="true"></i>
+                                            </button>
+                                        <?php endif; ?>
+                                    </form>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>
                 </table>
+            </div>
+
+            <div class="admin-mobile-card-list admin-blog-category-mobile-list">
+                <?php foreach ($categories as $category): ?>
+                    <?php
+                    $categoryId = (int) ($category['id'] ?? 0);
+                    $postCount = (int) ($category['post_count'] ?? 0);
+                    ?>
+                    <article class="admin-mobile-card">
+                        <div class="admin-mobile-card__main">
+                            <h3><?= e((string) ($category['name'] ?? 'Untitled Category')) ?></h3>
+                            <p><code><?= e((string) ($category['slug'] ?? '')) ?></code></p>
+                        </div>
+
+                        <div class="admin-mobile-card__badges">
+                            <span class="badge <?= $postCount > 0 ? 'badge--success' : 'badge--draft' ?>">
+                                <?= $postCount ?> <?= $postCount === 1 ? 'post' : 'posts' ?>
+                            </span>
+                        </div>
+
+                        <div class="admin-mobile-card__actions">
+                            <a class="admin-icon-action" href="<?= e(admin_url('blog-categories.php?edit=' . $categoryId)) ?>" aria-label="Edit blog category">
+                                <i class="fas fa-pen" aria-hidden="true"></i>
+                            </a>
+
+                            <form method="post" action="<?= e(admin_url('blog-categories.php')) ?>">
+                                <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
+                                <input type="hidden" name="action" value="delete">
+                                <input type="hidden" name="id" value="<?= e((string) $categoryId) ?>">
+
+                                <?php if ($postCount === 0): ?>
+                                    <button
+                                        type="submit"
+                                        class="admin-icon-action admin-icon-action--danger"
+                                        aria-label="Delete blog category"
+                                        onclick="return confirm('Delete this category?');"
+                                    >
+                                        <i class="fas fa-trash" aria-hidden="true"></i>
+                                    </button>
+                                <?php else: ?>
+                                    <button
+                                        type="button"
+                                        class="admin-icon-action admin-icon-action--disabled"
+                                        aria-label="Category has posts and cannot be deleted"
+                                        title="Categories with posts cannot be deleted."
+                                        disabled
+                                    >
+                                        <i class="fas fa-lock" aria-hidden="true"></i>
+                                    </button>
+                                <?php endif; ?>
+                            </form>
+                        </div>
+                    </article>
+                <?php endforeach; ?>
             </div>
         <?php endif; ?>
     </section>

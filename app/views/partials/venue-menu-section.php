@@ -51,7 +51,7 @@ $menuStatusClass = [
 
 // Statuses considered "risk/important" and shown as summary badges when no
 // filter is active. "does_not_contain" is deliberately excluded from the
-// summary — it would flood the cards with up to 9 badges per item.
+// summary â€” it would flood the cards with up to 9 badges per item.
 $riskStatuses = ['contains', 'may_contain', 'cross_contact_risk', 'unknown'];
 
 // Count the total number of menu items currently shown (after filtering) so

@@ -37,6 +37,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } elseif ($action === 'unfeature') {
             Blog::setFeatured($id, false);
             flash_set('success', 'Blog post unfeatured.');
+        } elseif ($action === 'delete') {
+            Blog::delete($id);
+            flash_set('success', 'Blog post deleted.');
         } else {
             flash_set('error', 'Unknown blog action.');
         }

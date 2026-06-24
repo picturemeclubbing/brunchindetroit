@@ -1,0 +1,162 @@
+/*
+ * Admin-only desktop styles.
+ *
+ * New admin layout/page styles should go here instead of main.css.
+ * Existing admin styles can be migrated out of main.css gradually.
+ */
+
+/* Shared admin icon actions */
+.admin-menu-icon-actions,
+.admin-mobile-card__actions {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+}
+
+.admin-menu-icon-actions form,
+.admin-mobile-card__actions form {
+    display: inline-flex;
+    margin: 0;
+}
+
+.admin-icon-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.1rem;
+    height: 2.1rem;
+    border: 1px solid var(--border);
+    border-radius: 0.65rem;
+    background: #fff;
+    color: var(--primary-dark);
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.admin-icon-action:hover,
+.admin-icon-action:focus {
+    background: rgba(44, 122, 123, 0.08);
+    color: var(--primary-dark);
+}
+
+.admin-icon-action--danger {
+    color: #b42318;
+}
+
+.admin-icon-action--danger:hover,
+.admin-icon-action--danger:focus {
+    background: #fee4e2;
+    border-color: #fecdca;
+    color: #b42318;
+}
+
+.admin-icon-action--disabled,
+.admin-icon-action--disabled:hover,
+.admin-icon-action--disabled:focus {
+    opacity: 0.42;
+    cursor: not-allowed;
+    color: var(--text-muted);
+    background: #f8fafc;
+    border-color: var(--border);
+}
+
+.admin-neighborhoods-table th:nth-child(3),
+.admin-neighborhoods-table td:nth-child(3),
+.admin-neighborhoods-table th:nth-child(4),
+.admin-neighborhoods-table td:nth-child(4),
+.admin-neighborhoods-table th:nth-child(5),
+.admin-neighborhoods-table td:nth-child(5) {
+    text-align: center;
+}
+
+.admin-neighborhoods-table .admin-menu-icon-actions {
+    justify-content: center;
+}
+
+/* Blog management icon/status actions */
+.admin-blog-table th:nth-child(4),
+.admin-blog-table td:nth-child(4),
+.admin-blog-table th:nth-child(5),
+.admin-blog-table td:nth-child(5) {
+    text-align: center;
+}
+
+.admin-blog-status-cell form,
+.admin-blog-icon-actions form,
+.admin-blog-mobile-list form {
+    display: inline-flex;
+    margin: 0;
+}
+
+.admin-blog-icon-actions {
+    justify-content: center;
+}
+
+.admin-icon-action--feature {
+    color: #a16207;
+}
+
+.admin-icon-action--feature:hover,
+.admin-icon-action--feature:focus,
+.admin-icon-action--featured {
+    background: #fef3c7;
+    border-color: #fde68a;
+    color: #a16207;
+}
+
+/* Blog categories icon actions */
+.admin-blog-categories-table th:nth-child(3),
+.admin-blog-categories-table td:nth-child(3),
+.admin-blog-categories-table th:nth-child(4),
+.admin-blog-categories-table td:nth-child(4) {
+    text-align: center;
+}
+
+.admin-blog-category-actions {
+    justify-content: center;
+}
+
+.admin-blog-category-actions form {
+    display: inline-flex;
+    margin: 0;
+}
+
+/* Venue management icon/status actions */
+.admin-venues-table th:nth-child(3),
+.admin-venues-table td:nth-child(3),
+.admin-venues-table th:nth-child(4),
+.admin-venues-table td:nth-child(4),
+.admin-venues-table th:nth-child(5),
+.admin-venues-table td:nth-child(5) {
+    text-align: center;
+}
+
+.admin-venue-status-cell form,
+.admin-venue-icon-actions form,
+.admin-venues-mobile-list form {
+    display: inline-flex;
+    margin: 0;
+}
+
+.admin-venue-icon-actions {
+    justify-content: center;
+}
+
+.admin-venue-row--featured {
+    box-shadow: inset 4px 0 0 #facc15;
+}
+
+.admin-mobile-card--featured {
+    border-left: 4px solid #facc15;
+}
+
+/* Admin hamburger base */
+.admin-nav-toggle,
+.admin-mobile-backdrop,
+.admin-mobile-drawer {
+    display: none;
+}
+
+.admin-topbar__actions--desktop {
+    display: flex;
+}

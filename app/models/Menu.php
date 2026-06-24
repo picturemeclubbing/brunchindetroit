@@ -11,7 +11,7 @@ declare(strict_types=1);
  * Filtering rule: when an allergen slug is supplied, only menu items that
  * have an explicit status of 'does_not_contain' for that allergen are kept.
  * Items with any other status (contains / may_contain / cross_contact_risk /
- * unknown) â€” or no status row at all â€” are excluded.
+ * unknown) ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â or no status row at all ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â are excluded.
  */
 final class Menu
 {
@@ -82,6 +82,8 @@ final class Menu
                     mi.id,
                     mi.name,
                     mi.description,
+                    mi.image_url,
+                    mi.image_alt_text,
                     mi.price,
                     mi.category_id,
                     mi.sort_order
@@ -105,6 +107,8 @@ final class Menu
                     mi.id,
                     mi.name,
                     mi.description,
+                    mi.image_url,
+                    mi.image_alt_text,
                     mi.price,
                     mi.category_id,
                     mi.sort_order
@@ -128,6 +132,7 @@ final class Menu
         // so the view can display per-item badges without extra queries.
         $itemIds = array_map(static fn ($row) => (int) $row['id'], $items);
         $statusesByItem = self::allergenStatusesForItems($itemIds);
+        $dietaryTagsByItem = self::dietaryTagsForItems($itemIds);
 
         // Fetch the venue's categories, ordered for display.
         $catsSql = "
@@ -165,10 +170,13 @@ final class Menu
                 'id'                => $itemId,
                 'name'              => (string) $item['name'],
                 'description'       => $item['description'] !== null ? (string) $item['description'] : null,
+                'image_url'         => $item['image_url'] !== null ? (string) $item['image_url'] : null,
+                'image_alt_text'    => $item['image_alt_text'] !== null ? (string) $item['image_alt_text'] : null,
                 'price'             => $item['price'] !== null ? (string) $item['price'] : null,
                 'category_id'       => $categoryId,
                 'sort_order'        => (int) $item['sort_order'],
                 'allergen_statuses' => $statusesByItem[$itemId] ?? [],
+                'dietary_tags'      => $dietaryTagsByItem[$itemId] ?? [],
             ];
         }
 
@@ -219,6 +227,8 @@ final class Menu
                 mi.category_id,
                 mi.name,
                 mi.description,
+                mi.image_url,
+                mi.image_alt_text,
                 mi.price,
                 mi.sort_order,
                 mi.is_published,
@@ -331,6 +341,8 @@ final class Menu
                 category_id,
                 name,
                 description,
+                image_url,
+                image_alt_text,
                 price,
                 sort_order,
                 is_published
@@ -339,6 +351,8 @@ final class Menu
                 :category_id,
                 :name,
                 :description,
+                :image_url,
+                :image_alt_text,
                 :price,
                 :sort_order,
                 :is_published
@@ -349,6 +363,8 @@ final class Menu
             ':category_id' => $data['category_id'] !== null ? (int) $data['category_id'] : null,
             ':name' => (string) $data['name'],
             ':description' => $data['description'],
+            ':image_url' => $data['image_url'],
+            ':image_alt_text' => $data['image_alt_text'],
             ':price' => $data['price'],
             ':sort_order' => (int) $data['sort_order'],
             ':is_published' => !empty($data['is_published']) ? 1 : 0,
@@ -366,6 +382,8 @@ final class Menu
             SET category_id = :category_id,
                 name = :name,
                 description = :description,
+                image_url = :image_url,
+                image_alt_text = :image_alt_text,
                 price = :price,
                 sort_order = :sort_order,
                 is_published = :is_published
@@ -379,6 +397,8 @@ final class Menu
             ':category_id' => $data['category_id'] !== null ? (int) $data['category_id'] : null,
             ':name' => (string) $data['name'],
             ':description' => $data['description'],
+            ':image_url' => $data['image_url'],
+            ':image_alt_text' => $data['image_alt_text'],
             ':price' => $data['price'],
             ':sort_order' => (int) $data['sort_order'],
             ':is_published' => !empty($data['is_published']) ? 1 : 0,
@@ -402,6 +422,188 @@ final class Menu
             ':is_published' => $published ? 1 : 0,
         ]);
     }
+
+    public static function deleteItem(int $id, int $venueId): bool
+    {
+        $pdo = db();
+
+        $stmt = $pdo->prepare("
+            DELETE FROM menu_items
+            WHERE id = :id
+              AND venue_id = :venue_id
+            LIMIT 1
+        ");
+        $stmt->execute([
+            ':id' => $id,
+            ':venue_id' => $venueId,
+        ]);
+
+        return $stmt->rowCount() > 0;
+    }
+    /**
+     * All dietary tags, ordered for admin/public display.
+     *
+     * @return array<int, array{id:int, name:string, slug:string, sort_order:int}>
+     */
+    public static function dietaryTags(): array
+    {
+        $pdo = db();
+
+        $sql = "
+            SELECT id, name, slug, sort_order
+            FROM dietary_tags
+            ORDER BY sort_order ASC, name ASC
+        ";
+
+        return $pdo->query($sql)->fetchAll();
+    }
+
+    /**
+     * Admin: selected dietary tag ids for one menu item.
+     *
+     * @return array<int, int>
+     */
+    public static function dietaryTagIdsForItem(int $itemId): array
+    {
+        $pdo = db();
+
+        $stmt = $pdo->prepare("
+            SELECT dietary_tag_id
+            FROM menu_item_dietary_tags
+            WHERE menu_item_id = :item_id
+            ORDER BY dietary_tag_id ASC
+        ");
+        $stmt->execute([':item_id' => $itemId]);
+
+        return array_map('intval', $stmt->fetchAll(PDO::FETCH_COLUMN));
+    }
+
+    /**
+     * Admin: allergen statuses for one menu item, keyed by allergen id.
+     *
+     * @return array<int, string>
+     */
+    public static function allergenStatusesForItem(int $itemId): array
+    {
+        $pdo = db();
+
+        $stmt = $pdo->prepare("
+            SELECT allergen_id, status
+            FROM menu_item_allergen_statuses
+            WHERE menu_item_id = :item_id
+        ");
+        $stmt->execute([':item_id' => $itemId]);
+
+        $statuses = [];
+        foreach ($stmt->fetchAll() as $row) {
+            $statuses[(int) $row['allergen_id']] = (string) $row['status'];
+        }
+
+        return $statuses;
+    }
+
+    /**
+     * Admin: replace dietary tags for a menu item.
+     *
+     * @param array<int, int|string> $tagIds
+     */
+    public static function syncItemDietaryTags(int $itemId, array $tagIds): void
+    {
+        $pdo = db();
+
+        $cleanIds = [];
+        foreach ($tagIds as $id) {
+            if (is_numeric($id) && (int) $id > 0) {
+                $cleanIds[] = (int) $id;
+            }
+        }
+        $cleanIds = array_values(array_unique($cleanIds));
+
+        $pdo->beginTransaction();
+
+        try {
+            $delete = $pdo->prepare("
+                DELETE FROM menu_item_dietary_tags
+                WHERE menu_item_id = :item_id
+            ");
+            $delete->execute([':item_id' => $itemId]);
+
+            if ($cleanIds !== []) {
+                $insert = $pdo->prepare("
+                    INSERT INTO menu_item_dietary_tags (menu_item_id, dietary_tag_id)
+                    VALUES (:item_id, :tag_id)
+                ");
+
+                foreach ($cleanIds as $tagId) {
+                    $insert->execute([
+                        ':item_id' => $itemId,
+                        ':tag_id'  => $tagId,
+                    ]);
+                }
+            }
+
+            $pdo->commit();
+        } catch (Throwable $ex) {
+            $pdo->rollBack();
+            throw $ex;
+        }
+    }
+
+    /**
+     * Admin: replace allergen statuses for a menu item.
+     *
+     * Unknown statuses are not stored. Missing rows are treated as unknown.
+     *
+     * @param array<int|string, string> $statusesByAllergenId
+     */
+    public static function syncItemAllergenStatuses(int $itemId, array $statusesByAllergenId): void
+    {
+        $allowed = [
+            'contains',
+            'does_not_contain',
+            'may_contain',
+            'cross_contact_risk',
+            'unknown',
+        ];
+
+        $pdo = db();
+        $pdo->beginTransaction();
+
+        try {
+            $delete = $pdo->prepare("
+                DELETE FROM menu_item_allergen_statuses
+                WHERE menu_item_id = :item_id
+            ");
+            $delete->execute([':item_id' => $itemId]);
+
+            $insert = $pdo->prepare("
+                INSERT INTO menu_item_allergen_statuses (menu_item_id, allergen_id, status)
+                VALUES (:item_id, :allergen_id, :status)
+            ");
+
+            foreach ($statusesByAllergenId as $allergenId => $status) {
+                if (!is_numeric($allergenId) || (int) $allergenId <= 0) {
+                    continue;
+                }
+
+                $status = (string) $status;
+                if (!in_array($status, $allowed, true) || $status === 'unknown') {
+                    continue;
+                }
+
+                $insert->execute([
+                    ':item_id'     => $itemId,
+                    ':allergen_id' => (int) $allergenId,
+                    ':status'      => $status,
+                ]);
+            }
+
+            $pdo->commit();
+        } catch (Throwable $ex) {
+            $pdo->rollBack();
+            throw $ex;
+        }
+    }
     /**
      * Resolve an allergen slug to its id (or null if unknown).
      */
@@ -418,6 +620,62 @@ final class Menu
         return $row !== false ? (int) $row['id'] : null;
     }
 
+    /**
+     * Fetch all dietary tags for a set of menu item ids.
+     *
+     * @param array<int, int> $itemIds
+     *
+     * @return array<int, array<int, array{id:int, name:string, slug:string}>>
+     */
+    private static function dietaryTagsForItems(array $itemIds): array
+    {
+        if ($itemIds === []) {
+            return [];
+        }
+
+        $pdo = db();
+
+        $placeholders = [];
+        $params = [];
+        foreach (array_values(array_unique($itemIds)) as $i => $id) {
+            $key = ':id' . $i;
+            $placeholders[] = $key;
+            $params[$key] = $id;
+        }
+
+        $inList = implode(', ', $placeholders);
+
+        $sql = "
+            SELECT
+                midt.menu_item_id,
+                dt.id,
+                dt.name,
+                dt.slug
+            FROM menu_item_dietary_tags midt
+            INNER JOIN dietary_tags dt ON dt.id = midt.dietary_tag_id
+            WHERE midt.menu_item_id IN ($inList)
+            ORDER BY dt.sort_order ASC, dt.name ASC
+        ";
+
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute($params);
+
+        $result = [];
+        foreach ($stmt->fetchAll() as $row) {
+            $itemId = (int) $row['menu_item_id'];
+            if (!isset($result[$itemId])) {
+                $result[$itemId] = [];
+            }
+
+            $result[$itemId][] = [
+                'id'   => (int) $row['id'],
+                'name' => (string) $row['name'],
+                'slug' => (string) $row['slug'],
+            ];
+        }
+
+        return $result;
+    }
     /**
      * Fetch all allergen statuses for a set of menu item ids.
      *

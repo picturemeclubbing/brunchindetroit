@@ -26,7 +26,7 @@ $isEdit = (int) ($form['id'] ?? 0) > 0;
     <div class="admin-card__header">
         <div>
             <h2 class="admin-card__title"><?= $isEdit ? 'Edit Neighborhood' : 'Add Neighborhood' ?></h2>
-            <p class="admin-card__subtitle">Slugs are used internally for future neighborhood URLs and filters.</p>
+            <p class="admin-card__subtitle">Sort order stays here because it is an admin setup field, not a list-view detail.</p>
         </div>
     </div>
 
@@ -107,7 +107,7 @@ $isEdit = (int) ($form['id'] ?? 0) > 0;
     </form>
 </section>
 
-<section class="admin-card">
+<section class="admin-card admin-neighborhoods-card">
     <div class="admin-card__header">
         <div>
             <h2 class="admin-card__title">Current Neighborhoods</h2>
@@ -118,13 +118,12 @@ $isEdit = (int) ($form['id'] ?? 0) > 0;
     <?php if (empty($neighborhoods)): ?>
         <p class="admin-empty-state">No neighborhoods have been added yet.</p>
     <?php else: ?>
-        <div class="admin-table-wrap">
-            <table class="admin-table">
+        <div class="admin-table-wrap admin-neighborhoods-table-wrap">
+            <table class="admin-table admin-neighborhoods-table">
                 <thead>
                     <tr>
                         <th scope="col">Neighborhood</th>
                         <th scope="col">Slug</th>
-                        <th scope="col">Sort</th>
                         <th scope="col">Venues</th>
                         <th scope="col">Status</th>
                         <th scope="col" class="admin-table__actions-col">Actions</th>
@@ -142,7 +141,6 @@ $isEdit = (int) ($form['id'] ?? 0) > 0;
                                 <strong><?= e((string) ($neighborhood['name'] ?? 'Untitled Neighborhood')) ?></strong>
                             </td>
                             <td><code><?= e((string) ($neighborhood['slug'] ?? '')) ?></code></td>
-                            <td><?= e((string) ($neighborhood['sort_order'] ?? '0')) ?></td>
                             <td>
                                 <span class="badge <?= $venueCount > 0 ? 'badge--success' : 'badge--draft' ?>">
                                     <?= $venueCount ?> <?= $venueCount === 1 ? 'venue' : 'venues' ?>
@@ -153,28 +151,100 @@ $isEdit = (int) ($form['id'] ?? 0) > 0;
                                     <?= $isActive ? 'Active' : 'Inactive' ?>
                                 </span>
                             </td>
-                            <td class="admin-table__actions">
-                                <a class="btn btn--sm btn--outline" href="<?= e(admin_url('neighborhoods.php?edit=' . $neighborhoodId)) ?>">
-                                    Edit
+                            <td class="admin-menu-icon-actions">
+                                <a class="admin-icon-action" href="<?= e(admin_url('neighborhoods.php?edit=' . $neighborhoodId)) ?>" aria-label="Edit neighborhood">
+                                    <i class="fa-solid fa-pen"></i>
                                 </a>
 
-                                <?php if ($venueCount === 0): ?>
-                                    <form method="post" action="<?= e(admin_url('neighborhoods.php')) ?>" onsubmit="return confirm('Delete this neighborhood?');">
-                                        <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
-                                        <input type="hidden" name="action" value="delete">
-                                        <input type="hidden" name="id" value="<?= e((string) $neighborhoodId) ?>">
-                                        <button type="submit" class="btn btn--sm btn--danger">Delete</button>
-                                    </form>
-                                <?php else: ?>
-                                    <button type="button" class="btn btn--sm btn--outline" disabled title="Neighborhoods with venues cannot be deleted.">
-                                        Locked
-                                    </button>
-                                <?php endif; ?>
+                                <form method="post" action="<?= e(admin_url('neighborhoods.php')) ?>">
+                                    <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
+                                    <input type="hidden" name="action" value="delete">
+                                    <input type="hidden" name="id" value="<?= e((string) $neighborhoodId) ?>">
+
+                                    <?php if ($venueCount === 0): ?>
+                                        <button
+                                            type="submit"
+                                            class="admin-icon-action admin-icon-action--danger"
+                                            aria-label="Delete neighborhood"
+                                            onclick="return confirm('Delete this neighborhood?');"
+                                        >
+                                            <i class="fa-solid fa-trash"></i>
+                                        </button>
+                                    <?php else: ?>
+                                        <button
+                                            type="button"
+                                            class="admin-icon-action admin-icon-action--disabled"
+                                            aria-label="Neighborhood has venues and cannot be deleted"
+                                            title="Neighborhoods with venues cannot be deleted."
+                                            disabled
+                                        >
+                                            <i class="fa-solid fa-lock"></i>
+                                        </button>
+                                    <?php endif; ?>
+                                </form>
                             </td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>
             </table>
+        </div>
+
+        <div class="admin-mobile-card-list admin-neighborhood-mobile-list">
+            <?php foreach ($neighborhoods as $neighborhood): ?>
+                <?php
+                $neighborhoodId = (int) ($neighborhood['id'] ?? 0);
+                $venueCount = (int) ($neighborhood['venue_count'] ?? 0);
+                $isActive = !empty($neighborhood['is_active']);
+                ?>
+                <article class="admin-mobile-card">
+                    <div class="admin-mobile-card__main">
+                        <h3><?= e((string) ($neighborhood['name'] ?? 'Untitled Neighborhood')) ?></h3>
+                        <p><code><?= e((string) ($neighborhood['slug'] ?? '')) ?></code></p>
+                    </div>
+
+                    <div class="admin-mobile-card__badges">
+                        <span class="badge <?= $venueCount > 0 ? 'badge--success' : 'badge--draft' ?>">
+                            <?= $venueCount ?> <?= $venueCount === 1 ? 'venue' : 'venues' ?>
+                        </span>
+                        <span class="badge <?= $isActive ? 'badge--success' : 'badge--draft' ?>">
+                            <?= $isActive ? 'Active' : 'Inactive' ?>
+                        </span>
+                    </div>
+
+                    <div class="admin-mobile-card__actions">
+                        <a class="admin-icon-action" href="<?= e(admin_url('neighborhoods.php?edit=' . $neighborhoodId)) ?>" aria-label="Edit neighborhood">
+                            <i class="fa-solid fa-pen"></i>
+                        </a>
+
+                        <form method="post" action="<?= e(admin_url('neighborhoods.php')) ?>">
+                            <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
+                            <input type="hidden" name="action" value="delete">
+                            <input type="hidden" name="id" value="<?= e((string) $neighborhoodId) ?>">
+
+                            <?php if ($venueCount === 0): ?>
+                                <button
+                                    type="submit"
+                                    class="admin-icon-action admin-icon-action--danger"
+                                    aria-label="Delete neighborhood"
+                                    onclick="return confirm('Delete this neighborhood?');"
+                                >
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
+                            <?php else: ?>
+                                <button
+                                    type="button"
+                                    class="admin-icon-action admin-icon-action--disabled"
+                                    aria-label="Neighborhood has venues and cannot be deleted"
+                                    title="Neighborhoods with venues cannot be deleted."
+                                    disabled
+                                >
+                                    <i class="fa-solid fa-lock"></i>
+                                </button>
+                            <?php endif; ?>
+                        </form>
+                    </div>
+                </article>
+            <?php endforeach; ?>
         </div>
     <?php endif; ?>
 </section>

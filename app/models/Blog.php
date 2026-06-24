@@ -560,6 +560,19 @@ final class Blog
     }
 
     /**
+     * Delete a blog post.
+     */
+    public static function delete(int $id): void
+    {
+        $stmt = db()->prepare("
+            DELETE FROM blog_posts
+            WHERE id = :id
+            LIMIT 1
+        ");
+        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+    }
+    /**
      * Toggle published state for a blog post.
      */
     public static function setPublished(int $id, bool $published): void

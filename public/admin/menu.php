@@ -8,7 +8,8 @@ declare(strict_types=1);
  * - Venue-scoped menu category CRUD
  * - Venue-scoped menu item add/edit
  * - Publish/unpublish menu items
- * - No allergen/diet tagging yet
+ * - Dietary tag assignment
+ * - Allergen status assignment
  */
 
 require_once __DIR__ . '/../../app/bootstrap.php';
@@ -52,6 +53,15 @@ if ($venueId > 0) {
         $venueId = 0;
         $flashError = $flashError ?? 'That venue could not be found.';
     }
+}
+
+try {
+    $dietaryTags = Menu::dietaryTags();
+    $allergens = Menu::allergens();
+} catch (Throwable $ex) {
+    $dietaryTags = [];
+    $allergens = [];
+    $flashError = $debug ? $ex->getMessage() : 'Could not load menu reference data.';
 }
 
 // POST actions.
@@ -128,9 +138,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $description = trim((string) ($_POST['item_description'] ?? ''));
                 $categoryIdRaw = trim((string) ($_POST['item_category_id'] ?? ''));
                 $priceRaw = trim((string) ($_POST['item_price'] ?? ''));
+                $imageUrl = trim((string) ($_POST['item_image_url'] ?? ''));
+                $imageAltText = trim((string) ($_POST['item_image_alt_text'] ?? ''));
                 $sortOrder = isset($_POST['item_sort_order']) && is_numeric($_POST['item_sort_order'])
                     ? (int) $_POST['item_sort_order']
                     : 0;
+                $dietaryTagIds = isset($_POST['dietary_tag_ids']) && is_array($_POST['dietary_tag_ids'])
+                    ? $_POST['dietary_tag_ids']
+                    : [];
+                $allergenStatuses = isset($_POST['allergen_statuses']) && is_array($_POST['allergen_statuses'])
+                    ? $_POST['allergen_statuses']
+                    : [];
 
                 if ($name === '') {
                     flash_set('error', 'Menu item name is required.');
@@ -157,11 +175,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $price = number_format((float) $priceRaw, 2, '.', '');
                 }
 
+                if ($imageUrl !== '' && filter_var($imageUrl, FILTER_VALIDATE_URL) === false) {
+                    flash_set('error', 'Image URL must be a valid URL or blank.');
+                    break;
+                }
+
+                if (mb_strlen($imageUrl) > 500) {
+                    flash_set('error', 'Image URL must be 500 characters or fewer.');
+                    break;
+                }
+
+                if (mb_strlen($imageAltText) > 255) {
+                    flash_set('error', 'Image alt text must be 255 characters or fewer.');
+                    break;
+                }
+
                 $data = [
                     'venue_id' => $venueId,
                     'category_id' => $categoryId,
                     'name' => $name,
                     'description' => $description !== '' ? $description : null,
+                    'image_url' => $imageUrl !== '' ? $imageUrl : null,
+                    'image_alt_text' => $imageAltText !== '' ? $imageAltText : null,
                     'price' => $price,
                     'sort_order' => $sortOrder,
                     'is_published' => isset($_POST['item_is_published']),
@@ -169,10 +204,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 if ($itemId > 0) {
                     Menu::updateItem($itemId, $data);
+                    Menu::syncItemDietaryTags($itemId, $dietaryTagIds);
+                    Menu::syncItemAllergenStatuses($itemId, $allergenStatuses);
                     flash_set('success', 'Menu item updated.');
                 } else {
-                    Menu::createItem($data);
+                    $itemId = Menu::createItem($data);
+                    Menu::syncItemDietaryTags($itemId, $dietaryTagIds);
+                    Menu::syncItemAllergenStatuses($itemId, $allergenStatuses);
                     flash_set('success', 'Menu item added.');
+                }
+                break;
+
+            case 'delete_item':
+                $itemId = isset($_POST['item_id']) && is_numeric($_POST['item_id'])
+                    ? (int) $_POST['item_id']
+                    : 0;
+
+                if ($itemId <= 0) {
+                    flash_set('error', 'Invalid menu item.');
+                    break;
+                }
+
+                if (Menu::deleteItem($itemId, $venueId)) {
+                    flash_set('success', 'Menu item deleted.');
+                } else {
+                    flash_set('error', 'Menu item could not be deleted.');
                 }
                 break;
 
@@ -206,6 +262,8 @@ $categories = [];
 $items = [];
 $editCategory = null;
 $editItem = null;
+$editItemDietaryTagIds = [];
+$editItemAllergenStatuses = [];
 
 if ($venueId > 0) {
     try {
@@ -226,6 +284,12 @@ if ($venueId > 0) {
         $editItem = Menu::findItem((int) $_GET['item_id']);
         if ($editItem !== null && (int) $editItem['venue_id'] !== $venueId) {
             $editItem = null;
+        }
+
+        if ($editItem !== null) {
+            $editItemId = (int) $editItem['id'];
+            $editItemDietaryTagIds = Menu::dietaryTagIdsForItem($editItemId);
+            $editItemAllergenStatuses = Menu::allergenStatusesForItem($editItemId);
         }
     }
 }

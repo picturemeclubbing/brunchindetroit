@@ -4,30 +4,33 @@ declare(strict_types=1);
 
 /**
  * Shared site header. Supports optional SEO / Open Graph / Twitter / JSON-LD
- * metadata via the variables listed below. Every variable is optional —
- * existing pages (home, directory, venue detail, admin) keep working with
- * their current defaults when these are not set.
+ * metadata via the variables listed below. Every variable is optional.
  *
- * @var string              $pageTitle         Document title segment before site domain
- * @var string|null         $metaDescription   <meta name="description">
- * @var string|null         $canonicalUrl      <link rel="canonical">
- * @var string|null         $ogTitle           og:title
- * @var string|null         $ogDescription     og:description
- * @var string|null         $ogType            og:type (e.g. website, article)
- * @var string|null         $ogUrl             og:url
- * @var string|null         $ogImage           og:image (absolute or relative)
- * @var string|null         $twitterCard       twitter:card (default summary)
- * @var string|null         $twitterTitle      twitter:title
- * @var string|null         $twitterDescription twitter:description
- * @var string|null         $twitterImage      twitter:image
- * @var string|null         $articlePublishedTime  ISO 8601 published time (article:published_time)
- * @var string|null         $jsonLd            Raw JSON-LD payload (already JSON-encoded)
+ * @var string              $pageTitle
+ * @var string|null         $metaDescription
+ * @var string|null         $canonicalUrl
+ * @var string|null         $ogTitle
+ * @var string|null         $ogDescription
+ * @var string|null         $ogType
+ * @var string|null         $ogUrl
+ * @var string|null         $ogImage
+ * @var string|null         $twitterCard
+ * @var string|null         $twitterTitle
+ * @var string|null         $twitterDescription
+ * @var string|null         $twitterImage
+ * @var string|null         $articlePublishedTime
+ * @var string|null         $jsonLd
  */
 
-// Page title: allow a fully-formed title to pass through when the caller
-// already appended the site domain (e.g. SEO pages that use the brand name).
 $metaDescription = $metaDescription ?? 'Find your next brunch obsession in Detroit.';
 $resolvedTitle   = isset($pageTitle) ? page_title($pageTitle) : page_title('Detroit Brunch');
+
+$showAdminNavLink = false;
+try {
+    $showAdminNavLink = function_exists('admin_is_logged_in') && admin_is_logged_in();
+} catch (Throwable $ex) {
+    $showAdminNavLink = false;
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -99,6 +102,9 @@ $resolvedTitle   = isset($pageTitle) ? page_title($pageTitle) : page_title('Detr
             <a href="<?= e(asset_url('blog.php')) ?>" class="site-nav__link">News &amp; Blogs</a>
             <a href="<?= e(asset_url('gallery.php')) ?>" class="site-nav__link">Gallery</a>
             <a href="<?= e(asset_url('directory.php')) ?>" class="site-nav__link">Directory</a>
+            <?php if ($showAdminNavLink): ?>
+                <a href="<?= e(admin_url('dashboard.php')) ?>" class="site-nav__link site-nav__link--admin">Admin</a>
+            <?php endif; ?>
         </nav>
 
         <button type="button" class="site-header__menu-btn" id="mobileMenuButton" aria-expanded="false" aria-controls="mobileMenu" aria-label="Open menu">
@@ -112,6 +118,9 @@ $resolvedTitle   = isset($pageTitle) ? page_title($pageTitle) : page_title('Detr
             <a href="<?= e(asset_url('blog.php')) ?>" class="site-nav-mobile__link">News &amp; Blogs</a>
             <a href="<?= e(asset_url('gallery.php')) ?>" class="site-nav-mobile__link">Gallery</a>
             <a href="<?= e(asset_url('directory.php')) ?>" class="site-nav-mobile__link">Directory</a>
+            <?php if ($showAdminNavLink): ?>
+                <a href="<?= e(admin_url('dashboard.php')) ?>" class="site-nav-mobile__link site-nav-mobile__link--admin">Admin</a>
+            <?php endif; ?>
         </nav>
     </div>
 </header>
