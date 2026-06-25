@@ -69,6 +69,12 @@ $adminNavGroups = [
                 'icon' => 'fa-solid fa-images',
                 'active' => $activeNav === 'galleries',
             ],
+            [
+                'label' => 'Gallery Ad Wall',
+                'url' => admin_url('gallery-adwall.php'),
+                'icon' => 'fa-solid fa-rectangle-ad',
+                'active' => $activeNav === 'gallery-adwall',
+            ],
         ],
     ],
 ];

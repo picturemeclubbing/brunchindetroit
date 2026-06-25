@@ -300,6 +300,43 @@ final class Gallery
     }
 
     /**
+     * Single published gallery by slug for public landing/ad-wall pages.
+     *
+     * @return array<string, mixed>|null
+     */
+    public static function findPublishedBySlug(string $slug): ?array
+    {
+        $pdo = db();
+
+        $stmt = $pdo->prepare("
+            SELECT
+                g.id,
+                g.slug,
+                g.title,
+                g.description,
+                g.cover_image_path,
+                g.gallery_url,
+                g.event_date,
+                g.location_label,
+                g.is_featured,
+                v.name AS venue_name,
+                n.name AS neighborhood_name
+            FROM galleries g
+            LEFT JOIN venues v        ON v.id = g.venue_id
+            LEFT JOIN neighborhoods n ON n.id = v.neighborhood_id
+            WHERE g.is_published = 1
+              AND g.slug = :slug
+            LIMIT 1
+        ");
+
+        $stmt->execute([':slug' => $slug]);
+
+        $row = $stmt->fetch();
+
+        return $row !== false ? $row : null;
+    }
+
+    /**
      * Whether a slug is already in use by another gallery.
      *
      * Pass the current record id (when editing) as $ignoreId so the gallery

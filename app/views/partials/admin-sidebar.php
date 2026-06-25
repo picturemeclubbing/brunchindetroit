@@ -15,6 +15,7 @@ $activeNav = $activeNav ?? 'dashboard';
             <a href="<?= e(admin_url('blog.php')) ?>" class="admin-sidebar__link<?= $activeNav === 'blog' ? ' admin-sidebar__link--active' : '' ?>">Blog</a>
         <a href="<?= e(admin_url('blog-categories.php')) ?>" class="admin-sidebar__link<?= $activeNav === 'blog' ? ' admin-sidebar__link--active' : '' ?>">Blog Categories</a>
             <a href="<?= e(admin_url('galleries.php')) ?>" class="admin-sidebar__link<?= $activeNav === 'galleries' ? ' admin-sidebar__link--active' : '' ?>">Galleries</a>
+            <a href="<?= e(admin_url('gallery-adwall.php')) ?>" class="admin-sidebar__link<?= $activeNav === 'gallery-adwall' ? ' admin-sidebar__link--active' : '' ?>">Gallery Ad Wall</a>
             <span class="admin-sidebar__link admin-sidebar__link--disabled" title="Available in a later phase">Settings</span>
         </nav>
     </aside>

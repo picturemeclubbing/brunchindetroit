@@ -1,5 +1,14 @@
 </main>
-<footer class="site-footer">
+<?php
+$footerClass = isset($footerClass) ? trim((string) $footerClass) : '';
+$footerStyle = isset($footerStyle) ? trim((string) $footerStyle) : '';
+
+$resolvedFooterClass = 'site-footer';
+if ($footerClass !== '') {
+    $resolvedFooterClass .= ' ' . $footerClass;
+}
+?>
+<footer class="<?= e($resolvedFooterClass) ?>"<?= $footerStyle !== '' ? ' style="' . e($footerStyle) . '"' : '' ?>>
     <div class="container site-footer__grid">
         <div>
             <p class="site-footer__brand"><?= e(site_name_display()) ?></p>
@@ -45,7 +54,7 @@
             <p>&copy; <?= (int) date('Y') ?> <?= e(site_domain()) ?>. All rights reserved.</p>
             <p class="site-footer__legal">
                 <a href="<?= e(asset_url('privacy.php')) ?>">Privacy</a>
-                <span aria-hidden="true"> · </span>
+                <span aria-hidden="true"> Â· </span>
                 <a href="<?= e(asset_url('terms.php')) ?>">Terms</a>
             </p>
         </div>

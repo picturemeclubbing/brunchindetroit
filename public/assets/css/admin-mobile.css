@@ -875,3 +875,20 @@
         min-height: 2.85rem;
     }
 }
+
+/* Gallery mobile cards */
+@media (max-width: 760px) {
+    .admin-galleries-table-wrap {
+        display: none;
+    }
+
+    .admin-galleries-mobile-list {
+        display: grid;
+        gap: 0.85rem;
+    }
+
+    .admin-gallery-mobile-card .admin-mobile-card__badges form {
+        display: inline-flex;
+        margin: 0;
+    }
+}

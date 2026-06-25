@@ -56,7 +56,7 @@ if (!$hasActiveFilters) {
 } else {
     $bits = [];
     if ($q !== '') {
-        $bits[] = '“' . $q . '”';
+        $bits[] = 'Ã¢â‚¬Å“' . $q . 'Ã¢â‚¬Â';
     }
     if ($location !== '') {
         $bits[] = $location;
@@ -67,11 +67,11 @@ if (!$hasActiveFilters) {
     if ($year !== null) {
         $bits[] = (string) $year;
     }
-    $joined = implode(' · ', $bits);
+    $joined = implode(' Ã‚Â· ', $bits);
     $statusText = 'Showing ' . $galleryCount . ' galler' . ($galleryCount === 1 ? 'y' : 'ies') . ' matching ' . $joined . '.';
 }
 
-// Gallery hero background — a warm Detroit brunch photo.
+// Gallery hero background Ã¢â‚¬â€ a warm Detroit brunch photo.
 $galleryHeroImage = 'https://images.unsplash.com/photo-1559056199-641a0ac8b55e?auto=format&fit=crop&w=1600&q=80';
 ?>
 
@@ -279,12 +279,10 @@ $galleryHeroImage = 'https://images.unsplash.com/photo-1559056199-641a0ac8b55e?a
                                     <?php if ($hasUrl): ?>
                                         <a
                                             class="btn btn--primary btn--block"
-                                            href="<?= e($gallery['gallery_url']) ?>"
-                                            target="_blank"
-                                            rel="noopener noreferrer"
+                                            href="<?= e(asset_url('gallery-view.php?slug=' . urlencode((string) $gallery['slug']))) ?>"
                                         >
                                             <i class="fas fa-images" aria-hidden="true"></i>
-                                            View Gallery
+                                            View Gallery Details Details
                                         </a>
                                     <?php else: ?>
                                         <span class="btn btn--primary btn--block is-disabled" aria-disabled="true">

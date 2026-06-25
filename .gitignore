@@ -5,3 +5,7 @@
 brunch_git_backup.bat
 .aider*
 backups/
+
+# Local uploaded gallery ad-wall images
+public/uploads/gallery-adwall/*
+!public/uploads/gallery-adwall/index.html
