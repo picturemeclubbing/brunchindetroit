@@ -209,7 +209,7 @@ declare(strict_types=1);
                                         <?php if (!empty($spotMeta)): ?>
                                             <p class="home-feature-card__meta">
                                                 <?php foreach ($spotMeta as $i => $part): ?>
-                                                    <?= $i > 0 ? ' <span class="home-feature-card__meta-sep" aria-hidden="true">•</span> ' : '' ?>
+                                                    <?= $i > 0 ? ' <span class="home-feature-card__meta-sep" aria-hidden="true">&middot;</span> ' : '' ?>
                                                     <span class="home-feature-card__meta-item"><?= e((string) $part) ?></span>
                                                 <?php endforeach; ?>
                                             </p>
@@ -260,52 +260,185 @@ declare(strict_types=1);
     </div>
 </section>
 
-<section class="section section--muted">
+<section class="section home-neighborhoods-section" aria-labelledby="home-neighborhoods-heading">
     <div class="container">
-        <div class="section-header">
-            <h2 class="section-title">Latest Brunch News</h2>
-            <a href="<?= e(asset_url('blog.php')) ?>" class="section-header__link">
-                View All Articles <i class="fas fa-chevron-right" aria-hidden="true"></i>
+        <div class="section-header home-neighborhoods-section__header">
+            <div>
+                <span class="home-section-eyebrow">Start local</span>
+                <h2 id="home-neighborhoods-heading" class="section-title">Brunch by neighborhood</h2>
+            </div>
+            <a href="<?= e(asset_url('directory.php')) ?>" class="section-header__link">
+                All neighborhoods <i class="fas fa-chevron-right" aria-hidden="true"></i>
             </a>
         </div>
 
-        <div class="grid grid--articles">
-            <article class="card card--article card--hover">
-                <div class="card__media" style="background-image: url('https://images.unsplash.com/photo-1490645935967-10de6ba17061?auto=format&amp;fit=crop&amp;w=1153&amp;q=80');"></div>
-                <div class="card__body">
-                    <span class="badge">Trending</span>
-                    <h3 class="card__title">Detroit&apos;s 10 Most Instagrammable Brunch Spots</h3>
-                    <p class="card__text">From floral walls to neon signs, these spots offer the perfect backdrop for your brunch photos.</p>
-                    <div class="card__meta">
-                        <span>June 15, 2023</span>
-                        <a href="<?= e(asset_url('blog.php')) ?>" class="card__link">Read More</a>
+        <div class="home-neighborhood-strip" aria-label="Popular brunch neighborhoods">
+            <a class="home-neighborhood-card home-neighborhood-card--corktown" href="<?= e(asset_url('directory.php?q=Corktown')) ?>">
+                <span class="home-neighborhood-card__name">Corktown</span>
+                <span class="home-neighborhood-card__note">Warm, casual, local</span>
+            </a>
+            <a class="home-neighborhood-card home-neighborhood-card--downtown" href="<?= e(asset_url('directory.php?q=Downtown')) ?>">
+                <span class="home-neighborhood-card__name">Downtown</span>
+                <span class="home-neighborhood-card__note">Classic brunch + cocktails</span>
+            </a>
+            <a class="home-neighborhood-card home-neighborhood-card--midtown" href="<?= e(asset_url('directory.php?q=Midtown')) ?>">
+                <span class="home-neighborhood-card__name">Midtown</span>
+                <span class="home-neighborhood-card__note">Coffee, culture, patios</span>
+            </a>
+            <a class="home-neighborhood-card home-neighborhood-card--eastern" href="<?= e(asset_url('directory.php?q=Eastern%20Market')) ?>">
+                <span class="home-neighborhood-card__name">Eastern Market</span>
+                <span class="home-neighborhood-card__note">Weekend food energy</span>
+            </a>
+            <a class="home-neighborhood-card home-neighborhood-card--newcenter" href="<?= e(asset_url('directory.php?q=New%20Center')) ?>">
+                <span class="home-neighborhood-card__name">New Center</span>
+                <span class="home-neighborhood-card__note">Hidden gems nearby</span>
+            </a>
+            <a class="home-neighborhood-card home-neighborhood-card--ferndale" href="<?= e(asset_url('directory.php?q=Ferndale')) ?>">
+                <span class="home-neighborhood-card__name">Ferndale</span>
+                <span class="home-neighborhood-card__note">Nearby brunch favorites</span>
+            </a>
+        </div>
+    </div>
+</section>
+<section class="section section--white home-featured-venues-section" aria-labelledby="home-featured-venues-heading">
+    <div class="container">
+        <div class="section-header">
+            <div>
+                <span class="home-section-eyebrow">Hand-picked</span>
+                <h2 id="home-featured-venues-heading" class="section-title">Featured brunch spots</h2>
+            </div>
+            <a href="<?= e(asset_url('directory.php?featured=1')) ?>" class="section-header__link">
+                View Directory <i class="fas fa-chevron-right" aria-hidden="true"></i>
+            </a>
+        </div>
+
+        <div class="home-featured-venue-grid">
+            <?php
+            $homeFeaturedVenues = array_slice($featuredVenues ?? [], 0, 3);
+            ?>
+
+            <?php if (!empty($homeFeaturedVenues)): ?>
+                <?php foreach ($homeFeaturedVenues as $venue): ?>
+                    <?php
+                    $venueName = (string) ($venue['name'] ?? 'Featured Brunch Spot');
+                    $venueSlug = (string) ($venue['slug'] ?? '');
+                    $venueUrl = $venueSlug !== ''
+                        ? asset_url('venue.php?slug=' . urlencode($venueSlug))
+                        : asset_url('directory.php?featured=1');
+
+                    $venueImage = !empty($venue['main_image_path'])
+                        ? (string) $venue['main_image_path']
+                        : 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=900&q=80';
+
+                    $venueNeighborhood = (string) ($venue['neighborhood_name'] ?? 'Detroit');
+                    $venueHours = (string) ($venue['brunch_hours_note'] ?? 'Brunch details available');
+                    $venueDescription = (string) ($venue['description'] ?? '');
+                    if (mb_strlen($venueDescription) > 120) {
+                        $venueDescription = mb_substr($venueDescription, 0, 117) . '...';
+                    }
+                    ?>
+                    <article class="home-featured-venue-card">
+                        <a class="home-featured-venue-card__media" href="<?= e($venueUrl) ?>">
+                            <img src="<?= e($venueImage) ?>" alt="<?= e($venueName) ?>" loading="lazy">
+                            <span class="home-featured-venue-card__badge">Featured</span>
+                        </a>
+
+                        <div class="home-featured-venue-card__body">
+                            <p class="home-featured-venue-card__area"><?= e($venueNeighborhood) ?></p>
+                            <h3 class="home-featured-venue-card__title">
+                                <a href="<?= e($venueUrl) ?>"><?= e($venueName) ?></a>
+                            </h3>
+
+                            <?php if ($venueDescription !== ''): ?>
+                                <p class="home-featured-venue-card__text"><?= e($venueDescription) ?></p>
+                            <?php endif; ?>
+
+                            <p class="home-featured-venue-card__meta">
+                                <i class="far fa-clock" aria-hidden="true"></i>
+                                <?= e($venueHours) ?>
+                            </p>
+
+                            <a class="btn btn--primary btn--sm" href="<?= e($venueUrl) ?>">View Details</a>
+                        </div>
+                    </article>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <article class="home-featured-venue-card home-featured-venue-card--empty">
+                    <div class="home-featured-venue-card__body">
+                        <p class="home-featured-venue-card__area">Coming Soon</p>
+                        <h3 class="home-featured-venue-card__title">Featured brunch spots are being curated.</h3>
+                        <p class="home-featured-venue-card__text">Browse the full directory while we highlight more Detroit brunch locations.</p>
+                        <a class="btn btn--primary btn--sm" href="<?= e(asset_url('directory.php')) ?>">Browse Directory</a>
                     </div>
-                </div>
-            </article>
-            <article class="card card--article card--hover">
-                <div class="card__media" style="background-image: url('https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&amp;fit=crop&amp;w=1170&amp;q=80');"></div>
-                <div class="card__body">
-                    <span class="badge">Recipes</span>
-                    <h3 class="card__title">How to Make Detroit-Style Cinnamon Rolls</h3>
-                    <p class="card__text">Our resident pastry chef shares her secret recipe for the perfect brunch treat.</p>
-                    <div class="card__meta">
-                        <span>June 8, 2023</span>
-                        <a href="<?= e(asset_url('blog.php')) ?>" class="card__link">Read More</a>
-                    </div>
-                </div>
-            </article>
-            <article class="card card--article card--hover">
-                <div class="card__media" style="background-image: url('https://images.unsplash.com/photo-1559847844-5315695dadae?auto=format&amp;fit=crop&amp;w=1198&amp;q=80');"></div>
-                <div class="card__body">
-                    <span class="badge">Reviews</span>
-                    <h3 class="card__title">We Tried Every Mimosa Flight in Detroit</h3>
-                    <p class="card__text">Our comprehensive guide to the best mimosa flights across the city.</p>
-                    <div class="card__meta">
-                        <span>June 1, 2023</span>
-                        <a href="<?= e(asset_url('blog.php')) ?>" class="card__link">Read More</a>
-                    </div>
-                </div>
-            </article>
+                </article>
+            <?php endif; ?>
+        </div>
+    </div>
+</section>
+
+<section class="section home-brunch-battle-section" aria-labelledby="home-brunch-battle-heading">
+    <div class="container">
+        <article class="home-brunch-battle-card">
+            <div class="home-brunch-battle-card__media">
+                <img
+                    src="https://images.unsplash.com/photo-1504754524776-8f4f37790ca0?auto=format&fit=crop&w=1000&q=80"
+                    alt="Brunch table with plates for a future Brunch Battle"
+                    loading="lazy"
+                >
+                <span class="home-brunch-battle-card__vs">VS</span>
+            </div>
+
+            <div class="home-brunch-battle-card__body">
+                <span class="home-section-eyebrow">This week's Brunch Battle</span>
+                <h2 id="home-brunch-battle-heading">Chicken &amp; waffles showdown</h2>
+                <p>
+                    Placeholder for the future Brunch Battle feature. Once the admin workflow is ready,
+                    this area can showcase two competing brunch plates, voting, judges, or video.
+                </p>
+                <a href="<?= e(asset_url('contact.php')) ?>" class="btn btn--accent">
+                    <i class="fas fa-trophy" aria-hidden="true"></i>
+                    Coming Soon
+                </a>
+            </div>
+        </article>
+    </div>
+</section>
+<section class="section section--muted">
+    <div class="container">
+        <div class="section-header"><div><span class="home-section-eyebrow">Browse by mood</span><h2 class="section-title">Brunch Categories</h2></div></div>
+        <div class="grid grid--categories">
+            <a href="<?= e(asset_url('directory.php')) ?>" class="category-tile">
+                <i class="fas fa-leaf category-tile__icon" aria-hidden="true"></i>
+                <span class="category-tile__label">Vegan Brunch</span>
+            </a>
+            <a href="<?= e(asset_url('directory.php')) ?>" class="category-tile">
+                <i class="fas fa-music category-tile__icon" aria-hidden="true"></i>
+                <span class="category-tile__label">Soul Food</span>
+            </a>
+            <a href="<?= e(asset_url('directory.php')) ?>" class="category-tile">
+                <i class="fas fa-umbrella-beach category-tile__icon" aria-hidden="true"></i>
+                <span class="category-tile__label">Rooftop</span>
+            </a>
+            <a href="<?= e(asset_url('directory.php')) ?>" class="category-tile">
+                <i class="fas fa-glass-cheers category-tile__icon" aria-hidden="true"></i>
+                <span class="category-tile__label">Boozy Brunch</span>
+            </a>
+            <a href="<?= e(asset_url('directory.php')) ?>" class="category-tile">
+                <i class="fas fa-child category-tile__icon" aria-hidden="true"></i>
+                <span class="category-tile__label">Family Friendly</span>
+            </a>
+            <a href="<?= e(asset_url('directory.php')) ?>" class="category-tile">
+                <i class="fas fa-pepper-hot category-tile__icon" aria-hidden="true"></i>
+                <span class="category-tile__label">Latin Flavors</span>
+            </a>
+            <a href="<?= e(asset_url('directory.php')) ?>" class="category-tile">
+                <i class="fas fa-bread-slice category-tile__icon" aria-hidden="true"></i>
+                <span class="category-tile__label">Gluten-Free</span>
+            </a>
+            <a href="<?= e(asset_url('directory.php')) ?>" class="category-tile">
+                <i class="fas fa-wine-glass-alt category-tile__icon" aria-hidden="true"></i>
+                <span class="category-tile__label">Bottomless</span>
+            </a>
         </div>
     </div>
 </section>
@@ -379,7 +512,7 @@ declare(strict_types=1);
                 <a href="<?= e(asset_url('gallery.php')) ?>" class="card--gallery__media-link">
                     <img
                         src="https://images.unsplash.com/photo-1551218808-94e220e084d2?auto=format&amp;fit=crop&amp;w=1074&amp;q=80"
-                        alt="Mother&apos;s Day brunch crowd at Garden Café, Corktown"
+                        alt="Mother&apos;s Day brunch crowd at Garden Cafe, Corktown"
                         class="card--gallery__img"
                         width="1074"
                         height="720"
@@ -387,7 +520,7 @@ declare(strict_types=1);
                     >
                 </a>
                 <div class="card__body">
-                    <p class="card--gallery__venue">Garden Café</p>
+                    <p class="card--gallery__venue">Garden Caf&eacute;</p>
                     <h3 class="card--gallery__event">Mother&apos;s Day Brunch</h3>
                     <div class="tag-list">
                         <span class="badge badge--location">Corktown</span>
@@ -405,54 +538,96 @@ declare(strict_types=1);
 
 <section class="section section--muted">
     <div class="container">
-        <h2 class="section-title section-title--spaced">Brunch Categories</h2>
-        <div class="grid grid--categories">
-            <a href="<?= e(asset_url('directory.php')) ?>" class="category-tile">
-                <i class="fas fa-leaf category-tile__icon" aria-hidden="true"></i>
-                <span class="category-tile__label">Vegan Brunch</span>
+        <div class="section-header">
+            <h2 class="section-title">Latest Brunch News</h2>
+            <a href="<?= e(asset_url('blog.php')) ?>" class="section-header__link">
+                View All Articles <i class="fas fa-chevron-right" aria-hidden="true"></i>
             </a>
-            <a href="<?= e(asset_url('directory.php')) ?>" class="category-tile">
-                <i class="fas fa-music category-tile__icon" aria-hidden="true"></i>
-                <span class="category-tile__label">Soul Food</span>
-            </a>
-            <a href="<?= e(asset_url('directory.php')) ?>" class="category-tile">
-                <i class="fas fa-umbrella-beach category-tile__icon" aria-hidden="true"></i>
-                <span class="category-tile__label">Rooftop</span>
-            </a>
-            <a href="<?= e(asset_url('directory.php')) ?>" class="category-tile">
-                <i class="fas fa-glass-cheers category-tile__icon" aria-hidden="true"></i>
-                <span class="category-tile__label">Boozy Brunch</span>
-            </a>
-            <a href="<?= e(asset_url('directory.php')) ?>" class="category-tile">
-                <i class="fas fa-child category-tile__icon" aria-hidden="true"></i>
-                <span class="category-tile__label">Family Friendly</span>
-            </a>
-            <a href="<?= e(asset_url('directory.php')) ?>" class="category-tile">
-                <i class="fas fa-pepper-hot category-tile__icon" aria-hidden="true"></i>
-                <span class="category-tile__label">Latin Flavors</span>
-            </a>
-            <a href="<?= e(asset_url('directory.php')) ?>" class="category-tile">
-                <i class="fas fa-bread-slice category-tile__icon" aria-hidden="true"></i>
-                <span class="category-tile__label">Gluten-Free</span>
-            </a>
-            <a href="<?= e(asset_url('directory.php')) ?>" class="category-tile">
-                <i class="fas fa-wine-glass-alt category-tile__icon" aria-hidden="true"></i>
-                <span class="category-tile__label">Bottomless</span>
-            </a>
+        </div>
+
+        <div class="grid grid--articles">
+            <article class="card card--article card--hover">
+                <div class="card__media" style="background-image: url('https://images.unsplash.com/photo-1490645935967-10de6ba17061?auto=format&amp;fit=crop&amp;w=1153&amp;q=80');"></div>
+                <div class="card__body">
+                    <span class="badge">Trending</span>
+                    <h3 class="card__title">Detroit&apos;s 10 Most Instagrammable Brunch Spots</h3>
+                    <p class="card__text">From floral walls to neon signs, these spots offer the perfect backdrop for your brunch photos.</p>
+                    <div class="card__meta">
+                        <span>June 15, 2023</span>
+                        <a href="<?= e(asset_url('blog.php')) ?>" class="card__link">Read More</a>
+                    </div>
+                </div>
+            </article>
+            <article class="card card--article card--hover">
+                <div class="card__media" style="background-image: url('https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&amp;fit=crop&amp;w=1170&amp;q=80');"></div>
+                <div class="card__body">
+                    <span class="badge">Recipes</span>
+                    <h3 class="card__title">How to Make Detroit-Style Cinnamon Rolls</h3>
+                    <p class="card__text">Our resident pastry chef shares her secret recipe for the perfect brunch treat.</p>
+                    <div class="card__meta">
+                        <span>June 8, 2023</span>
+                        <a href="<?= e(asset_url('blog.php')) ?>" class="card__link">Read More</a>
+                    </div>
+                </div>
+            </article>
+            <article class="card card--article card--hover">
+                <div class="card__media" style="background-image: url('https://images.unsplash.com/photo-1559847844-5315695dadae?auto=format&amp;fit=crop&amp;w=1198&amp;q=80');"></div>
+                <div class="card__body">
+                    <span class="badge">Reviews</span>
+                    <h3 class="card__title">We Tried Every Mimosa Flight in Detroit</h3>
+                    <p class="card__text">Our comprehensive guide to the best mimosa flights across the city.</p>
+                    <div class="card__meta">
+                        <span>June 1, 2023</span>
+                        <a href="<?= e(asset_url('blog.php')) ?>" class="card__link">Read More</a>
+                    </div>
+                </div>
+            </article>
         </div>
     </div>
 </section>
 
-<section class="cta-band">
-    <div class="container cta-band__inner">
-        <h2 class="cta-band__title">Ready to Brunch in Detroit?</h2>
-        <p class="cta-band__text">Browse neighborhood spots, menus, and allergy-aware listings curated for <?= e(site_domain()) ?>.</p>
-        <div class="cta-band__actions">
-            <a href="<?= e(asset_url('directory.php')) ?>" class="btn btn--accent btn--lg">Browse Directory</a>
-            <a href="<?= e(asset_url('contact.php')) ?>" class="btn btn--outline-light btn--lg">Contact Us</a>
+<section class="section home-sponsor-band-section" aria-labelledby="home-sponsor-band-heading">
+    <div class="container">
+        <div class="home-sponsor-band">
+            <span class="home-section-eyebrow">Sponsored</span>
+            <h2 id="home-sponsor-band-heading">Put your brand in front of hungry brunch lovers</h2>
+            <p>Reach locals actively choosing where to eat this weekend. Featured placement, galleries, and sponsored content options are available.</p>
+            <a href="mailto:hello@brunchindetroit.com" class="btn btn--light">Advertise with us</a>
         </div>
     </div>
 </section>
+
+<section class="section section--white home-owner-cta-section" aria-labelledby="home-owner-cta-heading">
+    <div class="container">
+        <div class="home-owner-cta">
+            <div class="home-owner-cta__media">
+                <img
+                    src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=900&q=80"
+                    alt="Restaurant table setting for brunch venue owners"
+                    loading="lazy"
+                >
+            </div>
+
+            <div class="home-owner-cta__body">
+                <span class="home-section-eyebrow">For venues</span>
+                <h2 id="home-owner-cta-heading">Own a brunch spot?</h2>
+                <p>Get listed, keep your brunch details updated, and reach Detroiters planning their next weekend move.</p>
+                <div class="home-owner-cta__actions">
+                    <a href="<?= e(asset_url('contact.php')) ?>" class="btn btn--primary">Get listed free</a>
+                    <a href="<?= e(asset_url('directory.php')) ?>" class="btn btn--outline">View directory</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+
+
+
+
+
 
 
 <script>

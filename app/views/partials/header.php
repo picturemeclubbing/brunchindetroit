@@ -88,36 +88,51 @@ try {
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous">
     <link rel="stylesheet" href="<?= e(asset_url('assets/css/main.css')) ?>">
 </head>
 <body class="site-body">
 <header class="site-header">
     <div class="container site-header__inner">
-        <a href="<?= e(asset_url('index.php')) ?>" class="site-logo"><?= e(site_name_display()) ?></a>
+        <a href="<?= e(asset_url('index.php')) ?>" class="site-logo">Brunch<span class="site-logo__accent">InDetroit</span></a>
 
         <nav class="site-nav site-nav--desktop" aria-label="Main navigation">
             <a href="<?= e(asset_url('index.php')) ?>" class="site-nav__link site-nav__link--active">Home</a>
-            <a href="<?= e(asset_url('blog.php')) ?>" class="site-nav__link">News &amp; Blogs</a>
-            <a href="<?= e(asset_url('gallery.php')) ?>" class="site-nav__link">Gallery</a>
             <a href="<?= e(asset_url('directory.php')) ?>" class="site-nav__link">Directory</a>
+            <a href="<?= e(asset_url('gallery.php')) ?>" class="site-nav__link">Galleries</a>
+            <a href="<?= e(asset_url('blog.php')) ?>" class="site-nav__link">News</a>
+            <a href="<?= e(asset_url('about.php')) ?>" class="site-nav__link">About</a>
+        </nav>
+
+        <div class="site-header__cta">
+            <a href="<?= e(asset_url('contact.php')) ?>" class="btn btn--accent btn--sm site-header__list-spot">
+                <i class="fas fa-plus" aria-hidden="true"></i>
+                List your spot
+            </a>
+
             <?php if ($showAdminNavLink): ?>
                 <a href="<?= e(admin_url('dashboard.php')) ?>" class="site-nav__link site-nav__link--admin">Admin</a>
             <?php endif; ?>
-        </nav>
 
-        <button type="button" class="site-header__menu-btn" id="mobileMenuButton" aria-expanded="false" aria-controls="mobileMenu" aria-label="Open menu">
-            <i class="fas fa-bars" aria-hidden="true"></i>
-        </button>
+            <button type="button" class="site-header__menu-btn" id="mobileMenuButton" aria-expanded="false" aria-controls="mobileMenu" aria-label="Open menu">
+                <i class="fas fa-bars" aria-hidden="true"></i>
+            </button>
+        </div>
     </div>
 
     <div id="mobileMenu" class="site-nav-mobile" hidden>
         <nav class="site-nav-mobile__inner" aria-label="Mobile navigation">
             <a href="<?= e(asset_url('index.php')) ?>" class="site-nav-mobile__link">Home</a>
-            <a href="<?= e(asset_url('blog.php')) ?>" class="site-nav-mobile__link">News &amp; Blogs</a>
-            <a href="<?= e(asset_url('gallery.php')) ?>" class="site-nav-mobile__link">Gallery</a>
             <a href="<?= e(asset_url('directory.php')) ?>" class="site-nav-mobile__link">Directory</a>
+            <a href="<?= e(asset_url('gallery.php')) ?>" class="site-nav-mobile__link">Galleries</a>
+            <a href="<?= e(asset_url('blog.php')) ?>" class="site-nav-mobile__link">News</a>
+            <a href="<?= e(asset_url('about.php')) ?>" class="site-nav-mobile__link">About</a>
+            <a href="<?= e(asset_url('contact.php')) ?>" class="site-nav-mobile__link site-nav-mobile__link--list-spot">
+                <i class="fas fa-plus" aria-hidden="true"></i>
+                List your spot
+            </a>
+
             <?php if ($showAdminNavLink): ?>
                 <a href="<?= e(admin_url('dashboard.php')) ?>" class="site-nav-mobile__link site-nav-mobile__link--admin">Admin</a>
             <?php endif; ?>

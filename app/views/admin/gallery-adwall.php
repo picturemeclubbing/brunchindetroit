@@ -189,7 +189,7 @@ if (!function_exists('gallery_adwall_image_field')) {
                     $currentOverlay = (string) ($form['gallery_adwall_overlay_opacity'] ?? '0.88');
                     ?>
                     <?php foreach ($overlayOptions as $value => $label): ?>
-                        <option value="<?= e($value) ?>" <?= $currentOverlay === $value ? 'selected' : '' ?>><?= e($label) ?></option>
+                        <option value="<?= e((string) $value) ?>" <?= $currentOverlay === (string) $value ? 'selected' : '' ?>><?= e((string) $label) ?></option>
                     <?php endforeach; ?>
                 </select>
                 <span class="admin-form__hint">Use None when the sponsor background already has readable text or branding.</span>
@@ -277,7 +277,7 @@ if (!function_exists('gallery_adwall_image_field')) {
                     $currentFooterOverlay = (string) ($form['gallery_adwall_footer_overlay_opacity'] ?? '0.82');
                     ?>
                     <?php foreach ($footerOverlayOptions as $value => $label): ?>
-                        <option value="<?= e($value) ?>" <?= $currentFooterOverlay === $value ? 'selected' : '' ?>><?= e($label) ?></option>
+                        <option value="<?= e((string) $value) ?>" <?= $currentFooterOverlay === (string) $value ? 'selected' : '' ?>><?= e((string) $label) ?></option>
                     <?php endforeach; ?>
                 </select>
                 <?php gallery_adwall_field_error('gallery_adwall_footer_overlay_opacity', $errors); ?>
@@ -295,7 +295,7 @@ if (!function_exists('gallery_adwall_image_field')) {
                     $currentFooterPositionX = (string) ($form['gallery_adwall_footer_position_x'] ?? 'center');
                     ?>
                     <?php foreach ($footerPositionXOptions as $value => $label): ?>
-                        <option value="<?= e($value) ?>" <?= $currentFooterPositionX === $value ? 'selected' : '' ?>><?= e($label) ?></option>
+                        <option value="<?= e((string) $value) ?>" <?= $currentFooterPositionX === (string) $value ? 'selected' : '' ?>><?= e((string) $label) ?></option>
                     <?php endforeach; ?>
                 </select>
                 <span class="admin-form__hint">Controls whether the footer background image is aligned left, center, or right.</span>
@@ -313,7 +313,7 @@ if (!function_exists('gallery_adwall_image_field')) {
                     $currentFooterPositionY = (string) ($form['gallery_adwall_footer_position_y'] ?? 'center');
                     ?>
                     <?php foreach ($footerPositionYOptions as $value => $label): ?>
-                        <option value="<?= e($value) ?>" <?= $currentFooterPositionY === $value ? 'selected' : '' ?>><?= e($label) ?></option>
+                        <option value="<?= e((string) $value) ?>" <?= $currentFooterPositionY === (string) $value ? 'selected' : '' ?>><?= e((string) $label) ?></option>
                     <?php endforeach; ?>
                 </select>
                 <span class="admin-form__hint">Use Top or Bottom when the important part of the image is being cropped out.</span>
