@@ -71,6 +71,7 @@ CREATE TABLE IF NOT EXISTS venues (
   is_published TINYINT(1) NOT NULL DEFAULT 0,
   is_featured TINYINT(1) NOT NULL DEFAULT 0,
   featured_sort INT NOT NULL DEFAULT 0,
+  profile_tier ENUM('free','premium') NOT NULL DEFAULT 'free',
   menu_last_updated_at DATETIME NULL,
   published_at DATETIME NULL,
   created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,

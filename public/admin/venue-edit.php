@@ -50,6 +50,7 @@ $form = [
     'price_range'      => '',
     'brunch_hours_note'=> '',
     'featured_sort'    => '0',
+    'profile_tier'     => 'free',
     'is_published'     => false,
     'is_featured'      => false,
 ];
@@ -88,6 +89,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && $editId > 0) {
         'price_range'      => (string) ($existing['price_range'] ?? ''),
         'brunch_hours_note'=> (string) ($existing['brunch_hours_note'] ?? ''),
         'featured_sort'    => (string) (int) ($existing['featured_sort'] ?? 0),
+        'profile_tier'     => in_array((string) ($existing['profile_tier'] ?? 'free'), ['free', 'premium'], true) ? (string) ($existing['profile_tier'] ?? 'free') : 'free',
         'is_published'     => !empty($existing['is_published']),
         'is_featured'      => !empty($existing['is_featured']),
         'interior_image_paths' => array_fill(0, 4, ''),
@@ -348,6 +350,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $form['price_range']       = trim((string) ($_POST['price_range'] ?? ''));
     $form['brunch_hours_note'] = trim((string) ($_POST['brunch_hours_note'] ?? ''));
     $form['featured_sort']     = trim((string) ($_POST['featured_sort'] ?? '0'));
+    $form['profile_tier']      = trim((string) ($_POST['profile_tier'] ?? 'free'));
     $form['is_published']      = isset($_POST['is_published']);
     $form['is_featured']       = isset($_POST['is_featured']);
 
@@ -479,6 +482,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Keep the normalized value sticky in case of other errors.
     $form['featured_sort'] = (string) $featuredSortOut;
 
+    if (!in_array($form['profile_tier'], ['free', 'premium'], true)) {
+        $errors['profile_tier'] = 'Profile tier must be Free or Premium.';
+        $form['profile_tier'] = 'free';
+    }
+
     // --- Persist -------------------------------------------------------------
     if (empty($errors)) {
         $data = [
@@ -502,6 +510,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'is_published'      => $form['is_published'] ? 1 : 0,
             'is_featured'       => $form['is_featured'] ? 1 : 0,
             'featured_sort'     => $featuredSortOut,
+            'profile_tier'      => $form['profile_tier'],
         ];
 
         try {

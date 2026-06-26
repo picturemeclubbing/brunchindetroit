@@ -28,6 +28,7 @@ final class Venue
                 v.main_image_path,
                 v.is_featured,
                 v.featured_sort,
+                v.profile_tier,
                 v.updated_at,
                 n.name AS neighborhood_name
             FROM venues v
@@ -68,6 +69,7 @@ final class Venue
                 v.website_url,
                 v.is_featured,
                 v.featured_sort,
+                v.profile_tier,
                 n.name AS neighborhood_name
             FROM venues v
             LEFT JOIN neighborhoods n ON n.id = v.neighborhood_id
@@ -115,6 +117,7 @@ final class Venue
                 v.main_image_path,
                 v.is_featured,
                 v.featured_sort,
+                v.profile_tier,
                 v.updated_at,
                 n.name AS neighborhood_name
             FROM venues v
@@ -188,6 +191,7 @@ final class Venue
                 v.is_published,
                 v.is_featured,
                 v.featured_sort,
+                v.profile_tier,
                 v.menu_last_updated_at,
                 v.published_at,
                 v.created_at,
@@ -234,6 +238,7 @@ final class Venue
                 v.is_published,
                 v.is_featured,
                 v.featured_sort,
+                v.profile_tier,
                 v.menu_last_updated_at,
                 v.published_at,
                 v.created_at,
@@ -296,12 +301,12 @@ final class Venue
                 (slug, name, description, hero_blurb, address_line1, address_line2, city, state, zip,
                  phone, website_url, instagram_url, facebook_url, neighborhood_id,
                  price_range, brunch_hours_note, main_image_path,
-                 is_published, is_featured, featured_sort)
+                 is_published, is_featured, featured_sort, profile_tier)
              VALUES
                 (:slug, :name, :description, :hero_blurb, :address_line1, :address_line2, :city, :state, :zip,
                  :phone, :website_url, :instagram_url, :facebook_url, :neighborhood_id,
                  :price_range, :brunch_hours_note, :main_image_path,
-                 :is_published, :is_featured, :featured_sort)'
+                 :is_published, :is_featured, :featured_sort, :profile_tier)'
         );
 
         $stmt->execute(self::bindValues($data));
@@ -340,7 +345,8 @@ final class Venue
                 main_image_path = :main_image_path,
                 is_published = :is_published,
                 is_featured = :is_featured,
-                featured_sort = :featured_sort
+                featured_sort = :featured_sort,
+                profile_tier = :profile_tier
              WHERE id = :id'
         );
 
@@ -426,6 +432,11 @@ final class Venue
         $city  = $nullable($data['city'] ?? '') ?? 'Detroit';
         $state = $nullable($data['state'] ?? '') ?? 'MI';
 
+        $profileTier = (string) ($data['profile_tier'] ?? 'free');
+        if (!in_array($profileTier, ['free', 'premium'], true)) {
+            $profileTier = 'free';
+        }
+
         return [
             ':slug'              => (string) ($data['slug'] ?? ''),
             ':name'              => (string) ($data['name'] ?? ''),
@@ -447,6 +458,7 @@ final class Venue
             ':is_published'      => !empty($data['is_published']) ? 1 : 0,
             ':is_featured'       => !empty($data['is_featured']) ? 1 : 0,
             ':featured_sort'     => (int) ($data['featured_sort'] ?? 0),
+            ':profile_tier'      => $profileTier,
         ];
     }
 
@@ -693,6 +705,7 @@ final class Venue
                 v.main_image_path,
                 v.is_featured,
                 v.featured_sort,
+                v.profile_tier,
                 n.name AS neighborhood_name,
                 CASE
                     WHEN cur.neighborhood_id IS NOT NULL AND v.neighborhood_id = cur.neighborhood_id THEN 0

@@ -122,6 +122,19 @@ $heading = $isEdit ? 'Edit Venue' : 'Add Venue';
                 <?php endif; ?>
             </div>
 
+            <!-- Profile tier -->
+            <div class="admin-form__field">
+                <label class="form-label" for="profile_tier">Profile Tier</label>
+                <select id="profile_tier" name="profile_tier" class="form-control">
+                    <option value="free"<?= ($form['profile_tier'] ?? 'free') === 'free' ? ' selected' : '' ?>>Free / Directory Profile</option>
+                    <option value="premium"<?= ($form['profile_tier'] ?? 'free') === 'premium' ? ' selected' : '' ?>>Premium / Website Mode</option>
+                </select>
+                <span class="admin-form__hint">Premium unlocks the website-style profile layout. Free keeps the standard tabbed profile.</span>
+                <?php if (!empty($errors['profile_tier'])): ?>
+                    <span class="admin-form__error"><?= e((string) $errors['profile_tier']) ?></span>
+                <?php endif; ?>
+            </div>
+
             <!-- Website URL -->
             <div class="admin-form__field admin-form__field--full">
                 <label class="form-label" for="website_url">Website URL</label>
