@@ -12688,3 +12688,236 @@ h3,
     border-radius: 0.65rem;
     border: 1px solid var(--border);
 }
+
+/* ==========================================================================
+   Phase 7A: Modern directory venue cards
+   Upgrades the existing grid card only; search/filter/pagination stay unchanged.
+   ========================================================================== */
+
+body .directory-page .directory-grid {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(17.5rem, 1fr)) !important;
+    gap: 1.35rem !important;
+    align-items: stretch !important;
+}
+
+body .directory-page .directory-grid .directory-venue-card {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: none !important;
+}
+
+body .directory-venue-card {
+    position: relative !important;
+    isolation: isolate !important;
+    overflow: hidden !important;
+    display: flex !important;
+    flex-direction: column !important;
+    min-height: 100% !important;
+    background: var(--surface) !important;
+    border: 1px solid var(--border) !important;
+    border-radius: 1rem !important;
+    box-shadow: 0 1px 2px rgba(20, 40, 38, 0.06) !important;
+    transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease !important;
+}
+
+body .directory-venue-card:hover {
+    transform: translateY(-4px) !important;
+    box-shadow: 0 14px 34px rgba(20, 40, 38, 0.13) !important;
+}
+
+body .directory-venue-card--featured {
+    border-color: rgba(201, 150, 47, 0.78) !important;
+    box-shadow: 0 0 0 4px rgba(201, 150, 47, 0.12), 0 1px 2px rgba(20, 40, 38, 0.06) !important;
+}
+
+body .directory-venue-card__stretched-link {
+    position: absolute !important;
+    inset: 0 !important;
+    z-index: 1 !important;
+}
+
+body .directory-venue-card__media {
+    position: relative !important;
+    aspect-ratio: 16 / 10 !important;
+    overflow: hidden !important;
+    background: #ede5d8 !important;
+}
+
+body .directory-venue-card__media img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    transition: transform 0.28s ease !important;
+}
+
+body .directory-venue-card:hover .directory-venue-card__media img {
+    transform: scale(1.045) !important;
+}
+
+body .directory-venue-card__featured-chip {
+    position: absolute !important;
+    top: 0.7rem !important;
+    left: 0.7rem !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 0.35rem !important;
+    padding: 0.32rem 0.58rem !important;
+    border-radius: 0.5rem !important;
+    background: var(--accent) !important;
+    color: #241900 !important;
+    font-size: 0.66rem !important;
+    font-weight: 800 !important;
+    line-height: 1 !important;
+    letter-spacing: 0.055em !important;
+    text-transform: uppercase !important;
+    z-index: 2 !important;
+}
+
+body .directory-venue-card__body {
+    display: flex !important;
+    flex: 1 1 auto !important;
+    flex-direction: column !important;
+    gap: 0.55rem !important;
+    padding: 1.05rem 1.1rem 1.15rem !important;
+}
+
+body .directory-venue-card__eyebrow {
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.4rem !important;
+    margin: 0 !important;
+    color: var(--secondary) !important;
+    font-size: 0.72rem !important;
+    font-weight: 800 !important;
+    line-height: 1.2 !important;
+    letter-spacing: 0.06em !important;
+    text-transform: uppercase !important;
+}
+
+body .directory-venue-card__price {
+    color: var(--primary-dark) !important;
+}
+
+body .directory-venue-card__dot {
+    color: var(--border) !important;
+}
+
+body .directory-venue-card__title {
+    margin: 0 !important;
+    color: var(--text) !important;
+    font-family: var(--font-display) !important;
+    font-size: 1.28rem !important;
+    font-weight: 700 !important;
+    line-height: 1.08 !important;
+    letter-spacing: -0.02em !important;
+}
+
+body .directory-venue-card__description {
+    margin: 0 !important;
+    color: var(--text) !important;
+    font-size: 0.9rem !important;
+    line-height: 1.5 !important;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 2 !important;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
+}
+
+body .directory-venue-card__facts {
+    display: grid !important;
+    gap: 0.42rem !important;
+    margin-top: 0.15rem !important;
+}
+
+body .directory-venue-card__facts p {
+    display: flex !important;
+    align-items: flex-start !important;
+    gap: 0.45rem !important;
+    margin: 0 !important;
+    color: var(--muted) !important;
+    font-size: 0.84rem !important;
+    line-height: 1.35 !important;
+}
+
+body .directory-venue-card__facts i {
+    flex: 0 0 auto !important;
+    margin-top: 0.16rem !important;
+    color: var(--primary) !important;
+}
+
+body .directory-venue-card__footer {
+    position: relative !important;
+    z-index: 2 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 0.85rem !important;
+    margin-top: auto !important;
+    padding-top: 0.9rem !important;
+}
+
+body .directory-venue-card__view {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 0.4rem !important;
+    color: var(--primary) !important;
+    font-size: 0.9rem !important;
+    font-weight: 800 !important;
+}
+
+body .directory-venue-card__view i {
+    font-size: 0.72rem !important;
+    transition: transform 0.22s ease !important;
+}
+
+body .directory-venue-card:hover .directory-venue-card__view i {
+    transform: translateX(3px) !important;
+}
+
+body .directory-venue-card__icons {
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.45rem !important;
+}
+
+body .directory-venue-card__icon {
+    position: relative !important;
+    z-index: 3 !important;
+    display: inline-grid !important;
+    width: 2.25rem !important;
+    height: 2.25rem !important;
+    place-items: center !important;
+    border: 1px solid var(--border) !important;
+    border-radius: 999px !important;
+    background: transparent !important;
+    color: var(--primary) !important;
+    transition: background 0.22s ease, border-color 0.22s ease, transform 0.22s ease !important;
+}
+
+body .directory-venue-card__icon:hover {
+    transform: translateY(-1px) !important;
+    border-color: rgba(31, 94, 91, 0.45) !important;
+    background: rgba(31, 94, 91, 0.07) !important;
+}
+
+@media (min-width: 1100px) {
+    body .directory-page .directory-grid {
+        grid-template-columns: repeat(auto-fit, minmax(19rem, 1fr)) !important;
+    }
+}
+
+@media (max-width: 640px) {
+    body .directory-page .directory-grid {
+        grid-template-columns: 1fr !important;
+        gap: 1rem !important;
+    }
+
+    body .directory-venue-card__body {
+        padding: 1rem !important;
+    }
+
+    body .directory-venue-card__title {
+        font-size: 1.18rem !important;
+    }
+}

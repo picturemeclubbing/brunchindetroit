@@ -315,43 +315,90 @@ if (!$hasActiveFilter) {
                         $venueHoursDisplay = $formatVenueHours((string) ($venue['brunch_hours_note'] ?? ''));
 
                         $venueImage = $resolveVenueImage((string) ($venue['main_image_path'] ?? ''));
-                        $venueCardTone = !empty($venue['is_featured']) ? 'venue-card--featured-image' : 'venue-card--standard-image';?>
-                        <article class="card card--hover venue-card venue-card--image <?= e($venueCardTone) ?>" style="--venue-card-bg:url('<?= e($venueImage) ?>');">
-                            <div class="venue-card__body">
+                        $profileUrl = asset_url('venue.php?slug=' . urlencode((string) ($venue['slug'] ?? '')));
+                        $areaText = trim((string) ($venue['neighborhood_name'] ?? ''));
+                        $priceText = trim((string) ($venue['price_range'] ?? ''));
+                        $phoneText = trim((string) ($venue['phone'] ?? ''));
+                        $phoneHref = $phoneText !== '' ? 'tel:' . preg_replace('/[^0-9+]/', '', $phoneText) : '';
+                        $directionsUrl = $addressLine !== ''
+                            ? 'https://www.google.com/maps/search/?api=1&query=' . urlencode($addressLine)
+                            : '';
+                        $venueCardTone = !empty($venue['is_featured']) ? 'directory-venue-card--featured' : 'directory-venue-card--standard';
+                        ?>
+                        <article class="venue-card directory-venue-card <?= e($venueCardTone) ?>">
+                            <a
+                                class="directory-venue-card__stretched-link"
+                                href="<?= e($profileUrl) ?>"
+                                aria-label="View <?= e((string) ($venue['name'] ?? 'venue')) ?> profile"
+                            ></a>
+
+                            <div class="directory-venue-card__media">
+                                <img
+                                    src="<?= e($venueImage) ?>"
+                                    alt="<?= e((string) ($venue['name'] ?? 'Venue')) ?>"
+                                    loading="lazy"
+                                >
                                 <?php if (!empty($venue['is_featured'])): ?>
-                                    <span class="badge badge--accent venue-card__featured">Featured</span>
+                                    <span class="directory-venue-card__featured-chip">
+                                        <i class="fas fa-star" aria-hidden="true"></i>
+                                        Featured
+                                    </span>
                                 <?php endif; ?>
+                            </div>
 
-                                <h3 class="venue-card__title"><?= e($venue['name']) ?></h3>
-
-                                <?php if (!empty($venue['description'])): ?>
-                                    <p class="venue-card__description"><?= e($venue['description']) ?></p>
-                                <?php endif; ?>
-
-                                <?php if ($addressLine !== ''): ?>
-                                    <p class="venue-card__address">
-                                        <i class="fas fa-location-dot" aria-hidden="true"></i>
-                                        <?= e($addressLine) ?>
+                            <div class="directory-venue-card__body">
+                                <?php if ($areaText !== '' || $priceText !== ''): ?>
+                                    <p class="directory-venue-card__eyebrow">
+                                        <?php if ($areaText !== ''): ?>
+                                            <span><?= e($areaText) ?></span>
+                                        <?php endif; ?>
+                                        <?php if ($areaText !== '' && $priceText !== ''): ?>
+                                            <span class="directory-venue-card__dot">•</span>
+                                        <?php endif; ?>
+                                        <?php if ($priceText !== ''): ?>
+                                            <span class="directory-venue-card__price"><?= e($priceText) ?></span>
+                                        <?php endif; ?>
                                     </p>
                                 <?php endif; ?>
 
-                                <p class="venue-card__hours">
-                                    <i class="fas fa-clock" aria-hidden="true"></i>
-                                    <strong>Brunch:</strong> <?= e($venueHoursDisplay) ?>
-                                </p>
+                                <h3 class="directory-venue-card__title"><?= e((string) ($venue['name'] ?? '')) ?></h3>
 
-                                <div class="venue-card__actions">
-                                    <a
-                                        class="btn btn--primary venue-card__view-profile"
-                                        href="<?= e(asset_url('venue.php?slug=' . urlencode((string) $venue['slug']))) ?>"
-                                    >
-                                        <i class="fas fa-circle-info" aria-hidden="true"></i>
-                                        View Profile
-                                    </a>
-                                    <button type="button" class="btn btn--outline venue-card__rsvp-placeholder" disabled aria-disabled="true">
-                                        <i class="fas fa-calendar-check" aria-hidden="true"></i>
-                                        RSVP
-                                    </button>
+                                <?php if (!empty($venue['description'])): ?>
+                                    <p class="directory-venue-card__description"><?= e((string) $venue['description']) ?></p>
+                                <?php endif; ?>
+
+                                <div class="directory-venue-card__facts">
+                                    <p>
+                                        <i class="fas fa-clock" aria-hidden="true"></i>
+                                        <span><strong>Brunch</strong> <?= e($venueHoursDisplay) ?></span>
+                                    </p>
+                                    <?php if ($addressLine !== ''): ?>
+                                        <p>
+                                            <i class="fas fa-location-dot" aria-hidden="true"></i>
+                                            <span><?= e($addressLine) ?></span>
+                                        </p>
+                                    <?php endif; ?>
+                                </div>
+
+                                <div class="directory-venue-card__footer">
+                                    <span class="directory-venue-card__view">
+                                        View profile
+                                        <i class="fas fa-chevron-right" aria-hidden="true"></i>
+                                    </span>
+
+                                    <div class="directory-venue-card__icons" aria-label="Quick actions">
+                                        <?php if ($phoneHref !== ''): ?>
+                                            <a class="directory-venue-card__icon" href="<?= e($phoneHref) ?>" aria-label="Call <?= e((string) ($venue['name'] ?? 'venue')) ?>">
+                                                <i class="fas fa-phone" aria-hidden="true"></i>
+                                            </a>
+                                        <?php endif; ?>
+
+                                        <?php if ($directionsUrl !== ''): ?>
+                                            <a class="directory-venue-card__icon" href="<?= e($directionsUrl) ?>" target="_blank" rel="noopener" aria-label="Get directions to <?= e((string) ($venue['name'] ?? 'venue')) ?>">
+                                                <i class="fas fa-diamond-turn-right" aria-hidden="true"></i>
+                                            </a>
+                                        <?php endif; ?>
+                                    </div>
                                 </div>
                             </div>
                         </article>
