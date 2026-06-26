@@ -12525,3 +12525,166 @@ h3,
     min-height: 60px !important;
   }
 }
+
+/* ==========================================================================
+   Phase 6A: Claude standard venue profile polish
+   Scoped refinements for the public standard/free venue profile.
+   ========================================================================== */
+
+.venue-profile-panel__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 0.9rem;
+}
+
+.venue-profile-panel__eyebrow {
+    display: block;
+    margin-bottom: 0.35rem;
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--primary);
+}
+
+.venue-profile-panel__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    flex: 0 0 auto;
+    color: var(--primary);
+    font-size: 0.86rem;
+    font-weight: 700;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.venue-profile-panel__link:hover {
+    color: var(--primary-dark);
+    text-decoration: underline;
+}
+
+.venue-profile-contact__directions {
+    margin-top: 1rem;
+}
+
+.venue-profile-event-galleries-panel {
+    margin-top: 1.25rem;
+}
+
+.venue-profile-event-galleries-panel .venue-event-gallery-list {
+    grid-template-columns: 1fr;
+}
+
+.venue-profile-event-galleries-panel .venue-event-gallery-card {
+    max-width: 26rem;
+}
+
+.venue-profile-event-galleries-panel .venue-event-gallery-card__image {
+    height: 10.5rem;
+}
+
+.venue-profile-event-galleries-panel .venue-event-gallery-card__button {
+    align-self: flex-start;
+    margin-top: auto;
+}
+
+.venue-profile-interior-gallery-panel .venue-profile-panel__header .venue-profile-panel__title,
+.venue-profile-event-galleries-panel .venue-profile-panel__header .venue-profile-panel__title {
+    margin-bottom: 0;
+}
+
+@media (max-width: 640px) {
+    .venue-profile-panel__header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.55rem;
+    }
+
+    .venue-profile-panel__link {
+        white-space: normal;
+    }
+
+    .venue-profile-event-galleries-panel .venue-event-gallery-card {
+        max-width: none;
+    }
+}
+
+/* Gallery card venue link pill */
+.gallery-card__venue-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    text-decoration: none;
+}
+
+.gallery-card__venue-link:hover {
+    color: var(--primary-dark);
+    border-color: var(--primary);
+    transform: translateY(-1px);
+}
+
+.gallery-card__date-meta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.gallery-card__venue-link i {
+    color: var(--secondary);
+}
+
+/* ==========================================================================
+   Phase 6A.2: Venue profile spacing and sidebar fix
+   ========================================================================== */
+
+.venue-profile-event-galleries-panel .venue-profile-gallery__note {
+    align-items: flex-start;
+    margin-top: 1rem;
+    padding: 0.85rem 0.9rem 0;
+    line-height: 1.55;
+}
+
+.venue-profile-event-galleries-panel .venue-profile-gallery__note i {
+    flex: 0 0 auto;
+    margin-top: 0.18rem;
+}
+
+/* Prevent the recent gallery card from becoming sticky inside the sticky sidebar. */
+.venue-profile-sidebar .venue-profile-recent-gallery {
+    position: static;
+    top: auto;
+}
+
+/* Gallery card venue pill: red pin only, text keeps normal pill color. */
+.gallery-card__venue-link i {
+    color: var(--secondary);
+}
+
+.venue-profile-hours-card__note {
+    margin: 0.85rem 0 0;
+    font-size: 0.82rem;
+    line-height: 1.4;
+    color: var(--muted);
+}
+
+.admin-form__stacked-field {
+    margin-top: 0.85rem;
+}
+
+.admin-venue-image-preview {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.65rem;
+    margin-top: 0.85rem;
+}
+
+.admin-venue-image-preview img {
+    width: 5.5rem;
+    height: 4.25rem;
+    object-fit: cover;
+    border-radius: 0.65rem;
+    border: 1px solid var(--border);
+}

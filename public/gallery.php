@@ -83,7 +83,7 @@ $monthNames = [
 ];
 
 // --- SEO metadata -------------------------------------------------------------
-$pageTitle       = 'Event Gallery Archives | DetroitBrunch.com';
+$pageTitle       = 'Recent Event Galleries | BrunchInDetroit';
 $metaDescription = 'Browse Detroit brunch event galleries, venue highlights, and photo collections. Search by event, venue, neighborhood, or date.';
 
 // Build the canonical query string from the active filters only.
@@ -103,7 +103,7 @@ if ($month !== null) {
 $canonicalQuery = $canonicalParts !== [] ? '?' . http_build_query($canonicalParts) : '';
 $canonicalUrl   = canonical_url('gallery.php' . $canonicalQuery);
 
-$ogTitle       = 'Event Gallery Archives | DetroitBrunch.com';
+$ogTitle       = 'Recent Event Galleries | BrunchInDetroit';
 $ogDescription = $metaDescription;
 $ogType        = 'website';
 $ogUrl         = $canonicalUrl;

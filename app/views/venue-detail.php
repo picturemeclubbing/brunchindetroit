@@ -77,7 +77,9 @@ if ($hasImage) {
 
 // Sanitized phone number for tel: links (keep digits and a leading +).
 $phoneTel = $hasPhone ? preg_replace('/[^0-9+]/', '', (string) $venue['phone']) : '';
-
+$directionsUrl = $addressLine !== ''
+    ? 'https://www.google.com/maps/search/?api=1&query=' . rawurlencode($addressLine)
+    : '';
 // Human-friendly last-updated date.
 $updatedFormatted = $hasUpdated ? date('F j, Y', strtotime((string) $venue['updated_at'])) : '';
 
@@ -96,6 +98,25 @@ $galleryImages = [
     'https://images.unsplash.com/photo-1490645935967-10de6ba17061?auto=format&fit=crop&w=1153&q=80',
     'https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=1170&q=80',
 ];
+
+$venueInteriorImageRows = isset($venueInteriorImages) && is_array($venueInteriorImages)
+    ? $venueInteriorImages
+    : [];
+
+foreach ($venueInteriorImageRows as $imageIndex => $imageRow) {
+    if ($imageIndex >= count($galleryImages) || !is_array($imageRow)) {
+        break;
+    }
+
+    $interiorImagePath = trim((string) ($imageRow['file_path'] ?? ''));
+    if ($interiorImagePath === '') {
+        continue;
+    }
+
+    $galleryImages[$imageIndex] = str_starts_with($interiorImagePath, 'http')
+        ? $interiorImagePath
+        : asset_url($interiorImagePath);
+}
 // Default large interior image when the venue has no main_image_path
 // (same Unsplash photo used for The Garden Rooftop on the home page slider).
 $defaultInteriorImage = 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=1074&q=80';
@@ -108,6 +129,7 @@ $eventGalleryImage = 'https://images.unsplash.com/photo-1551218808-94e220e084d2?
 
 $venueGalleryFilterUrl = asset_url('gallery.php?location=' . urlencode((string) ($venue['name'] ?? '')));
 $recentGallery = isset($recentVenueGallery) && is_array($recentVenueGallery) ? $recentVenueGallery : null;
+$recentVenueGalleryList = isset($recentVenueGalleries) && is_array($recentVenueGalleries) ? $recentVenueGalleries : [];
 $recentGalleryImage = !empty($recentGallery['cover_image_path'])
     ? (string) $recentGallery['cover_image_path']
     : $eventGalleryImage;
@@ -235,23 +257,37 @@ require APP_ROOT . '/views/partials/header.php';
 
                         <p class="eyebrow">Detroit Brunch Guide</p>
                         <h1 class="venue-profile-hero__title"><?= e($venue['name']) ?></h1>
-
                         <?php if ($hasHours): ?>
+                            <p class="venue-profile-hero__hours">
+                                <i class="fas fa-clock" aria-hidden="true"></i>
+                                <?= e($venueHoursDisplay) ?>
+                            </p>
                         <?php endif; ?>
 
                         <?php if (!empty($venue['description'])): ?>
                             <p class="venue-profile-hero__description"><?= e($venue['description']) ?></p>
                         <?php endif; ?>
-
                         <div class="venue-profile-hero__actions">
-                            <a class="btn btn--primary" href="<?= e(asset_url('directory.php')) ?>">
-                                <i class="fas fa-arrow-left" aria-hidden="true"></i>
-                                Back to Directory
-                            </a>
-                            <button type="button" class="btn btn--outline-light venue-profile-hero__rsvp-placeholder" disabled aria-disabled="true">
-                                <i class="fas fa-calendar-check" aria-hidden="true"></i>
-                                RSVP Coming Soon
-                            </button>
+                            <?php if ($directionsUrl !== ''): ?>
+                                <a class="btn btn--primary" href="<?= e($directionsUrl) ?>" target="_blank" rel="noopener">
+                                    <i class="fas fa-diamond-turn-right" aria-hidden="true"></i>
+                                    Get directions
+                                </a>
+                            <?php endif; ?>
+
+                            <?php if ($hasPhone && $phoneTel !== ''): ?>
+                                <a class="btn btn--accent" href="tel:<?= e($phoneTel) ?>">
+                                    <i class="fas fa-phone" aria-hidden="true"></i>
+                                    Call
+                                </a>
+                            <?php endif; ?>
+
+                            <?php if ($hasWebsite): ?>
+                                <a class="btn btn--outline-light" href="<?= e($venue['website_url']) ?>" target="_blank" rel="noopener">
+                                    <i class="fas fa-globe" aria-hidden="true"></i>
+                                    Website
+                                </a>
+                            <?php endif; ?>
                         </div>
                     </div>
                 </section>
@@ -296,6 +332,13 @@ require APP_ROOT . '/views/partials/header.php';
                                 </li>
                             <?php endif; ?>
                         </ul>
+
+                        <?php if ($directionsUrl !== ''): ?>
+                            <a class="btn btn--primary btn--block venue-profile-contact__directions" href="<?= e($directionsUrl) ?>" target="_blank" rel="noopener">
+                                <i class="fas fa-diamond-turn-right" aria-hidden="true"></i>
+                                Get directions
+                            </a>
+                        <?php endif; ?>
                     </article>
                 </aside>
 
@@ -346,7 +389,7 @@ require APP_ROOT . '/views/partials/header.php';
                                     aria-controls="venue-tabpanel-photos"
                                     tabindex="-1">
                                 <i class="fas fa-images" aria-hidden="true"></i>
-                                <span>Photos</span>
+                                <span>Event Galleries</span>
                             </button>
                             <button class="venue-tabs__button" type="button" role="tab"
                                     id="venue-tab-menu"
@@ -375,6 +418,7 @@ require APP_ROOT . '/views/partials/header.php';
                              data-venue-tab-panel="overview">
 
                             <article class="venue-profile-panel">
+                                <span class="venue-profile-panel__eyebrow">The place</span>
                                 <h2 class="venue-profile-panel__title">About</h2>
                                 <?php if (!empty($venue['description'])): ?>
                                     <p class="venue-profile-about__text"><?= e($venue['description']) ?></p>
@@ -385,29 +429,13 @@ require APP_ROOT . '/views/partials/header.php';
                                 <?php endif; ?>
                             </article>
 
-                            <article class="venue-profile-panel venue-profile-placeholder">
-                                <h2 class="venue-profile-panel__title">What to Know</h2>
-                                <p class="venue-profile-placeholder__text">
-                                    Brunch hours: <?= e($venueHoursDisplay) ?>.
-                                    <?php if ($hasNeighborhood): ?>
-                                        Located in the <?= e($venue['neighborhood_name']) ?> neighborhood.
-                                    <?php endif; ?>
-                                    Details are curated by DetroitBrunch.com &mdash; please confirm hours and
-                                    menus directly with the venue before visiting.
-                                </p>
-                            </article>
-                        </div>
-
-                        <!-- Panel 2: Photos (Interior Gallery + Recent Event Galleries) -->
-                        <div class="venue-tabs__panel" role="tabpanel"
-                             id="venue-tabpanel-photos"
-                             aria-labelledby="venue-tab-photos"
-                             data-venue-tab-panel="photos">
-
-
-
                             <article class="venue-profile-panel venue-profile-interior-gallery-panel">
-                                <h2 class="venue-profile-panel__title">Interior Gallery</h2>
+                                <div class="venue-profile-panel__header">
+                                    <div>
+                                        <span class="venue-profile-panel__eyebrow">Interior shots</span>
+                                        <h2 class="venue-profile-panel__title">Inside <?= e($venue['name']) ?></h2>
+                                    </div>
+                                </div>
 
                                 <div class="venue-gallery-grid">
                                     <button
@@ -478,7 +506,7 @@ require APP_ROOT . '/views/partials/header.php';
 
                                 <p class="venue-profile-gallery__note">
                                     <i class="fas fa-circle-info" aria-hidden="true"></i>
-                                    Interior photos will be managed from the admin area in a later phase.
+                                    Interior photos show the look and feel of this venue.
                                 </p>
 
                                 <div class="venue-photo-lightbox" aria-hidden="true" role="dialog" aria-label="Expanded venue photo">
@@ -487,6 +515,104 @@ require APP_ROOT . '/views/partials/header.php';
                                     </button>
                                     <img class="venue-photo-lightbox__image" src="" alt="">
                                 </div>
+                            </article>
+
+                            <article class="venue-profile-panel venue-profile-placeholder">
+                                <h2 class="venue-profile-panel__title">What to Know</h2>
+                                <p class="venue-profile-placeholder__text">
+                                    Brunch hours: <?= e($venueHoursDisplay) ?>.
+                                    <?php if ($hasNeighborhood): ?>
+                                        Located in the <?= e($venue['neighborhood_name']) ?> neighborhood.
+                                    <?php endif; ?>
+                                    Details are curated by BrunchInDetroit &mdash; please confirm hours and
+                                    menus directly with the venue before visiting.
+                                </p>
+                            </article>
+                        </div>
+
+                        <!-- Panel 2: Event Galleries (photo shoots at this location) -->
+                        <div class="venue-tabs__panel" role="tabpanel"
+                             id="venue-tabpanel-photos"
+                             aria-labelledby="venue-tab-photos"
+                             data-venue-tab-panel="photos">
+
+                            <article class="venue-profile-panel venue-profile-event-galleries-panel">
+                                <div class="venue-profile-panel__header">
+                                    <div>
+                                        <h2 class="venue-profile-panel__title"><?= e($venue['name']) ?> Event Galleries</h2>
+                                    </div>
+                                    <a class="venue-profile-panel__link" href="<?= e($venueGalleryFilterUrl) ?>">
+                                        View all from this venue
+                                        <i class="fas fa-arrow-right" aria-hidden="true"></i>
+                                    </a>
+                                </div>
+
+                                <?php if (!empty($recentVenueGalleryList)): ?>
+                                    <div class="venue-event-gallery-list">
+                                        <?php foreach ($recentVenueGalleryList as $venueGallery): ?>
+                                            <?php
+                                            $venueGalleryImage = !empty($venueGallery['cover_image_path'])
+                                                ? (string) $venueGallery['cover_image_path']
+                                                : $eventGalleryImage;
+                                            $venueGalleryTitle = !empty($venueGallery['title'])
+                                                ? (string) $venueGallery['title']
+                                                : 'Recent Gallery';
+                                            $venueGalleryDate = !empty($venueGallery['event_date'])
+                                                ? date('F j, Y', strtotime((string) $venueGallery['event_date']))
+                                                : 'Coming soon';
+                                            $venueGalleryText = !empty($venueGallery['description'])
+                                                ? (string) $venueGallery['description']
+                                                : 'Recent venue galleries will appear here once they are published.';
+                                            $venueGalleryUrl = !empty($venueGallery['gallery_url'])
+                                                ? (string) $venueGallery['gallery_url']
+                                                : '';
+                                            ?>
+                                            <article class="venue-event-gallery-card">
+                                                <img
+                                                    class="venue-event-gallery-card__image"
+                                                    src="<?= e($venueGalleryImage) ?>"
+                                                    alt="<?= e($venueGalleryTitle) ?> preview"
+                                                    loading="lazy"
+                                                >
+
+                                                <div class="venue-event-gallery-card__body">
+                                                    <p class="venue-event-gallery-card__date">
+                                                        <i class="fas fa-calendar" aria-hidden="true"></i>
+                                                        <?= e($venueGalleryDate) ?>
+                                                    </p>
+
+                                                    <h3 class="venue-event-gallery-card__title"><?= e($venueGalleryTitle) ?></h3>
+                                                    <p class="venue-event-gallery-card__text"><?= e($venueGalleryText) ?></p>
+
+                                                    <?php if ($venueGalleryUrl !== ''): ?>
+                                                        <a class="btn btn--primary venue-event-gallery-card__button" href="<?= e($venueGalleryUrl) ?>" target="_blank" rel="noopener">
+                                                            <i class="fas fa-images" aria-hidden="true"></i>
+                                                            View Gallery
+                                                        </a>
+                                                    <?php else: ?>
+                                                        <span class="venue-event-gallery-card__action">
+                                                            <i class="fas fa-clock" aria-hidden="true"></i>
+                                                            Gallery Coming Soon
+                                                        </span>
+                                                    <?php endif; ?>
+                                                </div>
+                                            </article>
+                                        <?php endforeach; ?>
+                                    </div>
+                                <?php else: ?>
+                                    <div class="venue-profile-events-empty">
+                                        <i class="fas fa-images" aria-hidden="true"></i>
+                                        <p class="venue-profile-note__text">No event galleries listed yet.</p>
+                                        <p class="venue-profile-note__text venue-profile-note__text--muted">
+                                            Check back after this location has published event galleries.
+                                        </p>
+                                    </div>
+                                <?php endif; ?>
+
+                                <p class="venue-profile-gallery__note">
+                                    <i class="fas fa-camera" aria-hidden="true"></i>
+                                    This tab shows event galleries photographed at this venue. Use View all from this venue for the full filtered gallery page.
+                                </p>
                             </article>
                         </div>
 
@@ -543,6 +669,8 @@ require APP_ROOT . '/views/partials/header.php';
                                 </div>
                             <?php endforeach; ?>
                         </dl>
+
+                        <p class="venue-profile-hours-card__note">Brunch hours may vary.</p>
                     </article>
                     <!-- 1. Recent Gallery -->
                     <article class="venue-profile-panel venue-profile-recent-gallery">

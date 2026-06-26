@@ -49,6 +49,7 @@ final class Gallery
                 g.location_label,
                 g.is_featured,
                 v.name AS venue_name,
+                v.slug AS venue_slug,
                 n.name AS neighborhood_name
             FROM galleries g
             LEFT JOIN venues v        ON v.id = g.venue_id
@@ -129,6 +130,7 @@ final class Gallery
                 g.location_label,
                 g.is_featured,
                 v.name AS venue_name,
+                v.slug AS venue_slug,
                 n.name AS neighborhood_name
             FROM galleries g
             LEFT JOIN venues v        ON v.id = g.venue_id
@@ -320,6 +322,7 @@ final class Gallery
                 g.location_label,
                 g.is_featured,
                 v.name AS venue_name,
+                v.slug AS venue_slug,
                 n.name AS neighborhood_name
             FROM galleries g
             LEFT JOIN venues v        ON v.id = g.venue_id
@@ -488,6 +491,7 @@ final class Gallery
                 g.location_label,
                 g.is_featured,
                 v.name AS venue_name,
+                v.slug AS venue_slug,
                 n.name AS neighborhood_name
             FROM galleries g
             LEFT JOIN venues v        ON v.id = g.venue_id
@@ -506,5 +510,44 @@ final class Gallery
         $row = $stmt->fetch();
 
         return $row !== false ? $row : null;
+    }
+    /**
+     * Recent published galleries for a venue.
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    public static function recentForVenueList(int $venueId, int $limit = 3): array
+    {
+        $pdo = db();
+
+        $stmt = $pdo->prepare("
+            SELECT
+                g.id,
+                g.slug,
+                g.title,
+                g.description,
+                g.cover_image_path,
+                g.gallery_url,
+                g.event_date,
+                g.location_label,
+                g.is_featured,
+                v.name AS venue_name,
+                n.name AS neighborhood_name
+            FROM galleries g
+            LEFT JOIN venues v        ON v.id = g.venue_id
+            LEFT JOIN neighborhoods n ON n.id = v.neighborhood_id
+            WHERE g.is_published = 1
+              AND g.venue_id = :venue_id
+            ORDER BY
+                g.event_date DESC,
+                g.created_at DESC
+            LIMIT :limit
+        ");
+
+        $stmt->bindValue(':venue_id', $venueId, PDO::PARAM_INT);
+        $stmt->bindValue(':limit', max(1, $limit), PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $stmt->fetchAll();
     }
 }

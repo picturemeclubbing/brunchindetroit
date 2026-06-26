@@ -129,7 +129,9 @@ $allergyDisclaimer =
     'allergen-free. Always confirm ingredients and cross-contact risks ' .
     'directly with the restaurant before ordering.';
 
+$venueInteriorImages = Venue::imagesForVenue((int) $venue['id'], 4);
 $recentVenueGallery = Gallery::recentForVenue((int) $venue['id']);
+$recentVenueGalleries = Gallery::recentForVenueList((int) $venue['id'], 3);
 
 $pageTitle = $venue['name'];
 require APP_ROOT . '/views/venue-detail.php';

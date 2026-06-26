@@ -56,7 +56,7 @@ if (!$hasActiveFilters) {
 } else {
     $bits = [];
     if ($q !== '') {
-        $bits[] = 'Ã¢â‚¬Å“' . $q . 'Ã¢â‚¬Â';
+        $bits[] = '"' . $q . '"';
     }
     if ($location !== '') {
         $bits[] = $location;
@@ -67,11 +67,11 @@ if (!$hasActiveFilters) {
     if ($year !== null) {
         $bits[] = (string) $year;
     }
-    $joined = implode(' Ã‚Â· ', $bits);
+    $joined = implode(' - ', $bits);
     $statusText = 'Showing ' . $galleryCount . ' galler' . ($galleryCount === 1 ? 'y' : 'ies') . ' matching ' . $joined . '.';
 }
 
-// Gallery hero background Ã¢â‚¬â€ a warm Detroit brunch photo.
+// Gallery hero background - a warm Detroit brunch photo.
 $galleryHeroImage = 'https://images.unsplash.com/photo-1559056199-641a0ac8b55e?auto=format&fit=crop&w=1600&q=80';
 ?>
 
@@ -84,7 +84,7 @@ $galleryHeroImage = 'https://images.unsplash.com/photo-1559056199-641a0ac8b55e?a
                     <i class="fas fa-camera-retro" aria-hidden="true"></i>
                     Detroit Brunch Galleries
                 </span>
-                <h1 class="main-page-hero__title">Event Gallery Archives</h1>
+                <h1 class="main-page-hero__title">Recent Event Galleries</h1>
                 <p class="main-page-hero__subtitle">
                     Browse brunch event galleries, venue highlights, and photo collections from around Detroit.
                 </p>
@@ -213,9 +213,23 @@ $galleryHeroImage = 'https://images.unsplash.com/photo-1559056199-641a0ac8b55e?a
                     <?php foreach ($galleries as $gallery): ?>
                         <?php
                         $locText   = $galleryLocation($gallery);
-                        $dateFull  = $formatDate($gallery['event_date'] ?? null);
-                        $dateShort = $formatMonth($gallery['event_date'] ?? null);
-                        $hasUrl    = !empty($gallery['gallery_url']);
+                        $venueText = trim((string) ($gallery['venue_name'] ?? ''));
+                        if ($venueText === '') {
+                            $venueText = $locText;
+                        }
+                        $venueSlug = trim((string) ($gallery['venue_slug'] ?? ''));
+                        $venueUrl = $venueSlug !== ''
+                            ? asset_url('venue.php?slug=' . urlencode($venueSlug))
+                            : '';
+                        $areaText = trim((string) ($gallery['location_label'] ?? ''));
+                        if ($areaText === '') {
+                            $areaText = trim((string) ($gallery['neighborhood_name'] ?? ''));
+                        }
+                        if ($areaText === $venueText) {
+                            $areaText = '';
+                        }
+                        $dateFull = $formatDate($gallery['event_date'] ?? null);
+                        $hasUrl   = !empty($gallery['gallery_url']);
                         ?>
                         <article class="gallery-card card card--hover">
                             <div class="gallery-card__media">
@@ -239,41 +253,35 @@ $galleryHeroImage = 'https://images.unsplash.com/photo-1559056199-641a0ac8b55e?a
                             <div class="gallery-card__body">
                                 <h3 class="gallery-card__title"><?= e($gallery['title'] ?? 'Untitled Gallery') ?></h3>
 
-                                <?php
-                                $metaBits = [];
-                                if ($locText !== '') {
-                                    $metaBits[] = '<i class="fas fa-location-dot" aria-hidden="true"></i> ' . e($locText);
-                                }
-                                if ($dateFull !== '') {
-                                    $metaBits[] = '<i class="fas fa-calendar-day" aria-hidden="true"></i> ' . e($dateFull);
-                                }
-                                ?>
-                                <?php if ($metaBits !== []): ?>
-                                    <p class="gallery-card__meta">
-                                        <?php foreach ($metaBits as $i => $bit): ?>
-                                            <span class="gallery-card__meta-item"><?= $bit ?></span>
-                                        <?php endforeach; ?>
-                                    </p>
+                                <?php if ($venueText !== '' || $dateFull !== ''): ?>
+                                    <div class="gallery-card__meta">
+                                        <?php if ($venueText !== ''): ?>
+                                            <?php if ($venueUrl !== ''): ?>
+                                                <a class="badge badge--location gallery-card__venue-link" href="<?= e($venueUrl) ?>">
+                                                    <i class="fas fa-map-pin" aria-hidden="true"></i>
+                                                    <?= e($venueText) ?>
+                                                </a>
+                                            <?php else: ?>
+                                                <span class="badge badge--location gallery-card__venue-link">
+                                                    <i class="fas fa-map-pin" aria-hidden="true"></i>
+                                                    <?= e($venueText) ?>
+                                                </span>
+                                            <?php endif; ?>
+                                        <?php endif; ?>
+
+                                        <?php if ($dateFull !== ''): ?>
+                                            <span class="gallery-card__meta-item gallery-card__date-meta">
+                                                <i class="fas fa-calendar-day" aria-hidden="true"></i>
+                                                <?= e($dateFull) ?>
+                                            </span>
+                                        <?php endif; ?>
+                                    </div>
                                 <?php endif; ?>
 
                                 <?php if (!empty($gallery['description'])): ?>
                                     <p class="gallery-card__description"><?= e($gallery['description']) ?></p>
                                 <?php endif; ?>
 
-                                <div class="gallery-card__badges">
-                                    <?php if ($locText !== ''): ?>
-                                        <span class="badge badge--location">
-                                            <i class="fas fa-map-pin" aria-hidden="true"></i>
-                                            <?= e($locText) ?>
-                                        </span>
-                                    <?php endif; ?>
-                                    <?php if ($dateShort !== ''): ?>
-                                        <span class="badge badge--date">
-                                            <i class="fas fa-calendar" aria-hidden="true"></i>
-                                            <?= e($dateShort) ?>
-                                        </span>
-                                    <?php endif; ?>
-                                </div>
 
                                 <div class="gallery-card__actions">
                                     <?php if ($hasUrl): ?>
@@ -282,7 +290,7 @@ $galleryHeroImage = 'https://images.unsplash.com/photo-1559056199-641a0ac8b55e?a
                                             href="<?= e(asset_url('gallery-view.php?slug=' . urlencode((string) $gallery['slug']))) ?>"
                                         >
                                             <i class="fas fa-images" aria-hidden="true"></i>
-                                            View Gallery Details Details
+                                            View Gallery Details
                                         </a>
                                     <?php else: ?>
                                         <span class="btn btn--primary btn--block is-disabled" aria-disabled="true">

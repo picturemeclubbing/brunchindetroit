@@ -45,6 +45,7 @@ $form = [
     'instagram_url'    => '',
     'facebook_url'     => '',
     'main_image_path'  => '',
+    'interior_image_paths' => array_fill(0, 4, ''),
     'price_range'      => '',
     'brunch_hours_note'=> '',
     'featured_sort'    => '0',
@@ -87,7 +88,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && $editId > 0) {
         'featured_sort'    => (string) (int) ($existing['featured_sort'] ?? 0),
         'is_published'     => !empty($existing['is_published']),
         'is_featured'      => !empty($existing['is_featured']),
+        'interior_image_paths' => array_fill(0, 4, ''),
     ];
+
+    $existingImages = Venue::imagesForVenue($editId, 4);
+    foreach ($existingImages as $imageIndex => $imageRow) {
+        if ($imageIndex >= 4) {
+            break;
+        }
+        $form['interior_image_paths'][$imageIndex] = (string) ($imageRow['file_path'] ?? '');
+    }
 }
 
 $errors    = [];   // field => message
@@ -118,6 +128,193 @@ $validateUrl = static function (string $field, string $label) use (&$form, &$err
     return $form[$field];
 };
 
+
+/**
+ * Handle one multi-file uploader for venue interior/profile photos.
+ *
+ * @return array<int, array{file_path:string, caption:string, sort_order:int}>|null
+ */
+/**
+ * Handle the single profile/main image upload for a venue.
+ */
+function admin_venue_handle_main_image_upload(array &$errors): ?string
+{
+    if (empty($_FILES['main_image_upload']) || !is_array($_FILES['main_image_upload'])) {
+        return null;
+    }
+
+    $file = $_FILES['main_image_upload'];
+    $error = (int) ($file['error'] ?? UPLOAD_ERR_NO_FILE);
+
+    if ($error === UPLOAD_ERR_NO_FILE) {
+        return null;
+    }
+
+    if ($error !== UPLOAD_ERR_OK) {
+        $errors['main_image_upload'] = 'Profile image upload failed. Please try again.';
+        return null;
+    }
+
+    $tmpName = (string) ($file['tmp_name'] ?? '');
+    $size = (int) ($file['size'] ?? 0);
+
+    if ($tmpName === '' || !is_uploaded_file($tmpName)) {
+        $errors['main_image_upload'] = 'Uploaded profile image could not be verified.';
+        return null;
+    }
+
+    $maxBytes = 5 * 1024 * 1024;
+    if ($size <= 0 || $size > $maxBytes) {
+        $errors['main_image_upload'] = 'Profile image must be 5MB or smaller.';
+        return null;
+    }
+
+    $imageInfo = @getimagesize($tmpName);
+    if ($imageInfo === false || empty($imageInfo['mime'])) {
+        $errors['main_image_upload'] = 'Upload a valid profile image file.';
+        return null;
+    }
+
+    $allowed = [
+        'image/jpeg' => 'jpg',
+        'image/png' => 'png',
+        'image/webp' => 'webp',
+    ];
+
+    $mime = (string) $imageInfo['mime'];
+    if (!isset($allowed[$mime])) {
+        $errors['main_image_upload'] = 'Profile image must be JPG, PNG, or WEBP.';
+        return null;
+    }
+
+    $publicRoot = realpath(__DIR__ . '/..');
+    if ($publicRoot === false) {
+        $errors['main_image_upload'] = 'Upload folder could not be resolved.';
+        return null;
+    }
+
+    $uploadDir = $publicRoot . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR . 'venues';
+    if (!is_dir($uploadDir) && !mkdir($uploadDir, 0775, true)) {
+        $errors['main_image_upload'] = 'Upload folder could not be created.';
+        return null;
+    }
+
+    if (!is_writable($uploadDir)) {
+        $errors['main_image_upload'] = 'Upload folder is not writable.';
+        return null;
+    }
+
+    $extension = $allowed[$mime];
+    $filename = date('YmdHis') . '-venue-profile-' . bin2hex(random_bytes(8)) . '.' . $extension;
+    $destination = $uploadDir . DIRECTORY_SEPARATOR . $filename;
+
+    if (!move_uploaded_file($tmpName, $destination)) {
+        $errors['main_image_upload'] = 'Uploaded profile image could not be saved.';
+        return null;
+    }
+
+    return '/uploads/venues/' . $filename;
+}
+
+function admin_venue_handle_interior_image_uploads(array &$errors): ?array
+{
+    if (empty($_FILES['interior_image_uploads']) || !is_array($_FILES['interior_image_uploads'])) {
+        return null;
+    }
+
+    $files = $_FILES['interior_image_uploads'];
+    $names = $files['name'] ?? [];
+
+    if (!is_array($names)) {
+        return null;
+    }
+
+    $uploaded = [];
+    $maxBytes = 5 * 1024 * 1024;
+    $allowed = [
+        'image/jpeg' => 'jpg',
+        'image/png' => 'png',
+        'image/webp' => 'webp',
+    ];
+
+    $publicRoot = realpath(__DIR__ . '/..');
+    if ($publicRoot === false) {
+        $errors['interior_image_uploads'] = 'Upload folder could not be resolved.';
+        return null;
+    }
+
+    $uploadDir = $publicRoot . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR . 'venues';
+    if (!is_dir($uploadDir) && !mkdir($uploadDir, 0775, true)) {
+        $errors['interior_image_uploads'] = 'Upload folder could not be created.';
+        return null;
+    }
+
+    if (!is_writable($uploadDir)) {
+        $errors['interior_image_uploads'] = 'Upload folder is not writable.';
+        return null;
+    }
+
+    foreach ($names as $index => $name) {
+        $error = (int) ($files['error'][$index] ?? UPLOAD_ERR_NO_FILE);
+
+        if ($error === UPLOAD_ERR_NO_FILE) {
+            continue;
+        }
+
+        if (count($uploaded) >= 4) {
+            $errors['interior_image_uploads'] = 'Upload up to 4 interior photos.';
+            return null;
+        }
+
+        if ($error !== UPLOAD_ERR_OK) {
+            $errors['interior_image_uploads'] = 'One interior photo failed to upload. Please try again.';
+            return null;
+        }
+
+        $tmpName = (string) ($files['tmp_name'][$index] ?? '');
+        $size = (int) ($files['size'][$index] ?? 0);
+
+        if ($tmpName === '' || !is_uploaded_file($tmpName)) {
+            $errors['interior_image_uploads'] = 'Uploaded interior photo could not be verified.';
+            return null;
+        }
+
+        if ($size <= 0 || $size > $maxBytes) {
+            $errors['interior_image_uploads'] = 'Each interior photo must be 5MB or smaller.';
+            return null;
+        }
+
+        $imageInfo = @getimagesize($tmpName);
+        if ($imageInfo === false || empty($imageInfo['mime'])) {
+            $errors['interior_image_uploads'] = 'Upload valid JPG, PNG, or WEBP images.';
+            return null;
+        }
+
+        $mime = (string) $imageInfo['mime'];
+        if (!isset($allowed[$mime])) {
+            $errors['interior_image_uploads'] = 'Interior photos must be JPG, PNG, or WEBP.';
+            return null;
+        }
+
+        $extension = $allowed[$mime];
+        $filename = date('YmdHis') . '-venue-' . bin2hex(random_bytes(8)) . '.' . $extension;
+        $destination = $uploadDir . DIRECTORY_SEPARATOR . $filename;
+
+        if (!move_uploaded_file($tmpName, $destination)) {
+            $errors['interior_image_uploads'] = 'Uploaded interior photo could not be saved.';
+            return null;
+        }
+
+        $uploaded[] = [
+            'file_path' => '/uploads/venues/' . $filename,
+            'caption' => '',
+            'sort_order' => count($uploaded),
+        ];
+    }
+
+    return $uploaded !== [] ? $uploaded : null;
+}
+
 // --- POST: validate + save ---------------------------------------------------
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
@@ -141,6 +338,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $form['instagram_url']     = trim((string) ($_POST['instagram_url'] ?? ''));
     $form['facebook_url']      = trim((string) ($_POST['facebook_url'] ?? ''));
     $form['main_image_path']   = trim((string) ($_POST['main_image_path'] ?? ''));
+    $uploadedMainImagePath = admin_venue_handle_main_image_upload($errors);
+    if ($uploadedMainImagePath !== null) {
+        $form['main_image_path'] = $uploadedMainImagePath;
+    }
     $form['price_range']       = trim((string) ($_POST['price_range'] ?? ''));
     $form['brunch_hours_note'] = trim((string) ($_POST['brunch_hours_note'] ?? ''));
     $form['featured_sort']     = trim((string) ($_POST['featured_sort'] ?? '0'));
@@ -236,7 +437,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $websiteUrlOut     = $validateUrl('website_url',     'Website URL');
     $instagramUrlOut   = $validateUrl('instagram_url',   'Instagram URL');
     $facebookUrlOut    = $validateUrl('facebook_url',    'Facebook URL');
-    $mainImagePathOut  = $validateUrl('main_image_path', 'Main image URL');
+    $mainImagePathOut = null;
+    if ($form['main_image_path'] !== '') {
+        if (mb_strlen($form['main_image_path']) > 500) {
+            $errors['main_image_path'] = 'Main image URL must be 500 characters or fewer.';
+        } elseif (str_starts_with($form['main_image_path'], '/uploads/venues/')) {
+            $mainImagePathOut = $form['main_image_path'];
+        } else {
+            $mainImagePathOut = $validateUrl('main_image_path', 'Main image URL');
+        }
+    }
+
+    $interiorImagesOut = admin_venue_handle_interior_image_uploads($errors);
 
     // --- Validate price_range (ENUM or empty) -------------------------------
     $priceRangeOut = null;
@@ -287,11 +499,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         try {
             if ($isEdit) {
                 Venue::update($postEditId, $data);
+                $savedVenueId = $postEditId;
                 flash_set('success', 'Venue updated.');
             } else {
-                Venue::create($data);
+                $savedVenueId = Venue::create($data);
                 flash_set('success', 'Venue added.');
             }
+
+            if ($interiorImagesOut !== null) {
+                Venue::replaceImages((int) $savedVenueId, $interiorImagesOut);
+            }
+
             redirect(admin_url('venues.php'));
         } catch (Throwable $ex) {
             $errors['form'] = $debug ? $ex->getMessage() : 'Could not save the venue. Please try again.';

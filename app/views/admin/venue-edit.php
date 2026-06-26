@@ -32,7 +32,7 @@ $heading = $isEdit ? 'Edit Venue' : 'Add Venue';
 <?php endif; ?>
 
 <div class="admin-panel">
-    <form class="admin-form" method="post" action="<?= e(admin_url('venue-edit.php')) ?>">
+    <form class="admin-form" method="post" action="<?= e(admin_url('venue-edit.php')) ?>" enctype="multipart/form-data">
         <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
         <?php if ($isEdit): ?>
             <input type="hidden" name="id" value="<?= (int) $form['id'] ?>">
@@ -165,12 +165,62 @@ $heading = $isEdit ? 'Edit Venue' : 'Add Venue';
                        maxlength="500"
                        placeholder="https://..."
                        value="<?= e($form['main_image_path']) ?>">
-                <span class="admin-form__hint">Direct URL to the main venue image (no upload).</span>
+                <span class="admin-form__hint">Direct URL to the main venue image, or upload a profile image below.</span>
                 <?php if (!empty($errors['main_image_path'])): ?>
                     <span class="admin-form__error"><?= e($errors['main_image_path']) ?></span>
                 <?php endif; ?>
+
+                <?php if (!empty($form['main_image_path'])): ?>
+                    <div class="admin-venue-image-preview">
+                        <img src="<?= e((string) $form['main_image_path']) ?>" alt="Current profile image preview" loading="lazy">
+                    </div>
+                <?php endif; ?>
+
+                <div class="admin-form__stacked-field">
+                    <label class="form-label" for="main_image_upload">Upload Profile Image</label>
+                    <input
+                        type="file"
+                        id="main_image_upload"
+                        name="main_image_upload"
+                        class="form-control"
+                        accept="image/jpeg,image/png,image/webp"
+                    >
+                    <span class="admin-form__hint">Optional. JPG, PNG, or WEBP. Max 5MB.</span>
+                    <?php if (!empty($errors['main_image_upload'])): ?>
+                        <span class="admin-form__error"><?= e((string) $errors['main_image_upload']) ?></span>
+                    <?php endif; ?>
+                </div>
             </div>
 
+            <!-- Interior photos upload -->
+            <div class="admin-form__field admin-form__field--full">
+                <label class="form-label" for="interior_image_uploads">Interior Photos</label>
+                <input
+                    type="file"
+                    id="interior_image_uploads"
+                    name="interior_image_uploads[]"
+                    class="form-control"
+                    accept="image/jpeg,image/png,image/webp"
+                    multiple
+                >
+                <span class="admin-form__hint">
+                    Upload up to 4 interior/profile photos. New uploads replace the current interior photo set.
+                </span>
+
+                <?php if (!empty($form['interior_image_paths']) && is_array($form['interior_image_paths'])): ?>
+                    <div class="admin-venue-image-preview">
+                        <?php foreach ($form['interior_image_paths'] as $imageUrl): ?>
+                            <?php if ((string) $imageUrl !== ''): ?>
+                                <img src="<?= e((string) $imageUrl) ?>" alt="Current interior photo preview" loading="lazy">
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+                    </div>
+                <?php endif; ?>
+
+                <?php if (!empty($errors['interior_image_uploads'])): ?>
+                    <span class="admin-form__error"><?= e((string) $errors['interior_image_uploads']) ?></span>
+                <?php endif; ?>
+            </div>
             <!-- Address line 1 -->
             <div class="admin-form__field">
                 <label class="form-label" for="address_line1">Address Line 1</label>

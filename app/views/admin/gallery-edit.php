@@ -68,7 +68,7 @@ $heading = $isEdit ? 'Edit Gallery' : 'Add Gallery';
             <div class="admin-form__field">
                 <label class="form-label" for="venue_id">Venue</label>
                 <select id="venue_id" name="venue_id" class="form-control">
-                    <option value="">â€” No linked venue â€”</option>
+                    <option value="">- No linked venue -</option>
                     <?php foreach ($venues as $v): ?>
                         <?php $vid = (int) ($v['id'] ?? 0); ?>
                         <option value="<?= $vid ?>"
@@ -143,12 +143,12 @@ $heading = $isEdit ? 'Edit Gallery' : 'Add Gallery';
                 <div class="admin-checkbox">
                     <input type="checkbox" id="is_published" name="is_published" value="1"
                         <?= !empty($form['is_published']) ? 'checked' : '' ?>>
-                    <label for="is_published"><strong>Published</strong> â€” show this gallery on the public Gallery page.</label>
+                    <label for="is_published"><strong>Published</strong> - show this gallery on the public Gallery page.</label>
                 </div>
                 <div class="admin-checkbox">
                     <input type="checkbox" id="is_featured" name="is_featured" value="1"
                         <?= !empty($form['is_featured']) ? 'checked' : '' ?>>
-                    <label for="is_featured"><strong>Featured</strong> â€” surface this gallery first.</label>
+                    <label for="is_featured"><strong>Featured</strong> - surface this gallery first.</label>
                 </div>
             </div>
         </div>

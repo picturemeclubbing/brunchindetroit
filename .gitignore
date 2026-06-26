@@ -9,3 +9,7 @@ backups/
 # Local uploaded gallery ad-wall images
 public/uploads/gallery-adwall/*
 !public/uploads/gallery-adwall/index.html
+
+# Local uploaded venue/profile images
+public/uploads/venues/*
+!public/uploads/venues/index.html

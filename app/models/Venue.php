@@ -591,4 +591,70 @@ final class Venue
         return $stmt->execute();
     }
 
+    /**
+     * Interior/profile images for a venue, ordered for display.
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    public static function imagesForVenue(int $venueId, int $limit = 4): array
+    {
+        $pdo = db();
+
+        $stmt = $pdo->prepare("
+            SELECT id, venue_id, file_path, caption, sort_order
+            FROM venue_images
+            WHERE venue_id = :venue_id
+            ORDER BY sort_order ASC, id ASC
+            LIMIT :limit
+        ");
+
+        $stmt->bindValue(':venue_id', $venueId, PDO::PARAM_INT);
+        $stmt->bindValue(':limit', max(1, $limit), PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $stmt->fetchAll();
+    }
+
+    /**
+     * Replace the admin-managed interior/profile image URLs for a venue.
+     *
+     * @param array<int, array{file_path:string, caption:string, sort_order:int}> $images
+     */
+    public static function replaceImages(int $venueId, array $images): void
+    {
+        $pdo = db();
+
+        $pdo->beginTransaction();
+
+        try {
+            $delete = $pdo->prepare('DELETE FROM venue_images WHERE venue_id = :venue_id');
+            $delete->execute([':venue_id' => $venueId]);
+
+            $insert = $pdo->prepare(
+                'INSERT INTO venue_images (venue_id, file_path, caption, sort_order)
+                 VALUES (:venue_id, :file_path, :caption, :sort_order)'
+            );
+
+            foreach ($images as $image) {
+                $filePath = trim((string) ($image['file_path'] ?? ''));
+                if ($filePath === '') {
+                    continue;
+                }
+
+                $caption = trim((string) ($image['caption'] ?? ''));
+
+                $insert->execute([
+                    ':venue_id'   => $venueId,
+                    ':file_path'  => $filePath,
+                    ':caption'    => $caption !== '' ? $caption : null,
+                    ':sort_order' => (int) ($image['sort_order'] ?? 0),
+                ]);
+            }
+
+            $pdo->commit();
+        } catch (Throwable $ex) {
+            $pdo->rollBack();
+            throw $ex;
+        }
+    }
 }
