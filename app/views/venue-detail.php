@@ -227,6 +227,10 @@ $expandVenueHoursRows = static function (?string $hours) use ($formatVenueHours)
 };
 
 $venueHoursDisplay = $formatVenueHours((string) ($venue['brunch_hours_note'] ?? ''));
+$venueHeroBlurb = trim((string) ($venue['hero_blurb'] ?? ''));
+if ($venueHeroBlurb === '') {
+    $venueHeroBlurb = trim((string) ($venue['description'] ?? ''));
+}
 $venueHoursRows = $expandVenueHoursRows((string) ($venue['brunch_hours_note'] ?? ''));
 require APP_ROOT . '/views/partials/header.php';
 ?>
@@ -264,8 +268,8 @@ require APP_ROOT . '/views/partials/header.php';
                             </p>
                         <?php endif; ?>
 
-                        <?php if (!empty($venue['description'])): ?>
-                            <p class="venue-profile-hero__description"><?= e($venue['description']) ?></p>
+                        <?php if ($venueHeroBlurb !== ''): ?>
+                            <p class="venue-profile-hero__description"><?= e($venueHeroBlurb) ?></p>
                         <?php endif; ?>
                         <div class="venue-profile-hero__actions">
                             <?php if ($directionsUrl !== ''): ?>

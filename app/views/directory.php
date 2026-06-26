@@ -353,6 +353,10 @@ if (!$hasActiveFilter) {
                         $areaText = trim((string) ($venue['neighborhood_name'] ?? ''));
                         $priceText = trim((string) ($venue['price_range'] ?? ''));
                         $phoneText = trim((string) ($venue['phone'] ?? ''));
+$cardDescription = trim((string) ($venue['hero_blurb'] ?? ''));
+if ($cardDescription === '') {
+    $cardDescription = trim((string) ($venue['description'] ?? ''));
+}
                         $phoneHref = $phoneText !== '' ? 'tel:' . preg_replace('/[^0-9+]/', '', $phoneText) : '';
                         $directionsUrl = $addressLine !== ''
                             ? 'https://www.google.com/maps/search/?api=1&query=' . urlencode($addressLine)
@@ -397,8 +401,8 @@ if (!$hasActiveFilter) {
 
                                 <h3 class="directory-venue-card__title"><?= e((string) ($venue['name'] ?? '')) ?></h3>
 
-                                <?php if (!empty($venue['description'])): ?>
-                                    <p class="directory-venue-card__description"><?= e((string) $venue['description']) ?></p>
+                                <?php if ($cardDescription !== ''): ?>
+                                    <p class="directory-venue-card__description"><?= e($cardDescription) ?></p>
                                 <?php endif; ?>
 
                                 <div class="directory-venue-card__facts">

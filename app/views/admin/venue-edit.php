@@ -286,10 +286,22 @@ $heading = $isEdit ? 'Edit Venue' : 'Add Venue';
                 <span class="admin-form__hint">Enter real brunch hours only. Leave blank to show N/A publicly. Use short days, e.g. "Sat-Sun 10am-2pm".</span>
             </div>
 
+
+            <!-- Hero blurb -->
+            <div class="admin-form__field admin-form__field--full">
+                <label class="form-label" for="hero_blurb">Hero Blurb</label>
+                <textarea id="hero_blurb" name="hero_blurb" class="form-control"
+                          rows="2" maxlength="300"><?= e($form['hero_blurb']) ?></textarea>
+                <span class="admin-form__hint">Short 1-sentence teaser for the profile hero and directory cards. Max 300 characters.</span>
+                <?php if (!empty($errors['hero_blurb'])): ?>
+                    <span class="admin-form__error"><?= e((string) $errors['hero_blurb']) ?></span>
+                <?php endif; ?>
+            </div>
             <!-- Description -->
             <div class="admin-form__field admin-form__field--full">
-                <label class="form-label" for="description">Description</label>
+                <label class="form-label" for="description">About Description</label>
                 <textarea id="description" name="description" class="form-control" rows="5"><?= e($form['description']) ?></textarea>
+                <span class="admin-form__hint">Longer About text shown inside the venue profile.</span>
             </div>
 
             <!-- Checkboxes -->

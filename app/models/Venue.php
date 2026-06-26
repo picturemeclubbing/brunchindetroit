@@ -13,6 +13,7 @@ final class Venue
                 v.slug,
                 v.name,
                 v.description,
+                v.hero_blurb,
                 v.address_line1,
                 v.address_line2,
                 v.city,
@@ -60,6 +61,7 @@ final class Venue
                 v.slug,
                 v.name,
                 v.description,
+                v.hero_blurb,
                 v.main_image_path,
                 v.price_range,
                 v.brunch_hours_note,
@@ -98,6 +100,7 @@ final class Venue
                 v.slug,
                 v.name,
                 v.description,
+                v.hero_blurb,
                 v.address_line1,
                 v.address_line2,
                 v.city,
@@ -168,6 +171,7 @@ final class Venue
                 v.slug,
                 v.name,
                 v.description,
+                v.hero_blurb,
                 v.address_line1,
                 v.address_line2,
                 v.city,
@@ -213,6 +217,7 @@ final class Venue
                 v.slug,
                 v.name,
                 v.description,
+                v.hero_blurb,
                 v.address_line1,
                 v.address_line2,
                 v.city,
@@ -288,12 +293,12 @@ final class Venue
 
         $stmt = $pdo->prepare(
             'INSERT INTO venues
-                (slug, name, description, address_line1, address_line2, city, state, zip,
+                (slug, name, description, hero_blurb, address_line1, address_line2, city, state, zip,
                  phone, website_url, instagram_url, facebook_url, neighborhood_id,
                  price_range, brunch_hours_note, main_image_path,
                  is_published, is_featured, featured_sort)
              VALUES
-                (:slug, :name, :description, :address_line1, :address_line2, :city, :state, :zip,
+                (:slug, :name, :description, :hero_blurb, :address_line1, :address_line2, :city, :state, :zip,
                  :phone, :website_url, :instagram_url, :facebook_url, :neighborhood_id,
                  :price_range, :brunch_hours_note, :main_image_path,
                  :is_published, :is_featured, :featured_sort)'
@@ -319,6 +324,7 @@ final class Venue
                 slug = :slug,
                 name = :name,
                 description = :description,
+                hero_blurb = :hero_blurb,
                 address_line1 = :address_line1,
                 address_line2 = :address_line2,
                 city = :city,
@@ -424,6 +430,7 @@ final class Venue
             ':slug'              => (string) ($data['slug'] ?? ''),
             ':name'              => (string) ($data['name'] ?? ''),
             ':description'       => $nullable($data['description'] ?? null),
+            ':hero_blurb'        => $nullable($data['hero_blurb'] ?? null),
             ':address_line1'     => $nullable($data['address_line1'] ?? null),
             ':address_line2'     => $nullable($data['address_line2'] ?? null),
             ':city'              => $city,
@@ -674,6 +681,7 @@ final class Venue
                 v.slug,
                 v.name,
                 v.description,
+                v.hero_blurb,
                 v.address_line1,
                 v.address_line2,
                 v.city,

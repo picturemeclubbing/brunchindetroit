@@ -34,6 +34,7 @@ $form = [
     'name'             => '',
     'slug'             => '',
     'description'      => '',
+    'hero_blurb'       => '',
     'neighborhood_id'  => '',
     'address_line1'    => '',
     'address_line2'    => '',
@@ -72,6 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && $editId > 0) {
         'name'             => (string) ($existing['name'] ?? ''),
         'slug'             => (string) ($existing['slug'] ?? ''),
         'description'      => (string) ($existing['description'] ?? ''),
+        'hero_blurb'       => (string) ($existing['hero_blurb'] ?? ''),
         'neighborhood_id'  => ($existing['neighborhood_id'] ?? null) !== null ? (string) (int) $existing['neighborhood_id'] : '',
         'address_line1'    => (string) ($existing['address_line1'] ?? ''),
         'address_line2'    => (string) ($existing['address_line2'] ?? ''),
@@ -327,6 +329,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $form['name']              = trim((string) ($_POST['name'] ?? ''));
     $form['slug']              = trim((string) ($_POST['slug'] ?? ''));
     $form['description']       = trim((string) ($_POST['description'] ?? ''));
+    $form['hero_blurb']        = trim((string) ($_POST['hero_blurb'] ?? ''));
     $form['neighborhood_id']   = trim((string) ($_POST['neighborhood_id'] ?? ''));
     $form['address_line1']     = trim((string) ($_POST['address_line1'] ?? ''));
     $form['address_line2']     = trim((string) ($_POST['address_line2'] ?? ''));
@@ -347,6 +350,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $form['featured_sort']     = trim((string) ($_POST['featured_sort'] ?? '0'));
     $form['is_published']      = isset($_POST['is_published']);
     $form['is_featured']       = isset($_POST['is_featured']);
+
+    if (mb_strlen($form['hero_blurb']) > 300) {
+        $errors['hero_blurb'] = 'Hero blurb must be 300 characters or fewer.';
+    }
 
     // On edit, keep the id from the hidden field for the update + slug check.
     $postEditId = (isset($_POST['id']) && is_numeric($_POST['id']) && (int) $_POST['id'] > 0)
@@ -478,6 +485,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'name'              => $form['name'],
             'slug'              => $form['slug'],
             'description'       => $form['description'] !== '' ? $form['description'] : null,
+            'hero_blurb'        => $form['hero_blurb'] !== '' ? $form['hero_blurb'] : null,
             'neighborhood_id'   => $neighborhoodIdOut,            // null or int
             'address_line1'     => $form['address_line1'] !== '' ? $form['address_line1'] : null,
             'address_line2'     => $form['address_line2'] !== '' ? $form['address_line2'] : null,

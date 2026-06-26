@@ -1,4 +1,4 @@
--- brunchindetroit.com â€” schema skeleton (Phase 1)
+-- brunchindetroit.com - schema skeleton (Phase 1)
 -- Import via phpMyAdmin or: mysql -u user -p brunchindetroit < database/schema.sql
 
 SET NAMES utf8mb4;
@@ -54,6 +54,7 @@ CREATE TABLE IF NOT EXISTS venues (
   slug VARCHAR(160) NOT NULL,
   name VARCHAR(200) NOT NULL,
   description TEXT NULL,
+  hero_blurb VARCHAR(300) NULL,
   address_line1 VARCHAR(200) NULL,
   address_line2 VARCHAR(200) NULL,
   city VARCHAR(100) NOT NULL DEFAULT 'Detroit',
@@ -268,7 +269,7 @@ CREATE TABLE IF NOT EXISTS blog_posts (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ---------------------------------------------------------------------------
--- Gallery (filter by venue/location/date â€” no gallery_tags in MVP)
+-- Gallery (filter by venue/location/date - no gallery_tags in MVP)
 -- ---------------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS galleries (
   id INT UNSIGNED NOT NULL AUTO_INCREMENT,
