@@ -46,10 +46,20 @@ if (isset($_GET['when']) && is_string($_GET['when'])) {
     $whenFilter = mb_substr(trim($_GET['when']), 0, 80);
 }
 
-$featuredFilter = false;
-if (isset($_GET['featured']) && is_string($_GET['featured'])) {
-    $featuredFilter = trim($_GET['featured']) === '1';
+$directorySortMode = 'az';
+if (isset($_GET['sort']) && is_string($_GET['sort'])) {
+    $candidateSort = trim($_GET['sort']);
+    if (in_array($candidateSort, ['az', 'featured_first', 'featured_only'], true)) {
+        $directorySortMode = $candidateSort;
+    }
 }
+
+// Backward compatibility for older /directory.php?featured=1 links.
+if (isset($_GET['featured']) && is_string($_GET['featured']) && trim($_GET['featured']) === '1') {
+    $directorySortMode = 'featured_only';
+}
+
+$featuredFilter = $directorySortMode === 'featured_only';
 
 // --- Available letters from full venue list --------------------------------
 $availableLetters = [];
@@ -143,6 +153,30 @@ if ($advancedNeedles !== []) {
     }));
 }
 
+
+// --- Sort results ------------------------------------------------------------
+// Default directory order is A-Z. Featured ordering is opt-in.
+usort($venues, static function ($a, $b) use ($directorySortMode): int {
+    if ($directorySortMode !== 'az') {
+        $aFeatured = !empty($a['is_featured']);
+        $bFeatured = !empty($b['is_featured']);
+
+        if ($aFeatured !== $bFeatured) {
+            return $aFeatured ? -1 : 1;
+        }
+
+        if ($aFeatured && $bFeatured) {
+            $aSort = isset($a['featured_sort']) ? (int) $a['featured_sort'] : 999;
+            $bSort = isset($b['featured_sort']) ? (int) $b['featured_sort'] : 999;
+
+            if ($aSort !== $bSort) {
+                return $aSort <=> $bSort;
+            }
+        }
+    }
+
+    return strcasecmp((string) ($a['name'] ?? ''), (string) ($b['name'] ?? ''));
+});
 // Full count after active filters.
 $filteredVenueCount = count($venues);
 

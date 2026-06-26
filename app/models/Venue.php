@@ -657,4 +657,57 @@ final class Venue
             throw $ex;
         }
     }
+    /**
+     * Nearby published venues for the public venue profile.
+     *
+     * Same neighborhood ranks first, then same city. Current venue excluded.
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    public static function nearbyForVenue(int $venueId, int $limit = 3): array
+    {
+        $pdo = db();
+
+        $stmt = $pdo->prepare("
+            SELECT
+                v.id,
+                v.slug,
+                v.name,
+                v.description,
+                v.address_line1,
+                v.address_line2,
+                v.city,
+                v.state,
+                v.zip,
+                v.phone,
+                v.price_range,
+                v.brunch_hours_note,
+                v.main_image_path,
+                v.is_featured,
+                v.featured_sort,
+                n.name AS neighborhood_name,
+                CASE
+                    WHEN cur.neighborhood_id IS NOT NULL AND v.neighborhood_id = cur.neighborhood_id THEN 0
+                    WHEN cur.city IS NOT NULL AND cur.city <> '' AND LOWER(v.city) = LOWER(cur.city) THEN 1
+                    ELSE 2
+                END AS nearby_rank
+            FROM venues v
+            INNER JOIN venues cur ON cur.id = :venue_id
+            LEFT JOIN neighborhoods n ON n.id = v.neighborhood_id
+            WHERE v.is_published = 1
+              AND v.id <> cur.id
+              AND (
+                    (cur.neighborhood_id IS NOT NULL AND v.neighborhood_id = cur.neighborhood_id)
+                    OR (cur.city IS NOT NULL AND cur.city <> '' AND LOWER(v.city) = LOWER(cur.city))
+              )
+            ORDER BY nearby_rank ASC, v.is_featured DESC, COALESCE(v.featured_sort, 999), v.name ASC
+            LIMIT :limit
+        ");
+
+        $stmt->bindValue(':venue_id', $venueId, PDO::PARAM_INT);
+        $stmt->bindValue(':limit', max(1, $limit), PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $stmt->fetchAll();
+    }
 }

@@ -201,18 +201,6 @@ if (!$hasActiveFilter) {
                 <?php if ($selectedLetter !== ''): ?>
                     <input type="hidden" name="letter" value="<?= e($selectedLetter) ?>">
                 <?php endif; ?>
-                <?php if ($styleFilter !== ''): ?>
-                    <input type="hidden" name="style" value="<?= e($styleFilter) ?>">
-                <?php endif; ?>
-                <?php if ($favoriteFilter !== ''): ?>
-                    <input type="hidden" name="favorite" value="<?= e($favoriteFilter) ?>">
-                <?php endif; ?>
-                <?php if ($whenFilter !== ''): ?>
-                    <input type="hidden" name="when" value="<?= e($whenFilter) ?>">
-                <?php endif; ?>
-                <?php if ($featuredFilter): ?>
-                    <input type="hidden" name="featured" value="1">
-                <?php endif; ?>
 
                 <label for="directory-search" class="sr-only">Search venues by location, address, or name</label>
                 <div class="directory-search-form__control">
@@ -239,6 +227,42 @@ if (!$hasActiveFilter) {
                         </a>
                     <?php endif; ?>
                 </div>
+
+                <details class="directory-advanced-filters"<?= ($styleFilter !== '' || $favoriteFilter !== '' || $whenFilter !== '' || $directorySortMode !== 'az') ? ' open' : '' ?>>
+                    <summary class="directory-advanced-filters__summary">
+                        <span>
+                            <i class="fas fa-sliders" aria-hidden="true"></i>
+                            Advanced filters
+                        </span>
+                        <i class="fas fa-chevron-down" aria-hidden="true"></i>
+                    </summary>
+
+                    <div class="directory-advanced-filters__grid">
+                        <label class="directory-advanced-filters__field">
+                            <span>Style or vibe</span>
+                            <input type="text" name="style" value="<?= e($styleFilter) ?>" placeholder="Soul food, rooftop, DJ brunch...">
+                        </label>
+
+                        <label class="directory-advanced-filters__field">
+                            <span>Favorite dish</span>
+                            <input type="text" name="favorite" value="<?= e($favoriteFilter) ?>" placeholder="Chicken & waffles, shrimp & grits...">
+                        </label>
+
+                        <label class="directory-advanced-filters__field">
+                            <span>When</span>
+                            <input type="text" name="when" value="<?= e($whenFilter) ?>" placeholder="Saturday, Sunday, weekday...">
+                        </label>
+
+                        <label class="directory-advanced-filters__field">
+                            <span>Featured</span>
+                            <select name="sort">
+                                <option value="az"<?= $directorySortMode === 'az' ? ' selected' : '' ?>>All spots A-Z</option>
+                                <option value="featured_first"<?= $directorySortMode === 'featured_first' ? ' selected' : '' ?>>Featured first</option>
+                                <option value="featured_only"<?= $directorySortMode === 'featured_only' ? ' selected' : '' ?>>Featured only</option>
+                            </select>
+                        </label>
+                    </div>
+                </details>
             </form>
 
             <div class="directory-alpha">
@@ -279,6 +303,16 @@ if (!$hasActiveFilter) {
                             : 'Showing published venues from the database.' ?>
                     </p>
                 </div>
+                <div class="directory-view-toggle" role="group" aria-label="Directory view options">
+                    <button class="directory-view-toggle__button is-active" type="button" data-directory-view="grid" aria-pressed="true">
+                        <i class="fas fa-table-cells-large" aria-hidden="true"></i>
+                        Grid
+                    </button>
+                    <button class="directory-view-toggle__button" type="button" data-directory-view="list" aria-pressed="false">
+                        <i class="fas fa-list" aria-hidden="true"></i>
+                        List
+                    </button>
+                </div>
             </div>
 
             <?php if (empty($venues)): ?>
@@ -302,7 +336,7 @@ if (!$hasActiveFilter) {
                     </div>
                 <?php endif; ?>
             <?php else: ?>
-                <div class="directory-grid" id="directory-grid">
+                <div class="directory-grid" id="directory-grid" data-directory-view-container>
                     <?php foreach ($visibleVenues as $venue): ?>
                         <?php
                         // Build an optional single-line address from whatever fields are present.
@@ -379,25 +413,25 @@ if (!$hasActiveFilter) {
                                         </p>
                                     <?php endif; ?>
                                 </div>
-
                                 <div class="directory-venue-card__footer">
-                                    <span class="directory-venue-card__view">
-                                        View profile
-                                        <i class="fas fa-chevron-right" aria-hidden="true"></i>
-                                    </span>
-
-                                    <div class="directory-venue-card__icons" aria-label="Quick actions">
+                                    <div class="directory-venue-card__actions" aria-label="Venue actions">
                                         <?php if ($phoneHref !== ''): ?>
-                                            <a class="directory-venue-card__icon" href="<?= e($phoneHref) ?>" aria-label="Call <?= e((string) ($venue['name'] ?? 'venue')) ?>">
+                                            <a class="directory-venue-card__action directory-venue-card__action--phone" href="<?= e($phoneHref) ?>" aria-label="Call <?= e((string) ($venue['name'] ?? 'venue')) ?>">
                                                 <i class="fas fa-phone" aria-hidden="true"></i>
+                                                <span>Phone</span>
                                             </a>
                                         <?php endif; ?>
 
-                                        <?php if ($directionsUrl !== ''): ?>
-                                            <a class="directory-venue-card__icon" href="<?= e($directionsUrl) ?>" target="_blank" rel="noopener" aria-label="Get directions to <?= e((string) ($venue['name'] ?? 'venue')) ?>">
-                                                <i class="fas fa-diamond-turn-right" aria-hidden="true"></i>
-                                            </a>
-                                        <?php endif; ?>
+                                        <button
+                                            class="directory-venue-card__action directory-venue-card__action--rsvp"
+                                            type="button"
+                                            data-rsvp-trigger
+                                            data-rsvp-venue="<?= e((string) ($venue['name'] ?? 'venue')) ?>"
+                                            aria-label="RSVP for <?= e((string) ($venue['name'] ?? 'venue')) ?>"
+                                        >
+                                            <i class="fas fa-calendar-check" aria-hidden="true"></i>
+                                            <span>RSVP</span>
+                                        </button>
                                     </div>
                                 </div>
                             </div>

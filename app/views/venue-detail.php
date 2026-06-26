@@ -271,7 +271,7 @@ require APP_ROOT . '/views/partials/header.php';
                             <?php if ($directionsUrl !== ''): ?>
                                 <a class="btn btn--primary" href="<?= e($directionsUrl) ?>" target="_blank" rel="noopener">
                                     <i class="fas fa-diamond-turn-right" aria-hidden="true"></i>
-                                    Get directions
+                                    Directions
                                 </a>
                             <?php endif; ?>
 
@@ -281,13 +281,16 @@ require APP_ROOT . '/views/partials/header.php';
                                     Call
                                 </a>
                             <?php endif; ?>
-
-                            <?php if ($hasWebsite): ?>
-                                <a class="btn btn--outline-light" href="<?= e($venue['website_url']) ?>" target="_blank" rel="noopener">
-                                    <i class="fas fa-globe" aria-hidden="true"></i>
-                                    Website
-                                </a>
-                            <?php endif; ?>
+                            <button
+                                class="btn btn--outline-light venue-profile-rsvp-button"
+                                type="button"
+                                data-rsvp-trigger
+                                data-rsvp-venue="<?= e((string) ($venue['name'] ?? 'venue')) ?>"
+                                aria-label="RSVP for <?= e((string) ($venue['name'] ?? 'venue')) ?>"
+                            >
+                                <i class="fas fa-calendar-check" aria-hidden="true"></i>
+                                RSVP
+                            </button>
                         </div>
                     </div>
                 </section>
@@ -653,6 +656,72 @@ require APP_ROOT . '/views/partials/header.php';
                         </div>
 
                     </div>
+                    <?php if (!empty($nearbyVenues) && is_array($nearbyVenues)): ?>
+                        <article class="venue-profile-panel venue-profile-nearby">
+                            <div class="venue-profile-panel__header">
+                                <div>
+                                    <span class="venue-profile-panel__eyebrow">More nearby</span>
+                                    <h2 class="venue-profile-panel__title">Nearby Brunch Spots</h2>
+                                </div>
+                                <a class="venue-profile-panel__link" href="<?= e(asset_url('directory.php')) ?>">
+                                    View directory
+                                    <i class="fas fa-arrow-right" aria-hidden="true"></i>
+                                </a>
+                            </div>
+
+                            <div class="venue-profile-nearby__grid">
+                                <?php foreach ($nearbyVenues as $nearbyVenue): ?>
+                                    <?php
+                                    $nearbyImagePath = trim((string) ($nearbyVenue['main_image_path'] ?? ''));
+                                    if ($nearbyImagePath !== '') {
+                                        $nearbyImage = (str_starts_with($nearbyImagePath, 'http') || str_starts_with($nearbyImagePath, '/'))
+                                            ? $nearbyImagePath
+                                            : asset_url($nearbyImagePath);
+                                    } else {
+                                        $nearbyImage = 'https://images.unsplash.com/photo-1559847844-5315695dadae?auto=format&fit=crop&w=1200&q=80';
+                                    }
+
+                                    $nearbyUrl = asset_url('venue.php?slug=' . urlencode((string) ($nearbyVenue['slug'] ?? '')));
+                                    $nearbyArea = trim((string) ($nearbyVenue['neighborhood_name'] ?? ''));
+                                    $nearbyHours = $formatVenueHours((string) ($nearbyVenue['brunch_hours_note'] ?? ''));
+                                    ?>
+                                    <a class="venue-profile-nearby-card" href="<?= e($nearbyUrl) ?>">
+                                        <span class="venue-profile-nearby-card__media">
+                                            <img
+                                                src="<?= e($nearbyImage) ?>"
+                                                alt="<?= e((string) ($nearbyVenue['name'] ?? 'Nearby brunch spot')) ?>"
+                                                loading="lazy"
+                                            >
+                                            <?php if (!empty($nearbyVenue['is_featured'])): ?>
+                                                <span class="venue-profile-nearby-card__badge">Featured</span>
+                                            <?php endif; ?>
+                                        </span>
+
+                                        <span class="venue-profile-nearby-card__body">
+                                            <?php if ($nearbyArea !== ''): ?>
+                                                <span class="venue-profile-nearby-card__eyebrow"><?= e($nearbyArea) ?></span>
+                                            <?php endif; ?>
+
+                                            <strong class="venue-profile-nearby-card__title">
+                                                <?= e((string) ($nearbyVenue['name'] ?? 'Nearby brunch spot')) ?>
+                                            </strong>
+
+                                            <span class="venue-profile-nearby-card__meta">
+                                                <i class="fas fa-clock" aria-hidden="true"></i>
+                                                <?= e($nearbyHours) ?>
+                                            </span>
+                                        </span>
+                                    </a>
+                                <?php endforeach; ?>
+                            </div>
+
+                            <p class="venue-profile-nearby__note">
+                                <i class="fas fa-circle-info" aria-hidden="true"></i>
+                                More places to check out near this location.
+                            </p>
+                        </article>
+                    <?php endif; ?>
+
                 </div>
 
                 <!-- E. Sidebar column -->

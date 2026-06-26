@@ -12921,3 +12921,769 @@ body .directory-venue-card__icon:hover {
         font-size: 1.18rem !important;
     }
 }
+
+/* ==========================================================================
+   Phase 7B: Directory grid/list toggle
+   Client-side view switch; filters, search, and pagination stay server-side.
+   ========================================================================== */
+
+body .directory-view-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.25rem;
+    border: 1px solid var(--border);
+    border-radius: 0.85rem;
+    background: var(--surface);
+    box-shadow: 0 1px 2px rgba(20, 40, 38, 0.06);
+}
+
+body .directory-view-toggle__button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    min-height: 2.25rem;
+    padding: 0.45rem 0.8rem;
+    border: 0;
+    border-radius: 0.65rem;
+    background: transparent;
+    color: var(--muted);
+    font: inherit;
+    font-size: 0.84rem;
+    font-weight: 800;
+    line-height: 1;
+    cursor: pointer;
+    transition: background 0.22s ease, color 0.22s ease, transform 0.22s ease;
+}
+
+body .directory-view-toggle__button:hover {
+    color: var(--primary);
+    background: rgba(31, 94, 91, 0.07);
+}
+
+body .directory-view-toggle__button.is-active {
+    color: #ffffff;
+    background: var(--primary);
+}
+
+body .directory-grid.is-list-view {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 1rem !important;
+}
+
+body .directory-grid.is-list-view .directory-venue-card {
+    display: grid !important;
+    grid-template-columns: minmax(12rem, 15rem) minmax(0, 1fr) !important;
+    min-height: 9.75rem !important;
+}
+
+body .directory-grid.is-list-view .directory-venue-card__media {
+    height: 100% !important;
+    min-height: 9.75rem !important;
+    aspect-ratio: auto !important;
+}
+
+body .directory-grid.is-list-view .directory-venue-card__body {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) auto !important;
+    grid-template-areas:
+        "eyebrow footer"
+        "title footer"
+        "desc footer"
+        "facts footer";
+    column-gap: 1.2rem !important;
+    row-gap: 0.38rem !important;
+    align-content: center !important;
+}
+
+body .directory-grid.is-list-view .directory-venue-card__eyebrow {
+    grid-area: eyebrow !important;
+}
+
+body .directory-grid.is-list-view .directory-venue-card__title {
+    grid-area: title !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+}
+
+body .directory-grid.is-list-view .directory-venue-card__description {
+    grid-area: desc !important;
+    -webkit-line-clamp: 1 !important;
+}
+
+body .directory-grid.is-list-view .directory-venue-card__facts {
+    grid-area: facts !important;
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 0.55rem 1.1rem !important;
+}
+
+body .directory-grid.is-list-view .directory-venue-card__facts p {
+    max-width: 28rem !important;
+}
+
+body .directory-grid.is-list-view .directory-venue-card__footer {
+    grid-area: footer !important;
+    align-self: center !important;
+    flex-direction: row !important;
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+    min-width: max-content !important;
+}
+
+@media (max-width: 760px) {
+    body .directory-page .section-header {
+        align-items: flex-start;
+    }
+
+    body .directory-view-toggle {
+        width: 100%;
+    }
+
+    body .directory-view-toggle__button {
+        flex: 1 1 50%;
+    }
+
+    body .directory-grid.is-list-view .directory-venue-card {
+        display: flex !important;
+        flex-direction: column !important;
+        min-height: 0 !important;
+    }
+
+    body .directory-grid.is-list-view .directory-venue-card__media {
+        min-height: 0 !important;
+        aspect-ratio: 16 / 10 !important;
+    }
+
+    body .directory-grid.is-list-view .directory-venue-card__body {
+        display: flex !important;
+        flex-direction: column !important;
+    }
+
+    body .directory-grid.is-list-view .directory-venue-card__title {
+        white-space: normal !important;
+    }
+
+    body .directory-grid.is-list-view .directory-venue-card__description {
+        -webkit-line-clamp: 2 !important;
+    }
+
+    body .directory-grid.is-list-view .directory-venue-card__footer {
+        align-self: stretch !important;
+        justify-content: space-between !important;
+        min-width: 0 !important;
+        margin-top: auto !important;
+        padding-top: 0.9rem !important;
+    }
+}
+
+/* ==========================================================================
+   Phase 7B.1: Directory list image lock and featured emboss
+   Keeps uploaded image proportions from changing card size.
+   Gives featured cards a raised/pillow treatment without changing row height.
+   ========================================================================== */
+
+body .directory-grid.is-list-view .directory-venue-card {
+    min-height: 10.5rem !important;
+    max-height: 10.5rem !important;
+    grid-template-columns: 14rem minmax(0, 1fr) !important;
+}
+
+body .directory-grid.is-list-view .directory-venue-card__media {
+    width: 14rem !important;
+    height: 10.5rem !important;
+    min-height: 10.5rem !important;
+    max-height: 10.5rem !important;
+    aspect-ratio: auto !important;
+}
+
+body .directory-grid.is-list-view .directory-venue-card__media img {
+    width: 100% !important;
+    height: 100% !important;
+    max-width: none !important;
+    max-height: none !important;
+    object-fit: cover !important;
+    object-position: center !important;
+    display: block !important;
+}
+
+body .directory-grid.is-list-view .directory-venue-card__body {
+    min-height: 10.5rem !important;
+    max-height: 10.5rem !important;
+    overflow: hidden !important;
+}
+
+body .directory-grid.is-list-view .directory-venue-card--featured {
+    z-index: 2 !important;
+    transform: scale(1.01) !important;
+    background:
+        linear-gradient(135deg, rgba(31, 111, 106, 0.98), rgba(22, 92, 88, 0.98)) !important;
+    border-color: rgba(255, 225, 91, 0.9) !important;
+    box-shadow:
+        0 22px 44px rgba(20, 40, 38, 0.2),
+        0 7px 14px rgba(20, 40, 38, 0.12),
+        inset 0 1px 0 rgba(255, 255, 255, 0.18),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.16) !important;
+}
+
+body .directory-grid.is-list-view .directory-venue-card--featured:hover {
+    transform: scale(1.025) translateY(-2px) !important;
+    box-shadow:
+        0 28px 56px rgba(20, 40, 38, 0.24),
+        0 10px 18px rgba(20, 40, 38, 0.16),
+        inset 0 1px 0 rgba(255, 255, 255, 0.22),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.18) !important;
+}
+
+body .directory-grid.is-list-view .directory-venue-card--featured .directory-venue-card__eyebrow,
+body .directory-grid.is-list-view .directory-venue-card--featured .directory-venue-card__title,
+body .directory-grid.is-list-view .directory-venue-card--featured .directory-venue-card__description,
+body .directory-grid.is-list-view .directory-venue-card--featured .directory-venue-card__facts p,
+body .directory-grid.is-list-view .directory-venue-card--featured .directory-venue-card__view {
+    color: #ffffff !important;
+}
+
+body .directory-grid.is-list-view .directory-venue-card--featured .directory-venue-card__facts i {
+    color: var(--accent) !important;
+}
+
+body .directory-grid.is-list-view .directory-venue-card--featured .directory-venue-card__price,
+body .directory-grid.is-list-view .directory-venue-card--featured .directory-venue-card__dot {
+    color: rgba(255, 255, 255, 0.82) !important;
+}
+
+body .directory-grid.is-list-view .directory-venue-card--featured .directory-venue-card__icon {
+    border-color: rgba(255, 255, 255, 0.42) !important;
+    background: rgba(255, 255, 255, 0.1) !important;
+    color: #ffffff !important;
+}
+
+body .directory-grid.is-list-view .directory-venue-card--featured .directory-venue-card__icon:hover {
+    background: rgba(255, 255, 255, 0.18) !important;
+}
+
+body .directory-grid.is-list-view .directory-venue-card--featured .directory-venue-card__featured-chip {
+    background: var(--accent) !important;
+    color: #241900 !important;
+    box-shadow:
+        0 8px 18px rgba(0, 0, 0, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.35) !important;
+}
+
+@media (max-width: 760px) {
+    body .directory-grid.is-list-view .directory-venue-card {
+        min-height: 0 !important;
+        max-height: none !important;
+        transform: none !important;
+    }
+
+    body .directory-grid.is-list-view .directory-venue-card__media {
+        width: 100% !important;
+        height: auto !important;
+        min-height: 0 !important;
+        max-height: none !important;
+        aspect-ratio: 16 / 10 !important;
+    }
+
+    body .directory-grid.is-list-view .directory-venue-card__body {
+        min-height: 0 !important;
+        max-height: none !important;
+    }
+
+    body .directory-grid.is-list-view .directory-venue-card--featured:hover {
+        transform: translateY(-3px) !important;
+    }
+}
+
+/* ==========================================================================
+   Phase 7C: Restore directory advanced filters
+   Adds visible style/favorite/when controls plus Featured sort mode.
+   ========================================================================== */
+
+body .directory-advanced-filters {
+    margin-top: 0.85rem;
+    border: 1px solid rgba(31, 94, 91, 0.14);
+    border-radius: 1rem;
+    background: rgba(255, 255, 255, 0.72);
+    overflow: hidden;
+}
+
+body .directory-advanced-filters__summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    min-height: 3rem;
+    padding: 0.8rem 1rem;
+    color: var(--primary-dark);
+    font-weight: 850;
+    cursor: pointer;
+    list-style: none;
+}
+
+body .directory-advanced-filters__summary::-webkit-details-marker {
+    display: none;
+}
+
+body .directory-advanced-filters__summary span {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+body .directory-advanced-filters__summary > i {
+    transition: transform 0.22s ease;
+}
+
+body .directory-advanced-filters[open] .directory-advanced-filters__summary > i {
+    transform: rotate(180deg);
+}
+
+body .directory-advanced-filters__grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.85rem;
+    padding: 0 1rem 1rem;
+}
+
+body .directory-advanced-filters__field {
+    display: grid;
+    gap: 0.35rem;
+}
+
+body .directory-advanced-filters__field span {
+    color: var(--muted);
+    font-size: 0.76rem;
+    font-weight: 850;
+}
+
+body .directory-advanced-filters__field input,
+body .directory-advanced-filters__field select {
+    width: 100%;
+    min-height: 2.65rem;
+    border: 1px solid var(--border);
+    border-radius: 0.75rem;
+    background: var(--surface);
+    color: var(--text);
+    font: inherit;
+    font-size: 0.88rem;
+    padding: 0.6rem 0.7rem;
+}
+
+body .directory-advanced-filters__field input:focus,
+body .directory-advanced-filters__field select:focus {
+    outline: none;
+    border-color: rgba(31, 94, 91, 0.58);
+    box-shadow: 0 0 0 3px rgba(31, 94, 91, 0.1);
+}
+
+@media (max-width: 900px) {
+    body .directory-advanced-filters__grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 560px) {
+    body .directory-advanced-filters__grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ==========================================================================
+   Phase 7D: RSVP placeholder actions
+   Adds visible RSVP buttons now; modal behavior will be wired later.
+   ========================================================================== */
+
+body .directory-venue-card__actions {
+    position: relative !important;
+    z-index: 3 !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.55rem !important;
+    margin-left: auto !important;
+}
+
+body .directory-venue-card__action {
+    position: relative !important;
+    z-index: 4 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 0.4rem !important;
+    min-height: 2.3rem !important;
+    padding: 0.52rem 0.85rem !important;
+    border: 1px solid var(--border) !important;
+    border-radius: 999px !important;
+    background: var(--surface) !important;
+    color: var(--primary) !important;
+    font: inherit !important;
+    font-size: 0.84rem !important;
+    font-weight: 850 !important;
+    line-height: 1 !important;
+    text-decoration: none !important;
+    cursor: pointer !important;
+    transition: transform 0.22s ease, background 0.22s ease, border-color 0.22s ease, color 0.22s ease !important;
+}
+
+body .directory-venue-card__action:hover {
+    transform: translateY(-1px) !important;
+    border-color: rgba(31, 94, 91, 0.45) !important;
+    background: rgba(31, 94, 91, 0.07) !important;
+}
+
+body .directory-venue-card__action--rsvp {
+    border-color: rgba(201, 150, 47, 0.55) !important;
+    background: var(--accent) !important;
+    color: #241900 !important;
+}
+
+body .directory-venue-card--featured .directory-venue-card__action {
+    border-color: rgba(255, 255, 255, 0.38) !important;
+    background: rgba(255, 255, 255, 0.12) !important;
+    color: #ffffff !important;
+}
+
+body .directory-venue-card--featured .directory-venue-card__action--rsvp {
+    border-color: rgba(255, 225, 91, 0.8) !important;
+    background: var(--accent) !important;
+    color: #241900 !important;
+}
+
+body .venue-profile-rsvp-button {
+    cursor: pointer;
+}
+
+@media (max-width: 760px) {
+    body .directory-venue-card__actions {
+        width: 100% !important;
+        margin-left: 0 !important;
+    }
+
+    body .directory-venue-card__action {
+        flex: 1 1 0 !important;
+    }
+}
+
+/* ==========================================================================
+   Phase 7E: Venue hero readability without green wash
+   Removes the green hero wash, keeps text readable, and makes Call text white.
+   ========================================================================== */
+
+body .venue-profile-hero::before {
+    background:
+        linear-gradient(
+            90deg,
+            rgba(0, 0, 0, 0.46) 0%,
+            rgba(0, 0, 0, 0.28) 48%,
+            rgba(0, 0, 0, 0.16) 100%
+        ) !important;
+}
+
+body .venue-profile-hero__title,
+body .venue-profile-hero__hours,
+body .venue-profile-hero__description,
+body .venue-profile-hero .badge,
+body .venue-profile-hero__actions .btn {
+    text-shadow:
+        0 2px 4px rgba(0, 0, 0, 0.42),
+        0 8px 22px rgba(0, 0, 0, 0.28) !important;
+}
+
+body .venue-profile-hero__actions .btn--accent,
+body .venue-profile-hero__actions .btn--accent i {
+    color: #ffffff !important;
+}
+
+body .venue-profile-hero__actions .btn--accent:hover,
+body .venue-profile-hero__actions .btn--accent:hover i {
+    color: #ffffff !important;
+}
+
+body .venue-profile-hero__actions .btn--accent {
+    background: var(--accent) !important;
+    border-color: var(--accent) !important;
+}
+
+/* ==========================================================================
+   Phase 7E.1: Mobile venue hero action row
+   Keeps labels visible, but makes hero actions fit cleaner on phones.
+   ========================================================================== */
+
+@media (max-width: 640px) {
+    body .venue-profile-hero__actions {
+        display: grid !important;
+        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+        gap: 0.55rem !important;
+        align-items: stretch !important;
+        width: 100% !important;
+    }
+
+    body .venue-profile-hero__actions .btn {
+        width: 100% !important;
+        min-height: 3rem !important;
+        padding: 0.68rem 0.45rem !important;
+        border-radius: 0.85rem !important;
+        justify-content: center !important;
+        font-size: 0.86rem !important;
+        line-height: 1.05 !important;
+        white-space: nowrap !important;
+    }
+
+    body .venue-profile-hero__actions .btn i {
+        margin-right: 0.22rem !important;
+    }
+}
+
+@media (max-width: 390px) {
+    body .venue-profile-hero__actions .btn {
+        font-size: 0.78rem !important;
+        padding-left: 0.3rem !important;
+        padding-right: 0.3rem !important;
+    }
+}
+
+/* ==========================================================================
+   Phase 7E.2: Mobile hero action spacing
+   Gives Directions more room so text does not crowd the button edge.
+   ========================================================================== */
+
+@media (max-width: 640px) {
+    body .venue-profile-hero__actions {
+        grid-template-columns: 1.35fr 1fr 1fr !important;
+        gap: 0.5rem !important;
+    }
+
+    body .venue-profile-hero__actions .btn {
+        min-width: 0 !important;
+        padding-left: 0.6rem !important;
+        padding-right: 0.6rem !important;
+        font-size: 0.82rem !important;
+        letter-spacing: -0.01em !important;
+    }
+
+    body .venue-profile-hero__actions .btn i {
+        flex: 0 0 auto !important;
+        margin-right: 0.18rem !important;
+    }
+}
+
+@media (max-width: 390px) {
+    body .venue-profile-hero__actions {
+        grid-template-columns: 1.42fr 0.92fr 0.92fr !important;
+        gap: 0.42rem !important;
+    }
+
+    body .venue-profile-hero__actions .btn {
+        font-size: 0.76rem !important;
+        padding-left: 0.42rem !important;
+        padding-right: 0.42rem !important;
+    }
+}
+
+/* ==========================================================================
+   Phase 7F: Nearby brunch spots
+   Bottom-of-profile discovery module for free venue pages.
+   ========================================================================== */
+
+body .venue-profile-nearby {
+    margin-top: 1rem;
+}
+
+body .venue-profile-nearby__grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.9rem;
+}
+
+body .venue-profile-nearby-card {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    border-radius: 1rem;
+    background: var(--surface);
+    color: var(--text);
+    text-decoration: none;
+    box-shadow: 0 1px 2px rgba(20, 40, 38, 0.06);
+    transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+}
+
+body .venue-profile-nearby-card:hover {
+    transform: translateY(-3px);
+    border-color: rgba(31, 94, 91, 0.28);
+    box-shadow: 0 14px 30px rgba(20, 40, 38, 0.12);
+}
+
+body .venue-profile-nearby-card__media {
+    position: relative;
+    display: block;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    background: #efe7db;
+}
+
+body .venue-profile-nearby-card__media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.25s ease;
+}
+
+body .venue-profile-nearby-card:hover .venue-profile-nearby-card__media img {
+    transform: scale(1.04);
+}
+
+body .venue-profile-nearby-card__badge {
+    position: absolute;
+    top: 0.55rem;
+    left: 0.55rem;
+    display: inline-flex;
+    padding: 0.28rem 0.5rem;
+    border-radius: 999px;
+    background: var(--accent);
+    color: #241900;
+    font-size: 0.64rem;
+    font-weight: 900;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+body .venue-profile-nearby-card__body {
+    display: grid;
+    gap: 0.35rem;
+    padding: 0.85rem;
+}
+
+body .venue-profile-nearby-card__eyebrow {
+    color: var(--secondary);
+    font-size: 0.68rem;
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+body .venue-profile-nearby-card__title {
+    color: var(--text);
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+    line-height: 1.1;
+}
+
+body .venue-profile-nearby-card__meta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    color: var(--muted);
+    font-size: 0.78rem;
+    line-height: 1.25;
+}
+
+body .venue-profile-nearby-card__meta i {
+    color: var(--primary);
+}
+
+body .venue-profile-nearby__note {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.45rem;
+    margin: 0.9rem 0 0;
+    color: var(--muted);
+    font-size: 0.82rem;
+    line-height: 1.45;
+}
+
+body .venue-profile-nearby__note i {
+    color: var(--primary);
+    margin-top: 0.15rem;
+}
+
+@media (max-width: 820px) {
+    body .venue-profile-nearby__grid {
+        grid-template-columns: 1fr;
+    }
+
+    body .venue-profile-nearby-card {
+        display: grid;
+        grid-template-columns: 7.5rem minmax(0, 1fr);
+    }
+
+    body .venue-profile-nearby-card__media {
+        aspect-ratio: auto;
+        min-height: 7rem;
+    }
+}
+
+@media (max-width: 480px) {
+    body .venue-profile-nearby-card {
+        grid-template-columns: 1fr;
+    }
+
+    body .venue-profile-nearby-card__media {
+        aspect-ratio: 16 / 10;
+        min-height: 0;
+    }
+}
+
+/* ==========================================================================
+   Phase 7G: Mobile interior shots slider
+   Keeps the desktop interior photo grid, but turns mobile into a swipe slider.
+   ========================================================================== */
+
+@media (max-width: 640px) {
+    body .venue-gallery-grid {
+        display: flex !important;
+        gap: 0.85rem !important;
+        overflow-x: auto !important;
+        overflow-y: hidden !important;
+        scroll-snap-type: x mandatory !important;
+        -webkit-overflow-scrolling: touch !important;
+        padding: 0 0.1rem 0.75rem !important;
+        margin-right: -1rem !important;
+        scrollbar-width: thin !important;
+    }
+
+    body .venue-gallery-grid__item,
+    body .venue-gallery-grid__lightbox-button {
+        flex: 0 0 82% !important;
+        width: 82% !important;
+        min-width: 82% !important;
+        max-width: 82% !important;
+        scroll-snap-align: start !important;
+    }
+
+    body .venue-gallery-grid__lightbox-button {
+        display: block !important;
+        aspect-ratio: 4 / 3 !important;
+        overflow: hidden !important;
+        border-radius: 1rem !important;
+    }
+
+    body .venue-gallery-grid__lightbox-button img,
+    body .venue-gallery-grid img {
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: cover !important;
+        display: block !important;
+    }
+
+    body .venue-gallery-grid::after {
+        content: "" !important;
+        flex: 0 0 0.15rem !important;
+    }
+}
+
+@media (max-width: 390px) {
+    body .venue-gallery-grid__item,
+    body .venue-gallery-grid__lightbox-button {
+        flex-basis: 88% !important;
+        width: 88% !important;
+        min-width: 88% !important;
+        max-width: 88% !important;
+    }
+}

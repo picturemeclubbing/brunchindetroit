@@ -325,3 +325,47 @@
 
   initSpotlightTouchArrows();
 })();
+
+/* Directory grid/list view toggle */
+(function () {
+    const container = document.querySelector('[data-directory-view-container]');
+    const buttons = document.querySelectorAll('[data-directory-view]');
+
+    if (!container || buttons.length === 0) {
+        return;
+    }
+
+    const storageKey = 'directoryViewPreference';
+
+    function setDirectoryView(view) {
+        const normalized = view === 'list' ? 'list' : 'grid';
+        container.classList.toggle('is-list-view', normalized === 'list');
+
+        buttons.forEach((button) => {
+            const isActive = button.getAttribute('data-directory-view') === normalized;
+            button.classList.toggle('is-active', isActive);
+            button.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+        });
+
+        try {
+            window.localStorage.setItem(storageKey, normalized);
+        } catch (error) {
+            // Ignore storage failures.
+        }
+    }
+
+    let savedView = 'grid';
+    try {
+        savedView = window.localStorage.getItem(storageKey) || 'grid';
+    } catch (error) {
+        savedView = 'grid';
+    }
+
+    setDirectoryView(savedView);
+
+    buttons.forEach((button) => {
+        button.addEventListener('click', () => {
+            setDirectoryView(button.getAttribute('data-directory-view'));
+        });
+    });
+})();
