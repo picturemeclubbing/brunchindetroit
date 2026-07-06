@@ -151,24 +151,28 @@ if ($venueHeroBlurb === '') {
     $venueHeroBlurb = trim((string) ($venue['description'] ?? ''));
 }
 
-$premiumHeroImage = $hasImage
-    ? $imageUrl
-    : 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=1600&q=80';
+// Single reusable stock fallback. Used only as a last resort when a venue
+// has no real photos of its own anywhere (hero image or interior gallery).
+$premiumStockFallbackImage = 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=1600&q=80';
 
-$galleryImages = [
-    'https://images.unsplash.com/photo-1559847844-5315695dadae?auto=format&fit=crop&w=1198&q=80',
-    'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1170&q=80',
-    'https://images.unsplash.com/photo-1490645935967-10de6ba17061?auto=format&fit=crop&w=1153&q=80',
-    'https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=1170&q=80',
-];
+$premiumHeroImage = $hasImage ? $imageUrl : $premiumStockFallbackImage;
 
+// About-section photo collage: prefer the venue's own main image plus any
+// admin-uploaded interior photos. Stock photography is only used when the
+// venue has no real images at all.
 $venueInteriorImageRows = isset($venueInteriorImages) && is_array($venueInteriorImages)
     ? $venueInteriorImages
     : [];
 
-foreach ($venueInteriorImageRows as $imageIndex => $imageRow) {
-    if ($imageIndex >= count($galleryImages) || !is_array($imageRow)) {
-        break;
+$premiumAboutPhotos = [];
+
+if ($hasImage) {
+    $premiumAboutPhotos[] = $imageUrl;
+}
+
+foreach ($venueInteriorImageRows as $imageRow) {
+    if (!is_array($imageRow)) {
+        continue;
     }
 
     $interiorImagePath = trim((string) ($imageRow['file_path'] ?? ''));
@@ -176,12 +180,18 @@ foreach ($venueInteriorImageRows as $imageIndex => $imageRow) {
         continue;
     }
 
-    $galleryImages[$imageIndex] = str_starts_with($interiorImagePath, 'http')
+    $premiumAboutPhotos[] = str_starts_with($interiorImagePath, 'http')
         ? $interiorImagePath
         : asset_url($interiorImagePath);
 }
 
-$premiumPhotos = array_values(array_filter(array_merge([$premiumHeroImage], $galleryImages)));
+$premiumAboutPhotos = array_values(array_unique(array_filter($premiumAboutPhotos)));
+
+if ($premiumAboutPhotos === []) {
+    $premiumAboutPhotos[] = $premiumStockFallbackImage;
+}
+
+$premiumPhotos = $premiumAboutPhotos;
 
 $premiumMenuPreviewItems = [];
 $premiumMenuCategoryRows = isset($menuCategories) && is_array($menuCategories) ? $menuCategories : [];
@@ -221,9 +231,53 @@ foreach ($premiumMenuCategoryRows as $premiumMenuCategoryRow) {
     }
 }
 
+// If fewer than 3 published items have photos, fill the rest of the preview
+// with polished text-only cards (name / price / description) rather than
+// leaving the preview sparse or padding it with unrelated stock photos.
+$premiumMenuFallbackItems = [];
+
+if (count($premiumMenuPreviewItems) < 3) {
+    foreach ($premiumMenuCategoryRows as $premiumMenuCategoryRow) {
+        if (!is_array($premiumMenuCategoryRow)) {
+            continue;
+        }
+
+        $premiumMenuRows = isset($premiumMenuCategoryRow['items']) && is_array($premiumMenuCategoryRow['items'])
+            ? $premiumMenuCategoryRow['items']
+            : [];
+
+        foreach ($premiumMenuRows as $premiumMenuRow) {
+            if (!is_array($premiumMenuRow)) {
+                continue;
+            }
+
+            // Items with photos are already represented above; skip them here.
+            if (trim((string) ($premiumMenuRow['image_url'] ?? '')) !== '') {
+                continue;
+            }
+
+            $fallbackName = trim((string) ($premiumMenuRow['name'] ?? ''));
+            if ($fallbackName === '') {
+                continue;
+            }
+
+            $rawPrice = $premiumMenuRow['price'] ?? null;
+
+            $premiumMenuFallbackItems[] = [
+                'name'        => $fallbackName,
+                'price'       => ($rawPrice !== null && $rawPrice !== '') ? '$' . number_format((float) $rawPrice, 2) : '',
+                'description' => trim((string) ($premiumMenuRow['description'] ?? '')),
+            ];
+
+            if ((count($premiumMenuPreviewItems) + count($premiumMenuFallbackItems)) >= 3) {
+                break 2;
+            }
+        }
+    }
+}
+
 $venueGalleryFilterUrl = asset_url('gallery.php?location=' . urlencode((string) ($venue['name'] ?? '')));
 $recentVenueGalleryList = isset($recentVenueGalleries) && is_array($recentVenueGalleries) ? $recentVenueGalleries : [];
-$eventGalleryImage = 'https://images.unsplash.com/photo-1551218808-94e220e084d2?auto=format&fit=crop&w=1074&q=80';
 
 $pageTitle = ($venue['name'] ?? 'Venue') . ' - Premium Profile';
 require APP_ROOT . '/views/partials/header.php';
@@ -339,27 +393,33 @@ require APP_ROOT . '/views/partials/header.php';
 
     <section class="premium-venue-section" id="premium-about">
         <div class="container">
-            <span class="premium-venue-section__eyebrow">The place</span>
-            <h2 class="premium-venue-section__title">About <?= e((string) ($venue['name'] ?? 'this venue')) ?></h2>
-            <?php if (!empty($venue['description'])): ?>
-                <p class="premium-venue-section__lead"><?= e((string) $venue['description']) ?></p>
-            <?php else: ?>
-                <p class="premium-venue-section__lead premium-venue-section__lead--muted">
-                    More details about this venue are coming soon.
-                </p>
-            <?php endif; ?>
+            <div class="premium-venue-about__grid">
+                <div class="premium-venue-about__copy">
+                    <span class="premium-venue-section__eyebrow">The place</span>
+                    <h2 class="premium-venue-section__title">About <?= e((string) ($venue['name'] ?? 'this venue')) ?></h2>
+                    <?php if (!empty($venue['description'])): ?>
+                        <p class="premium-venue-section__lead"><?= e((string) $venue['description']) ?></p>
+                    <?php else: ?>
+                        <p class="premium-venue-section__lead premium-venue-section__lead--muted">
+                            More details about this venue are coming soon.
+                        </p>
+                    <?php endif; ?>
+                </div>
 
-            <div class="premium-venue-photo-row">
-                <?php foreach (array_slice($premiumPhotos, 0, 5) as $photoIndex => $photoUrl): ?>
-                    <button
-                        type="button"
-                        class="premium-venue-photo-row__item"
-                        data-photo-src="<?= e($photoUrl) ?>"
-                        data-photo-alt="<?= e((string) ($venue['name'] ?? 'Venue')) ?> photo <?= (int) $photoIndex + 1 ?>"
-                    >
-                        <img src="<?= e($photoUrl) ?>" alt="<?= e((string) ($venue['name'] ?? 'Venue')) ?> photo <?= (int) $photoIndex + 1 ?>" loading="lazy">
-                    </button>
-                <?php endforeach; ?>
+                <div class="premium-venue-about__gallery">
+                    <div class="premium-venue-photo-row">
+                        <?php foreach (array_slice($premiumPhotos, 0, 5) as $photoIndex => $photoUrl): ?>
+                            <button
+                                type="button"
+                                class="premium-venue-photo-row__item"
+                                data-photo-src="<?= e($photoUrl) ?>"
+                                data-photo-alt="<?= e((string) ($venue['name'] ?? 'Venue')) ?> photo <?= (int) $photoIndex + 1 ?>"
+                            >
+                                <img src="<?= e($photoUrl) ?>" alt="<?= e((string) ($venue['name'] ?? 'Venue')) ?> photo <?= (int) $photoIndex + 1 ?>" loading="lazy">
+                            </button>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
@@ -377,8 +437,8 @@ require APP_ROOT . '/views/partials/header.php';
                 </a>
             </div>
 
-            <div class="premium-venue-menu-preview__photos" aria-label="Featured menu item photos">
-                <?php if (!empty($premiumMenuPreviewItems)): ?>
+            <div class="premium-venue-menu-preview__photos" aria-label="Featured menu items">
+                <?php if (!empty($premiumMenuPreviewItems) || !empty($premiumMenuFallbackItems)): ?>
                     <?php foreach ($premiumMenuPreviewItems as $premiumMenuPreviewItem): ?>
                         <figure class="premium-venue-menu-preview__photo">
                             <img
@@ -387,6 +447,17 @@ require APP_ROOT . '/views/partials/header.php';
                                 loading="lazy"
                             >
                         </figure>
+                    <?php endforeach; ?>
+                    <?php foreach ($premiumMenuFallbackItems as $premiumMenuFallbackItem): ?>
+                        <div class="premium-venue-menu-preview__card">
+                            <strong class="premium-venue-menu-preview__card-name"><?= e($premiumMenuFallbackItem['name']) ?></strong>
+                            <?php if ($premiumMenuFallbackItem['price'] !== ''): ?>
+                                <span class="premium-venue-menu-preview__card-price"><?= e($premiumMenuFallbackItem['price']) ?></span>
+                            <?php endif; ?>
+                            <?php if ($premiumMenuFallbackItem['description'] !== ''): ?>
+                                <p class="premium-venue-menu-preview__card-desc"><?= e($premiumMenuFallbackItem['description']) ?></p>
+                            <?php endif; ?>
+                        </div>
                     <?php endforeach; ?>
                 <?php else: ?>
                     <div class="premium-venue-menu-preview__empty">
@@ -419,9 +490,7 @@ require APP_ROOT . '/views/partials/header.php';
                 <div class="premium-venue-event-grid">
                     <?php foreach ($recentVenueGalleryList as $venueGallery): ?>
                         <?php
-                        $venueGalleryImage = !empty($venueGallery['cover_image_path'])
-                            ? (string) $venueGallery['cover_image_path']
-                            : $eventGalleryImage;
+                        $venueGalleryCoverImage = trim((string) ($venueGallery['cover_image_path'] ?? ''));
                         $venueGalleryTitle = !empty($venueGallery['title'])
                             ? (string) $venueGallery['title']
                             : 'Recent Gallery';
@@ -434,7 +503,13 @@ require APP_ROOT . '/views/partials/header.php';
                         ?>
                         <a class="premium-venue-event-card" href="<?= e($venueGalleryUrl !== '' ? $venueGalleryUrl : $venueGalleryFilterUrl) ?>"<?= $venueGalleryUrl !== '' ? ' target="_blank" rel="noopener"' : '' ?>>
                             <span class="premium-venue-event-card__image">
-                                <img src="<?= e($venueGalleryImage) ?>" alt="<?= e($venueGalleryTitle) ?> preview" loading="lazy">
+                                <?php if ($venueGalleryCoverImage !== ''): ?>
+                                    <img src="<?= e($venueGalleryCoverImage) ?>" alt="<?= e($venueGalleryTitle) ?> preview" loading="lazy">
+                                <?php else: ?>
+                                    <span class="premium-venue-event-card__image-placeholder" aria-hidden="true">
+                                        <i class="fas fa-images"></i>
+                                    </span>
+                                <?php endif; ?>
                             </span>
                             <span class="premium-venue-event-card__body">
                                 <span class="premium-venue-event-card__date">
@@ -459,6 +534,15 @@ require APP_ROOT . '/views/partials/header.php';
         <div class="container">
             <span class="premium-venue-section__eyebrow">What's coming</span>
             <h2 class="premium-venue-section__title">Upcoming Events</h2>
+            <?php
+            /*
+             * Future Events batch: once an events table/model exists, loop
+             * real upcoming events here using markup similar to
+             * .premium-venue-event-card (see the Event Photos section above),
+             * and only fall back to the empty state below when the venue
+             * truly has no upcoming events.
+             */
+            ?>
             <div class="premium-venue-empty">
                 <i class="fas fa-calendar-days" aria-hidden="true"></i>
                 <p>No upcoming events listed yet. Check back soon for brunch events at this location.</p>
@@ -555,16 +639,16 @@ require APP_ROOT . '/views/partials/header.php';
                         <i class="fas fa-calendar-check" aria-hidden="true"></i>
                         RSVP
                     </button>
-                    <?php if ($hasPhone && $phoneTel !== ''): ?>
-                        <a class="btn btn--primary" href="tel:<?= e($phoneTel) ?>">
-                            <i class="fas fa-phone" aria-hidden="true"></i>
-                            Call
-                        </a>
-                    <?php endif; ?>
                     <?php if ($directionsUrl !== ''): ?>
                         <a class="btn btn--outline-light" href="<?= e($directionsUrl) ?>" target="_blank" rel="noopener">
                             <i class="fas fa-diamond-turn-right" aria-hidden="true"></i>
                             Directions
+                        </a>
+                    <?php endif; ?>
+                    <?php if ($hasPhone && $phoneTel !== ''): ?>
+                        <a class="btn btn--primary" href="tel:<?= e($phoneTel) ?>">
+                            <i class="fas fa-phone" aria-hidden="true"></i>
+                            Call
                         </a>
                     <?php endif; ?>
                     <?php if ($hasWebsite): ?>

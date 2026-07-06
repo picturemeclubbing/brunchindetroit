@@ -14087,15 +14087,6 @@ body:has(.premium-venue-page) {
     text-align: left;
 }
 
-.premium-venue-map {
-    min-height: 16rem;
-    display: grid;
-    place-items: center;
-    border-radius: 1rem;
-    background:
-        linear-gradient(rgba(20, 63, 61, 0.18), rgba(20, 63, 61, 0.28)),
-        url("https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&w=900&q=75") center / cover;
-}
 
 .premium-venue-footer {
     padding: 2.5rem 0;
@@ -15872,4 +15863,89 @@ body:has(.premium-venue-page) .site-footer {
         padding-left: 1.25rem !important;
         padding-right: 1.25rem !important;
     }
+}
+
+/* ==========================================================================
+   Phase 8U: Premium sections polish (Batch A3)
+   About two-column layout, menu preview fallback cards, event photo
+   placeholder. Namespaced under .premium-venue-* only.
+   ========================================================================== */
+
+.premium-venue-about__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    align-items: start;
+}
+
+@media (min-width: 900px) {
+    .premium-venue-about__grid {
+        grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+        gap: 2.75rem;
+    }
+
+    .premium-venue-about__copy {
+        padding-top: 0.25rem;
+    }
+}
+
+/* Keep the About photo collage at a clean 2-column grid regardless of
+   viewport width, since it now lives in a narrower column on desktop
+   rather than the full section width. */
+@media (min-width: 680px) {
+    .premium-venue-about__gallery .premium-venue-photo-row {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .premium-venue-about__gallery .premium-venue-photo-row__item:first-child {
+        grid-column: span 2;
+        grid-row: auto;
+        aspect-ratio: 2 / 1;
+    }
+}
+
+/* Menu preview text-only fallback cards, shown when a venue has fewer
+   than 3 published menu items with photos. */
+.premium-venue-menu-preview__card {
+    display: flex;
+    flex-direction: column;
+    align-self: start;
+    gap: 0.35rem;
+    padding: 1.1rem 1.15rem;
+    border: 1px solid rgba(231, 223, 210, 0.95);
+    border-radius: 0.9rem;
+    background: #ffffff;
+    box-shadow: 0 8px 20px rgba(20, 40, 38, 0.055);
+}
+
+.premium-venue-menu-preview__card-name {
+    color: var(--primary-dark);
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+    line-height: 1.2;
+}
+
+.premium-venue-menu-preview__card-price {
+    color: var(--accent);
+    font-size: 0.85rem;
+    font-weight: 800;
+}
+
+.premium-venue-menu-preview__card-desc {
+    margin: 0;
+    color: var(--muted);
+    font-size: 0.88rem;
+    line-height: 1.5;
+}
+
+/* Event photo placeholder, shown when a gallery has no cover image yet.
+   Replaces a previous hardcoded stock-photo fallback. */
+.premium-venue-event-card__image-placeholder {
+    display: grid;
+    place-items: center;
+    width: 100%;
+    height: 100%;
+    background: #efe7db;
+    color: var(--muted);
+    font-size: 1.5rem;
 }
