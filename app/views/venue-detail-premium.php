@@ -334,7 +334,10 @@ require APP_ROOT . '/views/partials/header.php';
                     class="btn premium-venue-hero__cta premium-venue-hero__cta--rsvp"
                     type="button"
                     data-rsvp-trigger
-                    data-rsvp-venue="<?= e((string) ($venue['name'] ?? 'venue')) ?>"
+                    data-rsvp-venue-slug="<?= e((string) ($venue['slug'] ?? '')) ?>"
+                    data-rsvp-venue-id="<?= (int) ($venue['id'] ?? 0) ?>"
+                    data-rsvp-venue-name="<?= e((string) ($venue['name'] ?? 'venue')) ?>"
+                    data-rsvp-source="premium_hero"
                 >
                     <i class="fas fa-calendar-check" aria-hidden="true"></i>
                     RSVP
@@ -393,6 +396,12 @@ require APP_ROOT . '/views/partials/header.php';
 
     <section class="premium-venue-section" id="premium-about">
         <div class="container">
+            <?php
+            $premiumAboutDisplayPhotos = array_slice($premiumPhotos, 0, 4);
+            $premiumAboutPhotoCount = count($premiumAboutDisplayPhotos);
+            $premiumAboutMainPhoto = $premiumAboutDisplayPhotos[0] ?? '';
+            $premiumAboutThumbPhotos = array_slice($premiumAboutDisplayPhotos, 1);
+            ?>
             <div class="premium-venue-about__grid">
                 <div class="premium-venue-about__copy">
                     <span class="premium-venue-section__eyebrow">The place</span>
@@ -406,20 +415,37 @@ require APP_ROOT . '/views/partials/header.php';
                     <?php endif; ?>
                 </div>
 
-                <div class="premium-venue-about__gallery">
-                    <div class="premium-venue-photo-row">
-                        <?php foreach (array_slice($premiumPhotos, 0, 5) as $photoIndex => $photoUrl): ?>
+                <?php if ($premiumAboutPhotoCount > 0): ?>
+                    <div class="premium-venue-about__gallery">
+                        <div class="premium-about-gallery" data-photo-count="<?= $premiumAboutPhotoCount ?>">
                             <button
                                 type="button"
-                                class="premium-venue-photo-row__item"
-                                data-photo-src="<?= e($photoUrl) ?>"
-                                data-photo-alt="<?= e((string) ($venue['name'] ?? 'Venue')) ?> photo <?= (int) $photoIndex + 1 ?>"
+                                class="premium-about-gallery__main"
+                                data-photo-src="<?= e($premiumAboutMainPhoto) ?>"
+                                data-photo-alt="<?= e((string) ($venue['name'] ?? 'Venue')) ?> photo 1"
+                                data-lightbox-trigger
                             >
-                                <img src="<?= e($photoUrl) ?>" alt="<?= e((string) ($venue['name'] ?? 'Venue')) ?> photo <?= (int) $photoIndex + 1 ?>" loading="lazy">
+                                <img src="<?= e($premiumAboutMainPhoto) ?>" alt="<?= e((string) ($venue['name'] ?? 'Venue')) ?> photo 1" loading="lazy">
                             </button>
-                        <?php endforeach; ?>
+
+                            <?php if ($premiumAboutThumbPhotos !== []): ?>
+                                <div class="premium-about-gallery__thumbs">
+                                    <?php foreach ($premiumAboutThumbPhotos as $photoIndex => $photoUrl): ?>
+                                        <button
+                                            type="button"
+                                            class="premium-about-gallery__thumb"
+                                            data-photo-src="<?= e($photoUrl) ?>"
+                                            data-photo-alt="<?= e((string) ($venue['name'] ?? 'Venue')) ?> photo <?= (int) $photoIndex + 2 ?>"
+                                            data-lightbox-trigger
+                                        >
+                                            <img src="<?= e($photoUrl) ?>" alt="<?= e((string) ($venue['name'] ?? 'Venue')) ?> photo <?= (int) $photoIndex + 2 ?>" loading="lazy">
+                                        </button>
+                                    <?php endforeach; ?>
+                                </div>
+                            <?php endif; ?>
+                        </div>
                     </div>
-                </div>
+                <?php endif; ?>
             </div>
         </div>
     </section>
@@ -635,7 +661,7 @@ require APP_ROOT . '/views/partials/header.php';
                     <p>Reserve a table, get directions, or call ahead to confirm your plans.</p>
                 </div>
                 <div class="premium-venue-cta__actions">
-                    <button class="btn btn--accent" type="button" data-rsvp-trigger data-rsvp-venue="<?= e((string) ($venue['name'] ?? 'venue')) ?>">
+                    <button class="btn btn--accent" type="button" data-rsvp-trigger data-rsvp-venue-slug="<?= e((string) ($venue['slug'] ?? '')) ?>" data-rsvp-venue-id="<?= (int) ($venue['id'] ?? 0) ?>" data-rsvp-venue-name="<?= e((string) ($venue['name'] ?? 'venue')) ?>" data-rsvp-source="premium_footer_cta">
                         <i class="fas fa-calendar-check" aria-hidden="true"></i>
                         RSVP
                     </button>
@@ -667,7 +693,10 @@ require APP_ROOT . '/views/partials/header.php';
             class="btn btn--accent premium-venue-mobile-bar__rsvp"
             type="button"
             data-rsvp-trigger
-            data-rsvp-venue="<?= e((string) ($venue['name'] ?? 'venue')) ?>"
+            data-rsvp-venue-slug="<?= e((string) ($venue['slug'] ?? '')) ?>"
+            data-rsvp-venue-id="<?= (int) ($venue['id'] ?? 0) ?>"
+            data-rsvp-venue-name="<?= e((string) ($venue['name'] ?? 'venue')) ?>"
+            data-rsvp-source="premium_mobile_bar"
         >
             <i class="fas fa-calendar-check" aria-hidden="true"></i>
             RSVP
@@ -696,4 +725,5 @@ require APP_ROOT . '/views/partials/header.php';
     </div>
 </div>
 
+<script src="<?= e(asset_url('assets/js/venue-lightbox.js')) ?>"></script>
 <?php require APP_ROOT . '/views/partials/footer.php'; ?>

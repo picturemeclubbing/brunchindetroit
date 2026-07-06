@@ -259,6 +259,32 @@ final class Venue
     }
 
     /**
+     * Structured brunch hours for a venue, one row per open day
+     * (hour_type = 'brunch'), used to validate RSVP requested date/time.
+     *
+     * Returns an empty array if the venue has no rows in venue_hours yet
+     * (the table exists in the schema but nothing currently writes to it —
+     * there is no admin UI for it). Callers must treat an empty result as
+     * "unknown / not yet configured", not as "closed every day".
+     *
+     * @return array<int, array{day_of_week: int, open_time: ?string, close_time: ?string, is_closed: int}>
+     */
+    public static function brunchHoursForVenue(int $venueId): array
+    {
+        $pdo = db();
+
+        $stmt = $pdo->prepare("
+            SELECT day_of_week, open_time, close_time, is_closed
+            FROM venue_hours
+            WHERE venue_id = :venue_id AND hour_type = 'brunch'
+            ORDER BY day_of_week ASC
+        ");
+        $stmt->execute([':venue_id' => $venueId]);
+
+        return $stmt->fetchAll();
+    }
+
+    /**
      * Whether a slug is already in use by another venue.
      *
      * Pass the current record id (when editing) as $ignoreId so the venue

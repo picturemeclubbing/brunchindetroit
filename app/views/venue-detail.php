@@ -289,7 +289,10 @@ require APP_ROOT . '/views/partials/header.php';
                                 class="btn btn--outline-light venue-profile-rsvp-button"
                                 type="button"
                                 data-rsvp-trigger
-                                data-rsvp-venue="<?= e((string) ($venue['name'] ?? 'venue')) ?>"
+                                data-rsvp-venue-slug="<?= e((string) ($venue['slug'] ?? '')) ?>"
+                                data-rsvp-venue-id="<?= (int) ($venue['id'] ?? 0) ?>"
+                                data-rsvp-venue-name="<?= e((string) ($venue['name'] ?? 'venue')) ?>"
+                                data-rsvp-source="free_profile_hero"
                                 aria-label="RSVP for <?= e((string) ($venue['name'] ?? 'venue')) ?>"
                             >
                                 <i class="fas fa-calendar-check" aria-hidden="true"></i>
@@ -510,11 +513,6 @@ require APP_ROOT . '/views/partials/header.php';
                                         >
                                     </button>
                                 </div>
-
-                                <p class="venue-profile-gallery__note">
-                                    <i class="fas fa-circle-info" aria-hidden="true"></i>
-                                    Interior photos show the look and feel of this venue.
-                                </p>
 
                                 <div class="venue-photo-lightbox" aria-hidden="true" role="dialog" aria-label="Expanded venue photo">
                                     <button type="button" class="venue-photo-lightbox__close" aria-label="Close expanded photo">

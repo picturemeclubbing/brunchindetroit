@@ -15949,3 +15949,817 @@ body:has(.premium-venue-page) .site-footer {
     color: var(--muted);
     font-size: 1.5rem;
 }
+
+/* ==========================================================================
+   Batch B2: RSVP modal + admin RSVP inbox
+   ========================================================================== */
+body.rsvp-modal-open { overflow: hidden; }
+.rsvp-modal[hidden] { display: none !important; }
+.rsvp-modal { position: fixed; inset: 0; z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 1rem; }
+.rsvp-modal__backdrop { position: absolute; inset: 0; background: rgba(15, 23, 42, 0.68); backdrop-filter: blur(4px); }
+.rsvp-modal__panel { position: relative; z-index: 1; width: min(100%, 42rem); max-height: min(92vh, 52rem); overflow: auto; background: #fffefc; border-radius: 1.25rem; box-shadow: 0 24px 70px rgba(15, 23, 42, 0.28); border: 1px solid rgba(231, 223, 210, 0.95); }
+.rsvp-modal__header { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; padding: 1.35rem 1.5rem 1rem; border-bottom: 1px solid rgba(231, 223, 210, 0.9); }
+.rsvp-modal__title { margin: 0; color: var(--primary-dark); font-family: var(--font-display); font-size: clamp(1.35rem, 3vw, 1.8rem); line-height: 1.15; }
+.rsvp-modal__subtitle { margin: 0.35rem 0 0; color: var(--muted); line-height: 1.5; }
+.rsvp-modal__close { flex: 0 0 auto; width: 2.4rem; height: 2.4rem; display: inline-flex; align-items: center; justify-content: center; border-radius: 999px; border: 1px solid rgba(231, 223, 210, 0.95); background: #fcfaf6; color: var(--primary-dark); cursor: pointer; }
+.rsvp-modal__body { padding: 1.5rem; }
+.rsvp-modal__alert { display: flex; align-items: flex-start; gap: 0.55rem; margin-bottom: 1rem; padding: 0.8rem 0.95rem; border-radius: 0.8rem; font-weight: 700; line-height: 1.45; }
+.rsvp-modal__alert[hidden] { display: none !important; }
+.rsvp-modal__alert--success { background: rgba(44, 122, 123, 0.1); color: var(--primary-dark); border: 1px solid rgba(44, 122, 123, 0.22); }
+.rsvp-modal__alert--danger { background: rgba(220, 38, 38, 0.08); color: #991b1b; border: 1px solid rgba(220, 38, 38, 0.18); }
+.rsvp-modal__grid { display: grid; grid-template-columns: 1fr; gap: 1rem; }
+@media (min-width: 700px) { .rsvp-modal__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.rsvp-modal__field, .rsvp-modal__field--full { min-width: 0; }
+.rsvp-modal__field--full { grid-column: 1 / -1; }
+.rsvp-modal__req, .rsvp-modal__field-error, .rsvp-modal__hint { color: #b42318; }
+.rsvp-modal__field-error, .rsvp-modal__hint { display: block; min-height: 1.1rem; margin-top: 0.25rem; font-size: 0.82rem; font-weight: 700; line-height: 1.35; }
+.rsvp-modal__honeypot { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
+.rsvp-modal__actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 0.75rem; margin-top: 1.35rem; }
+@media (max-width: 520px) { .rsvp-modal { align-items: flex-end; padding: 0; } .rsvp-modal__panel { width: 100%; max-height: 94vh; border-radius: 1.25rem 1.25rem 0 0; } .rsvp-modal__header, .rsvp-modal__body { padding-left: 1rem; padding-right: 1rem; } .rsvp-modal__actions .btn { flex: 1 1 100%; justify-content: center; } }
+.admin-rsvp-panel { margin-top: 1rem; }
+.admin-rsvp-contact-cell { display: flex; flex-direction: column; gap: 0.25rem; }
+.admin-rsvp-notes-cell { max-width: 18rem; }
+.admin-rsvp-notes-cell .admin-table__muted { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.admin-rsvp-status-cell form { margin: 0; }
+.admin-rsvp-status-select { min-width: 8.5rem; padding: 0.45rem 0.65rem; border-radius: 0.65rem; border: 1px solid rgba(100, 116, 139, 0.24); background: #fff; font-weight: 800; }
+.admin-rsvp-status-select--new { color: #92400e; background: rgba(251, 191, 36, 0.14); }
+.admin-rsvp-status-select--contacted { color: #1d4ed8; background: rgba(59, 130, 246, 0.1); }
+.admin-rsvp-status-select--confirmed { color: var(--primary-dark); background: rgba(44, 122, 123, 0.1); }
+.admin-rsvp-status-select--cancelled { color: #991b1b; background: rgba(220, 38, 38, 0.08); }
+
+/* ==========================================================================
+   Batch B2 repair: RSVP pickers, premium about gallery resilience, lightbox
+   ========================================================================== */
+
+#premium-about > .container {
+    display: block !important;
+}
+
+#premium-about .premium-venue-about__grid {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+    gap: clamp(2rem, 5vw, 4rem) !important;
+    align-items: start !important;
+}
+
+#premium-about .premium-venue-about__copy {
+    max-width: 42rem !important;
+    width: 100% !important;
+}
+
+#premium-about .premium-venue-about__gallery {
+    width: 100% !important;
+    max-width: 100% !important;
+}
+
+#premium-about .premium-venue-photo-row {
+    display: grid !important;
+    gap: 0.8rem !important;
+}
+
+#premium-about .premium-venue-about__gallery--single .premium-venue-photo-row {
+    grid-template-columns: 1fr !important;
+}
+
+#premium-about .premium-venue-about__gallery--single .premium-venue-photo-row__item {
+    aspect-ratio: 16 / 10 !important;
+}
+
+#premium-about .premium-venue-about__gallery--pair .premium-venue-photo-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+}
+
+#premium-about .premium-venue-about__gallery--pair .premium-venue-photo-row__item {
+    aspect-ratio: 1 / 1 !important;
+}
+
+#premium-about .premium-venue-about__gallery--collage .premium-venue-photo-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+}
+
+#premium-about .premium-venue-about__gallery--collage .premium-venue-photo-row__item:first-child {
+    grid-column: span 2 !important;
+    aspect-ratio: 16 / 8 !important;
+}
+
+#premium-about .premium-venue-photo-row__item {
+    cursor: zoom-in;
+    border: 0;
+    padding: 0;
+    overflow: hidden;
+    border-radius: 1rem;
+    background: transparent;
+}
+
+#premium-about .premium-venue-photo-row__item img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.rsvp-datepicker,
+.rsvp-timepicker {
+    position: relative;
+}
+
+.rsvp-datepicker__input,
+.rsvp-timepicker__input {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    text-align: left;
+    cursor: pointer;
+}
+
+.rsvp-datepicker__panel,
+.rsvp-timepicker__panel {
+    position: absolute;
+    z-index: 10050;
+    top: calc(100% + 0.4rem);
+    left: 0;
+    width: min(20rem, 92vw);
+    max-height: 22rem;
+    overflow: auto;
+    padding: 0.85rem;
+    border: 1px solid rgba(20, 40, 38, 0.14);
+    border-radius: 1rem;
+    background: #fff;
+    box-shadow: 0 18px 50px rgba(20, 40, 38, 0.2);
+}
+
+.rsvp-datepicker__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+    font-weight: 800;
+}
+
+.rsvp-datepicker__nav {
+    display: inline-grid;
+    place-items: center;
+    width: 2rem;
+    height: 2rem;
+    border: 1px solid rgba(20, 40, 38, 0.12);
+    border-radius: 999px;
+    background: #fcfaf6;
+    cursor: pointer;
+}
+
+.rsvp-datepicker__weekdays,
+.rsvp-datepicker__days {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 0.25rem;
+}
+
+.rsvp-datepicker__weekdays {
+    margin-bottom: 0.35rem;
+    color: var(--muted);
+    font-size: 0.72rem;
+    font-weight: 800;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+.rsvp-datepicker__day,
+.rsvp-timepicker__option {
+    border: 1px solid transparent;
+    border-radius: 0.65rem;
+    background: transparent;
+    color: var(--primary-dark);
+    cursor: pointer;
+    font-weight: 700;
+}
+
+.rsvp-datepicker__day {
+    min-height: 2.15rem;
+}
+
+.rsvp-timepicker__option {
+    display: block;
+    width: 100%;
+    padding: 0.7rem 0.85rem;
+    text-align: left;
+}
+
+.rsvp-datepicker__day:hover,
+.rsvp-timepicker__option:hover,
+.rsvp-datepicker__day.is-selected,
+.rsvp-timepicker__option.is-selected {
+    border-color: rgba(43, 157, 153, 0.35);
+    background: rgba(43, 157, 153, 0.12);
+}
+
+.rsvp-datepicker__day[disabled] {
+    opacity: 0.35;
+    cursor: not-allowed;
+}
+
+.premium-lightbox {
+    position: fixed;
+    z-index: 10080;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    padding: clamp(1rem, 3vw, 2rem);
+    background: rgba(6, 15, 14, 0.88);
+}
+
+.premium-lightbox[hidden] {
+    display: none;
+}
+
+.premium-lightbox__figure {
+    max-width: min(92vw, 72rem);
+    max-height: 88vh;
+    margin: 0;
+}
+
+.premium-lightbox__figure img {
+    display: block;
+    max-width: 100%;
+    max-height: 78vh;
+    border-radius: 1rem;
+    object-fit: contain;
+    box-shadow: 0 24px 70px rgba(0, 0, 0, 0.45);
+}
+
+.premium-lightbox__caption {
+    margin-top: 0.75rem;
+    color: #fff;
+    text-align: center;
+}
+
+.premium-lightbox__close {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    display: inline-grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.12);
+    color: #fff;
+    cursor: pointer;
+}
+
+@media (max-width: 860px) {
+    #premium-about .premium-venue-about__grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    #premium-about .premium-venue-about__gallery--pair .premium-venue-photo-row,
+    #premium-about .premium-venue-about__gallery--collage .premium-venue-photo-row {
+        grid-template-columns: 1fr !important;
+    }
+
+    #premium-about .premium-venue-about__gallery--collage .premium-venue-photo-row__item:first-child {
+        grid-column: auto !important;
+        aspect-ratio: 16 / 10 !important;
+    }
+}
+
+/* ==========================================================================
+   B2 repair pass 2: RSVP confirmation view
+   Replaces the form on success instead of showing form + success message
+   together. Namespaced under .rsvp-modal-*.
+   ========================================================================== */
+
+.rsvp-modal__confirmation {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 0.75rem;
+    padding: 2.25rem 1rem 1.5rem;
+}
+
+.rsvp-modal__confirmation[hidden] {
+    display: none;
+}
+
+.rsvp-modal__confirmation i {
+    font-size: 2.25rem;
+    color: var(--primary-dark);
+}
+
+.rsvp-modal__confirmation p {
+    margin: 0;
+    font-size: 1.05rem;
+    color: var(--text);
+}
+
+form#rsvpForm[hidden] {
+    display: none;
+}
+
+/* ==========================================================================
+   B2 repair pass 2: Premium About image area - compact, fixed heights
+   Previous pass fixed the horizontal squeeze but left height driven by
+   aspect-ratio on a wide column, making the image area too tall. Switch to
+   explicit, compact pixel/rem heights (not width-driven aspect-ratio) so the
+   image side can never control the section's overall height. Also clears
+   leftover legacy min-height rules from earlier "Phase 8" patches.
+   Namespaced under .premium-venue-about__gallery--*.
+   ========================================================================== */
+
+.premium-venue-about__gallery {
+    align-self: start;
+}
+
+.premium-venue-about__gallery .premium-venue-photo-row,
+.premium-venue-about__gallery .premium-venue-photo-row__item,
+.premium-venue-about__gallery .premium-venue-photo-row__item:first-child {
+    min-height: 0 !important;
+}
+
+/* 1 image: one compact feature image, not a full-height collage box. */
+.premium-venue-about__gallery--single .premium-venue-photo-row {
+    grid-template-columns: 1fr !important;
+}
+
+.premium-venue-about__gallery--single .premium-venue-photo-row__item:first-child {
+    grid-column: 1 !important;
+    aspect-ratio: auto !important;
+    height: 13rem !important;
+}
+
+/* 2 images: compact side-by-side pair. */
+.premium-venue-about__gallery--pair .premium-venue-photo-row {
+    grid-template-columns: repeat(2, 1fr) !important;
+}
+
+.premium-venue-about__gallery--pair .premium-venue-photo-row__item,
+.premium-venue-about__gallery--pair .premium-venue-photo-row__item:first-child {
+    grid-column: span 1 !important;
+    aspect-ratio: auto !important;
+    height: 9rem !important;
+}
+
+/* 3+ images: one compact main image with a row of small thumbnails below,
+   instead of a tall multi-row collage. */
+.premium-venue-about__gallery--collage .premium-venue-photo-row {
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 0.5rem !important;
+}
+
+.premium-venue-about__gallery--collage .premium-venue-photo-row__item:first-child {
+    grid-column: 1 / -1 !important;
+    grid-row: auto !important;
+    aspect-ratio: auto !important;
+    height: 9rem !important;
+}
+
+.premium-venue-about__gallery--collage .premium-venue-photo-row__item:not(:first-child) {
+    aspect-ratio: auto !important;
+    height: 4.5rem !important;
+}
+
+@media (max-width: 860px) {
+    .premium-venue-about__gallery--single .premium-venue-photo-row__item:first-child,
+    .premium-venue-about__gallery--pair .premium-venue-photo-row__item,
+    .premium-venue-about__gallery--collage .premium-venue-photo-row__item:first-child {
+        height: 11rem !important;
+    }
+}
+/* ==========================================================================
+   B2 final polish: Premium About square responsive thumbnails
+   Keeps thumbnails compact, square, and responsive so they do not stretch the
+   About row height. Namespaced under premium About gallery classes only.
+   ========================================================================== */
+
+.premium-venue-about__gallery .premium-venue-photo-row {
+    align-items: start !important;
+}
+
+.premium-venue-about__gallery .premium-venue-photo-row__item {
+    overflow: hidden !important;
+}
+
+.premium-venue-about__gallery .premium-venue-photo-row__item img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+}
+
+/* 1 image: one compact feature image. */
+.premium-venue-about__gallery--single .premium-venue-photo-row__item:first-child {
+    aspect-ratio: 16 / 10 !important;
+    height: auto !important;
+    max-height: 18rem !important;
+}
+
+/* 2 images: two equal square thumbnails. */
+.premium-venue-about__gallery--pair .premium-venue-photo-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+}
+
+.premium-venue-about__gallery--pair .premium-venue-photo-row__item,
+.premium-venue-about__gallery--pair .premium-venue-photo-row__item:first-child {
+    aspect-ratio: 1 / 1 !important;
+    height: auto !important;
+    max-height: 11rem !important;
+}
+
+/* 3+ images: compact main image with square thumbs under it. */
+.premium-venue-about__gallery--collage .premium-venue-photo-row {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 0.55rem !important;
+}
+
+.premium-venue-about__gallery--collage .premium-venue-photo-row__item:first-child {
+    grid-column: 1 / -1 !important;
+    aspect-ratio: 16 / 9 !important;
+    height: auto !important;
+    max-height: 15rem !important;
+}
+
+.premium-venue-about__gallery--collage .premium-venue-photo-row__item:not(:first-child) {
+    aspect-ratio: 1 / 1 !important;
+    height: auto !important;
+    max-height: 7.5rem !important;
+}
+
+@media (max-width: 860px) {
+    .premium-venue-about__gallery--single .premium-venue-photo-row__item:first-child {
+        max-height: none !important;
+    }
+
+    .premium-venue-about__gallery--pair .premium-venue-photo-row__item,
+    .premium-venue-about__gallery--pair .premium-venue-photo-row__item:first-child,
+    .premium-venue-about__gallery--collage .premium-venue-photo-row__item:not(:first-child) {
+        max-height: none !important;
+    }
+
+    .premium-venue-about__gallery--collage .premium-venue-photo-row__item:first-child {
+        max-height: 13rem !important;
+    }
+}
+/* ==========================================================================
+   B2 final polish 2: fixed premium About grid cells
+   Keeps the image dimensions from determining the gallery grid shape.
+   Main image and thumbnail cells are controlled by CSS; images fill cells
+   with object-fit: cover. Scoped to premium About only.
+   ========================================================================== */
+
+.premium-venue-about__gallery {
+    width: 100% !important;
+    max-width: 34rem !important;
+    align-self: start !important;
+}
+
+.premium-venue-about__gallery .premium-venue-photo-row {
+    display: grid !important;
+    gap: 0.75rem !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    align-items: start !important;
+    justify-content: stretch !important;
+}
+
+.premium-venue-about__gallery .premium-venue-photo-row__item,
+.premium-venue-about__gallery .premium-venue-photo-row__item:first-child,
+.premium-venue-about__gallery .premium-venue-photo-row__item:not(:first-child) {
+    width: 100% !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
+    height: auto !important;
+    max-height: none !important;
+    overflow: hidden !important;
+    border-radius: 1rem !important;
+}
+
+.premium-venue-about__gallery .premium-venue-photo-row__item img {
+    display: block !important;
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+}
+
+/* 1 image: one controlled feature cell. */
+.premium-venue-about__gallery--single .premium-venue-photo-row {
+    grid-template-columns: 1fr !important;
+}
+
+.premium-venue-about__gallery--single .premium-venue-photo-row__item:first-child {
+    grid-column: auto !important;
+    grid-row: auto !important;
+    aspect-ratio: 16 / 9 !important;
+}
+
+/* 2 images: two equal square cells. */
+.premium-venue-about__gallery--pair .premium-venue-photo-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+}
+
+.premium-venue-about__gallery--pair .premium-venue-photo-row__item,
+.premium-venue-about__gallery--pair .premium-venue-photo-row__item:first-child {
+    grid-column: auto !important;
+    grid-row: auto !important;
+    aspect-ratio: 1 / 1 !important;
+}
+
+/* 3+ images: fixed feature row plus square thumbs below. */
+.premium-venue-about__gallery--collage .premium-venue-photo-row {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+}
+
+.premium-venue-about__gallery--collage .premium-venue-photo-row__item:first-child {
+    grid-column: 1 / -1 !important;
+    grid-row: auto !important;
+    aspect-ratio: 16 / 7 !important;
+}
+
+.premium-venue-about__gallery--collage .premium-venue-photo-row__item:not(:first-child) {
+    grid-column: auto !important;
+    grid-row: auto !important;
+    aspect-ratio: 1 / 1 !important;
+}
+
+/* Keep the text/image row balanced so the gallery does not dominate. */
+@media (min-width: 900px) {
+    .premium-venue-about__grid {
+        grid-template-columns: minmax(0, 1.05fr) minmax(18rem, 0.95fr) !important;
+        align-items: start !important;
+    }
+}
+
+@media (max-width: 620px) {
+    .premium-venue-about__gallery {
+        max-width: 100% !important;
+    }
+
+    .premium-venue-about__gallery--collage .premium-venue-photo-row {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    }
+
+    .premium-venue-about__gallery--collage .premium-venue-photo-row__item:first-child {
+        grid-column: 1 / -1 !important;
+        aspect-ratio: 16 / 9 !important;
+    }
+}
+/* ==========================================================================
+   B2 final override: compact premium About thumbnail grid
+   The gallery is a fixed thumbnail grid. Images fill square cells and cannot
+   stretch the row/section based on their natural dimensions.
+   ========================================================================== */
+
+.premium-venue-about__grid {
+    align-items: start !important;
+}
+
+.premium-venue-about__copy {
+    max-width: 44rem !important;
+}
+
+.premium-venue-about__gallery {
+    align-self: start !important;
+    justify-self: end !important;
+    width: min(100%, 37rem) !important;
+}
+
+.premium-venue-about__gallery .premium-venue-photo-row {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(7.5rem, 9rem)) !important;
+    grid-auto-rows: auto !important;
+    justify-content: end !important;
+    align-items: start !important;
+    gap: 0.75rem !important;
+    width: 100% !important;
+    max-width: 37rem !important;
+}
+
+.premium-venue-about__gallery .premium-venue-photo-row__item,
+.premium-venue-about__gallery .premium-venue-photo-row__item:first-child,
+.premium-venue-about__gallery--single .premium-venue-photo-row__item:first-child,
+.premium-venue-about__gallery--pair .premium-venue-photo-row__item,
+.premium-venue-about__gallery--pair .premium-venue-photo-row__item:first-child,
+.premium-venue-about__gallery--collage .premium-venue-photo-row__item:first-child,
+.premium-venue-about__gallery--collage .premium-venue-photo-row__item:not(:first-child) {
+    grid-column: auto !important;
+    grid-row: auto !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    aspect-ratio: 1 / 1 !important;
+    border-radius: 0.9rem !important;
+    overflow: hidden !important;
+}
+
+.premium-venue-about__gallery .premium-venue-photo-row__item img,
+.premium-venue-about__gallery .premium-venue-photo-row__item picture,
+.premium-venue-about__gallery .premium-venue-photo-row__item button {
+    width: 100% !important;
+    height: 100% !important;
+    display: block !important;
+}
+
+.premium-venue-about__gallery .premium-venue-photo-row__item img {
+    object-fit: cover !important;
+}
+
+@media (max-width: 980px) {
+    .premium-venue-about__gallery {
+        justify-self: start !important;
+        width: 100% !important;
+    }
+
+    .premium-venue-about__gallery .premium-venue-photo-row {
+        justify-content: start !important;
+        grid-template-columns: repeat(auto-fit, minmax(7rem, 8.5rem)) !important;
+    }
+}
+
+@media (max-width: 560px) {
+    .premium-venue-about__gallery .premium-venue-photo-row {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    }
+}
+
+/* BEGIN B2 replacement: Premium About gallery normal-profile pattern */
+/* ==========================================================================
+   Premium About gallery — consolidated (single source of truth)
+   Replaces every earlier Premium About gallery CSS block. Modeled on the
+   free profile's .venue-gallery-grid pattern (app/views/venue-detail.php +
+   the ".venue-gallery-grid*" rules in this file): one large lead image plus
+   small square thumbnails, object-fit: cover throughout so natural image
+   dimensions never drive layout.
+   Difference from the free-profile version: the Premium About gallery lives
+   in a narrower half-width column (see ".premium-venue-about__grid" above),
+   so the main image sits above a row of thumbnails rather than beside them,
+   and everything uses fixed/capped heights so it can never stretch the
+   section — a fixed-size main image plus small square thumbs, not a
+   width-driven aspect-ratio box.
+   Namespaced entirely under .premium-about-gallery*; does not touch
+   .venue-gallery-grid* (free profile) or any directory class.
+   ========================================================================== */
+
+.premium-venue-about__gallery {
+    align-self: start;
+}
+
+.premium-about-gallery {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.6rem;
+    max-height: 20rem;
+}
+
+.premium-about-gallery__main {
+    display: block;
+    width: 100%;
+    height: 13rem;
+    padding: 0;
+    border: 0;
+    border-radius: 0.75rem;
+    overflow: hidden;
+    background: #efe7db;
+    cursor: pointer;
+}
+
+.premium-about-gallery__main img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    transition: transform 0.2s ease;
+}
+
+.premium-about-gallery__main:hover img {
+    transform: scale(1.03);
+}
+
+/* Square thumbnails, fixed width — deliberately NOT auto-fit/1fr, so a
+   single leftover thumbnail (e.g. the 2-image case) cannot stretch to fill
+   the row and grow tall. Unused row space just stays empty, which is normal
+   for a compact thumbnail strip. */
+.premium-about-gallery__thumbs {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 4.5rem);
+    gap: 0.5rem;
+}
+
+.premium-about-gallery__thumb {
+    display: block;
+    width: 4.5rem;
+    aspect-ratio: 1 / 1;
+    padding: 0;
+    border: 0;
+    border-radius: 0.55rem;
+    overflow: hidden;
+    background: #efe7db;
+    cursor: pointer;
+}
+
+.premium-about-gallery__thumb img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    transition: transform 0.2s ease;
+}
+
+.premium-about-gallery__thumb:hover img {
+    transform: scale(1.05);
+}
+
+/* Mobile: swipeable horizontal strip instead of a vertical stack, so
+   thumbnails never pile up and add height to the About section. */
+@media (max-width: 640px) {
+    .premium-about-gallery {
+        max-height: none;
+    }
+
+    .premium-about-gallery__main {
+        height: 11rem;
+    }
+
+    .premium-about-gallery__thumbs {
+        display: flex;
+        grid-template-columns: none;
+        overflow-x: auto;
+        gap: 0.5rem;
+        padding-bottom: 0.25rem;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .premium-about-gallery__thumb {
+        flex: 0 0 4.5rem;
+        width: 4.5rem;
+        scroll-snap-align: start;
+    }
+}
+/* END B2 replacement: Premium About gallery normal-profile pattern */
+
+/* ==========================================================================
+   B2 final mobile premium about gallery slider
+   Mobile follows the normal profile behavior: a horizontal slide strip.
+   Desktop stays as the compact main image + square thumbnails pattern.
+   ========================================================================== */
+
+@media (max-width: 700px) {
+    #premium-about .premium-venue-about__grid {
+        grid-template-columns: 1fr !important;
+        gap: 1.5rem !important;
+    }
+
+    #premium-about .premium-about-gallery {
+        width: 100% !important;
+        max-width: 100% !important;
+        overflow: hidden !important;
+    }
+
+    #premium-about .premium-about-gallery__main {
+        display: none !important;
+    }
+
+    #premium-about .premium-about-gallery__thumbs {
+        display: grid !important;
+        grid-auto-flow: column !important;
+        grid-auto-columns: minmax(78%, 1fr) !important;
+        grid-template-columns: none !important;
+        gap: 0.9rem !important;
+        overflow-x: auto !important;
+        overflow-y: hidden !important;
+        scroll-snap-type: x mandatory !important;
+        -webkit-overflow-scrolling: touch !important;
+        padding: 0 1rem 0.4rem 0 !important;
+        scrollbar-width: thin;
+    }
+
+    #premium-about .premium-about-gallery__main + .premium-about-gallery__thumbs {
+        margin-top: 0 !important;
+    }
+
+    #premium-about .premium-about-gallery__thumb {
+        width: 100% !important;
+        height: auto !important;
+        aspect-ratio: 1 / 1 !important;
+        scroll-snap-align: start !important;
+        flex: 0 0 auto !important;
+        overflow: hidden !important;
+    }
+
+    #premium-about .premium-about-gallery__thumb img,
+    #premium-about .premium-about-gallery__main img {
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: cover !important;
+        display: block !important;
+    }
+}
+
+@media (min-width: 701px) {
+    #premium-about .premium-about-gallery__thumbs {
+        overflow: visible !important;
+    }
+}

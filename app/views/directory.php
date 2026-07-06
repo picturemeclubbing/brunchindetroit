@@ -430,7 +430,10 @@ if ($cardDescription === '') {
                                             class="directory-venue-card__action directory-venue-card__action--rsvp"
                                             type="button"
                                             data-rsvp-trigger
-                                            data-rsvp-venue="<?= e((string) ($venue['name'] ?? 'venue')) ?>"
+                                            data-rsvp-venue-slug="<?= e((string) ($venue['slug'] ?? '')) ?>"
+                                            data-rsvp-venue-id="<?= (int) ($venue['id'] ?? 0) ?>"
+                                            data-rsvp-venue-name="<?= e((string) ($venue['name'] ?? 'venue')) ?>"
+                                            data-rsvp-source="directory_card"
                                             aria-label="RSVP for <?= e((string) ($venue['name'] ?? 'venue')) ?>"
                                         >
                                             <i class="fas fa-calendar-check" aria-hidden="true"></i>

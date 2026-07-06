@@ -64,6 +64,11 @@ if ($footerClass !== '') {
         </div>
     </div>
 </footer>
+
+<?php require APP_ROOT . '/views/partials/rsvp-modal.php'; ?>
+
 <script src="<?= e(asset_url('assets/js/main.js')) ?>"></script>
+<script src="<?= e(asset_url('assets/js/rsvp.js')) ?>"></script>
+<script src="<?= e(asset_url('assets/js/premium-lightbox.js')) ?>"></script>
 </body>
 </html>
