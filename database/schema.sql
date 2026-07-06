@@ -308,6 +308,34 @@ CREATE TABLE IF NOT EXISTS gallery_images (
     ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- ---------------------------------------------------------------------------
+-- Venue RSVPs (Batch B1: backend foundation only; no public UI wiring yet)
+-- ---------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS venue_rsvps (
+  id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  venue_id INT UNSIGNED NOT NULL,
+  name VARCHAR(150) NOT NULL,
+  phone VARCHAR(30) NULL,
+  email VARCHAR(190) NULL,
+  party_size SMALLINT UNSIGNED NULL,
+  requested_date DATE NULL,
+  requested_time TIME NULL,
+  notes TEXT NULL,
+  status ENUM('new','contacted','confirmed','cancelled') NOT NULL DEFAULT 'new',
+  source_context VARCHAR(100) NULL,
+  ip_address VARCHAR(45) NULL,
+  user_agent VARCHAR(255) NULL,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  KEY idx_venue_rsvps_venue (venue_id),
+  KEY idx_venue_rsvps_status (status),
+  KEY idx_venue_rsvps_requested_date (requested_date),
+  KEY idx_venue_rsvps_created_at (created_at),
+  CONSTRAINT fk_venue_rsvps_venue
+    FOREIGN KEY (venue_id) REFERENCES venues (id)
+    ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 SET FOREIGN_KEY_CHECKS = 1;
 
 -- ---------------------------------------------------------------------------
