@@ -135,4 +135,10 @@ $recentVenueGalleries = Gallery::recentForVenueList((int) $venue['id'], 3);
 $nearbyVenues = Venue::nearbyForVenue((int) $venue['id'], 3);
 
 $pageTitle = $venue['name'];
+
+if ((string) ($venue['profile_tier'] ?? 'free') === 'premium') {
+    require APP_ROOT . '/views/venue-detail-premium.php';
+    return;
+}
+
 require APP_ROOT . '/views/venue-detail.php';

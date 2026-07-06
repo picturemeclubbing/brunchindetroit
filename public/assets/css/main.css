@@ -13687,3 +13687,2190 @@ body .venue-profile-nearby__note i {
         max-width: 88% !important;
     }
 }
+
+/* ==========================================================================
+   Phase 8C: Premium website-mode venue profile
+   Premium tier profile layout inspired by the approved website-mode mockup.
+   ========================================================================== */
+
+body:has(.premium-venue-page) {
+    padding-bottom: 74px;
+}
+
+.premium-venue-page {
+    background: var(--background);
+    color: var(--text);
+}
+
+.premium-venue-bar {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+}
+
+.premium-venue-bar__inner {
+    min-height: 46px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    font-size: 0.84rem;
+}
+
+.premium-venue-bar__back {
+    color: var(--primary);
+    font-weight: 800;
+}
+
+.premium-venue-bar__mark {
+    font-family: var(--font-display);
+    font-weight: 800;
+    color: var(--text);
+}
+
+.premium-venue-bar__mark span {
+    color: var(--primary);
+}
+
+.premium-venue-hero {
+    position: relative;
+    min-height: clamp(22rem, 52vh, 30rem);
+    display: flex;
+    align-items: flex-end;
+    color: #fff;
+    background-position: center;
+    background-size: cover;
+    overflow: hidden;
+}
+
+.premium-venue-hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+        linear-gradient(
+            180deg,
+            rgba(20, 63, 61, 0.12) 0%,
+            rgba(20, 63, 61, 0.46) 42%,
+            rgba(21, 32, 30, 0.94) 100%
+        );
+}
+
+.premium-venue-hero__inner {
+    position: relative;
+    z-index: 1;
+    padding-top: 2.4rem;
+    padding-bottom: 2.25rem;
+}
+
+.premium-venue-hero__badge {
+    display: inline-flex;
+    margin-bottom: 0.8rem;
+    padding: 0.32rem 0.68rem;
+    border-radius: 0.45rem;
+    background: var(--accent);
+    color: #231a00;
+    font-size: 0.7rem;
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.premium-venue-hero__eyebrow {
+    margin: 0 0 0.45rem;
+    color: #e7c887;
+    font-size: 0.78rem;
+    font-weight: 900;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+}
+
+.premium-venue-hero__title {
+    max-width: 12ch;
+    margin: 0 0 0.45rem;
+    color: #fff;
+    font-family: var(--font-display);
+    font-size: clamp(2.5rem, 7vw, 4.65rem);
+    line-height: 0.98;
+    text-shadow: 0 2px 24px rgba(0, 0, 0, 0.4);
+}
+
+.premium-venue-hero__tagline {
+    max-width: 42rem;
+    margin: 0 0 1.1rem;
+    color: #efe9dd;
+    font-size: clamp(1rem, 2.4vw, 1.25rem);
+    line-height: 1.55;
+    text-shadow: 0 2px 16px rgba(0, 0, 0, 0.4);
+}
+
+.premium-venue-hero__facts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.55rem 1.15rem;
+    margin-bottom: 1.25rem;
+    color: #f1ebdd;
+    font-size: 0.95rem;
+    font-weight: 800;
+}
+
+.premium-venue-hero__facts span,
+.premium-venue-hero__facts a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+}
+
+.premium-venue-hero__facts i {
+    color: var(--accent);
+}
+
+.premium-venue-hero__facts a:hover {
+    color: #fff;
+}
+
+.premium-venue-hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.65rem;
+}
+
+.premium-venue-subnav {
+    position: sticky;
+    top: 0;
+    z-index: 30;
+    background: rgba(250, 246, 238, 0.94);
+    border-bottom: 1px solid var(--border);
+    backdrop-filter: blur(10px);
+}
+
+.premium-venue-subnav__inner {
+    height: 52px;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+
+.premium-venue-subnav__inner::-webkit-scrollbar {
+    display: none;
+}
+
+.premium-venue-subnav a {
+    flex: 0 0 auto;
+    padding: 0.5rem 0.85rem;
+    border-radius: 0.55rem;
+    color: var(--muted);
+    font-size: 0.88rem;
+    font-weight: 850;
+    white-space: nowrap;
+}
+
+.premium-venue-subnav a:hover {
+    background: rgba(31, 94, 91, 0.08);
+    color: var(--primary);
+}
+
+.premium-venue-section {
+    padding: 3.1rem 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.premium-venue-section__header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+}
+
+.premium-venue-section__eyebrow {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--secondary);
+    font-size: 0.72rem;
+    font-weight: 900;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+}
+
+.premium-venue-section__title {
+    margin: 0 0 1.25rem;
+    font-family: var(--font-display);
+    font-size: clamp(1.75rem, 4vw, 2.35rem);
+    line-height: 1.1;
+}
+
+.premium-venue-section__header .premium-venue-section__title {
+    margin-bottom: 0;
+}
+
+.premium-venue-section__lead {
+    max-width: 64ch;
+    margin: 0;
+    font-size: 1.08rem;
+    line-height: 1.78;
+}
+
+.premium-venue-section__lead--muted {
+    color: var(--muted);
+}
+
+.premium-venue-section__link {
+    color: var(--primary);
+    font-weight: 850;
+    white-space: nowrap;
+}
+
+.premium-venue-photo-row {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.7rem;
+    margin-top: 1.5rem;
+}
+
+.premium-venue-photo-row__item {
+    appearance: none;
+    border: 0;
+    padding: 0;
+    overflow: hidden;
+    border-radius: 0.9rem;
+    background: #efe7db;
+    cursor: pointer;
+    aspect-ratio: 1;
+}
+
+.premium-venue-photo-row__item:first-child {
+    grid-column: span 2;
+    aspect-ratio: 2 / 1;
+}
+
+.premium-venue-photo-row__item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.25s ease;
+}
+
+.premium-venue-photo-row__item:hover img {
+    transform: scale(1.04);
+}
+
+.premium-venue-event-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+}
+
+.premium-venue-event-card {
+    overflow: hidden;
+    border: 1px solid var(--border);
+    border-radius: 1rem;
+    background: var(--surface);
+    box-shadow: 0 1px 2px rgba(20, 40, 38, 0.06);
+    transition: transform 0.22s ease, box-shadow 0.22s ease;
+}
+
+.premium-venue-event-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 14px 30px rgba(20, 40, 38, 0.12);
+}
+
+.premium-venue-event-card__image {
+    display: block;
+    aspect-ratio: 3 / 2;
+    overflow: hidden;
+}
+
+.premium-venue-event-card__image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.premium-venue-event-card__body {
+    display: grid;
+    gap: 0.35rem;
+    padding: 0.95rem;
+}
+
+.premium-venue-event-card__date {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.38rem;
+    color: var(--secondary);
+    font-size: 0.78rem;
+    font-weight: 800;
+}
+
+.premium-venue-event-card strong {
+    color: var(--text);
+    font-family: var(--font-display);
+    font-size: 1.08rem;
+    line-height: 1.12;
+}
+
+.premium-venue-empty {
+    display: grid;
+    gap: 0.65rem;
+    padding: 1.4rem;
+    border: 1px dashed var(--border);
+    border-radius: 1rem;
+    background: var(--surface);
+    color: var(--muted);
+}
+
+.premium-venue-empty i {
+    color: var(--primary);
+    font-size: 1.45rem;
+}
+
+.premium-venue-visit {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(18rem, 0.9fr);
+    gap: 1.5rem;
+}
+
+.premium-venue-info-list {
+    display: grid;
+    gap: 0.72rem;
+    margin: 0 0 1rem;
+    padding: 0;
+    list-style: none;
+}
+
+.premium-venue-info-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    color: var(--text);
+    font-size: 0.96rem;
+}
+
+.premium-venue-info-list i {
+    width: 1.15rem;
+    margin-top: 0.18rem;
+    color: var(--primary);
+    text-align: center;
+}
+
+.premium-venue-info-list a {
+    color: var(--primary);
+    font-weight: 750;
+}
+
+.premium-venue-hours {
+    display: grid;
+    margin: 0;
+    padding: 0;
+}
+
+.premium-venue-hours div {
+    display: grid;
+    grid-template-columns: minmax(4.5rem, 7rem) minmax(0, 1fr);
+    align-items: start;
+    gap: 1rem;
+    padding: 0.52rem 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.premium-venue-hours dt {
+    color: var(--text);
+    font-weight: 850;
+}
+
+.premium-venue-hours dd {
+    margin: 0;
+    color: var(--muted);
+    line-height: 1.35;
+    text-align: left;
+}
+
+.premium-venue-map {
+    min-height: 16rem;
+    display: grid;
+    place-items: center;
+    border-radius: 1rem;
+    background:
+        linear-gradient(rgba(20, 63, 61, 0.18), rgba(20, 63, 61, 0.28)),
+        url("https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&w=900&q=75") center / cover;
+}
+
+.premium-venue-footer {
+    padding: 2.5rem 0;
+    background: var(--footer-bg);
+    color: #c9d2cf;
+    text-align: center;
+}
+
+.premium-venue-claim {
+    max-width: 34rem;
+    margin: 0 auto;
+    padding: 1.45rem;
+    border: 1px solid rgba(201, 150, 47, 0.4);
+    border-radius: 1rem;
+    background: rgba(201, 150, 47, 0.12);
+}
+
+.premium-venue-claim h2 {
+    margin: 0 0 0.45rem;
+    color: #fff;
+    font-family: var(--font-display);
+    font-size: 1.45rem;
+}
+
+.premium-venue-claim p {
+    margin: 0 0 1rem;
+    font-size: 0.92rem;
+}
+
+.premium-venue-mobile-bar {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 55;
+    display: flex;
+    gap: 0.6rem;
+    padding: 0.65rem 0.9rem calc(0.65rem + env(safe-area-inset-bottom));
+    border-top: 1px solid var(--border);
+    background: rgba(250, 246, 238, 0.96);
+    backdrop-filter: blur(8px);
+}
+
+.premium-venue-mobile-bar .btn {
+    flex: 1;
+}
+
+@media (min-width: 680px) {
+    .premium-venue-photo-row {
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    .premium-venue-photo-row__item:first-child {
+        grid-column: span 2;
+        grid-row: span 2;
+        aspect-ratio: auto;
+    }
+}
+
+@media (min-width: 980px) {
+    body:has(.premium-venue-page) {
+        padding-bottom: 0;
+    }
+
+    .premium-venue-mobile-bar {
+        display: none;
+    }
+}
+
+@media (max-width: 820px) {
+    .premium-venue-event-grid,
+    .premium-venue-visit {
+        grid-template-columns: 1fr;
+    }
+
+    .premium-venue-section__header {
+        display: grid;
+        align-items: start;
+    }
+}
+
+@media (max-width: 560px) {
+    .premium-venue-hero__actions {
+        display: grid;
+        grid-template-columns: 1fr;
+    }
+
+    .premium-venue-hero__actions .btn {
+        width: 100%;
+    }
+
+    .premium-venue-photo-row {
+        display: flex;
+        overflow-x: auto;
+        gap: 0.85rem;
+        margin-right: -1rem;
+        padding-bottom: 0.75rem;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .premium-venue-photo-row__item,
+    .premium-venue-photo-row__item:first-child {
+        flex: 0 0 84%;
+        width: 84%;
+        min-width: 84%;
+        aspect-ratio: 4 / 3;
+        scroll-snap-align: start;
+    }
+}
+
+/* ==========================================================================
+   Phase 8D: Premium polish
+   ========================================================================== */
+
+.premium-venue-glance {
+    position: relative;
+    z-index: 2;
+    margin-top: -1.7rem;
+    padding-bottom: 1.2rem;
+}
+
+.premium-venue-glance__grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.75rem;
+    padding: 1rem;
+    border: 1px solid rgba(231, 223, 210, 0.92);
+    border-radius: 1rem;
+    background: rgba(255, 255, 255, 0.94);
+    box-shadow: 0 18px 45px rgba(20, 40, 38, 0.1);
+    backdrop-filter: blur(12px);
+}
+
+.premium-venue-glance__item {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.1rem 0.65rem;
+    align-items: center;
+    min-width: 0;
+}
+
+.premium-venue-glance__item i {
+    grid-row: span 2;
+    width: 2.25rem;
+    height: 2.25rem;
+    display: inline-grid;
+    place-items: center;
+    border-radius: 0.75rem;
+    background: rgba(31, 94, 91, 0.08);
+    color: var(--primary);
+    font-size: 1rem;
+}
+
+.premium-venue-glance__item span {
+    color: var(--muted);
+    font-size: 0.68rem;
+    font-weight: 900;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.premium-venue-glance__item strong {
+    min-width: 0;
+    overflow-wrap: anywhere;
+    color: var(--text);
+    font-size: 0.9rem;
+    line-height: 1.2;
+}
+
+.premium-venue-directions-card {
+    min-height: 16rem;
+    display: grid;
+    align-content: center;
+    justify-items: start;
+    gap: 1rem;
+    padding: 1.5rem;
+    border: 1px solid rgba(31, 94, 91, 0.14);
+    border-radius: 1rem;
+    background:
+        radial-gradient(circle at top right, rgba(201, 150, 47, 0.18), transparent 34%),
+        linear-gradient(135deg, rgba(31, 94, 91, 0.1), rgba(255, 255, 255, 0.92)),
+        var(--surface);
+    box-shadow: 0 10px 26px rgba(20, 40, 38, 0.08);
+}
+
+.premium-venue-directions-card__eyebrow,
+.premium-venue-cta__eyebrow {
+    display: block;
+    margin-bottom: 0.45rem;
+    color: var(--accent);
+    font-size: 0.7rem;
+    font-weight: 900;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.premium-venue-directions-card h3 {
+    margin: 0 0 0.45rem;
+    color: var(--primary-dark);
+    font-family: var(--font-display);
+    font-size: 1.55rem;
+    line-height: 1.08;
+}
+
+.premium-venue-directions-card p {
+    max-width: 30rem;
+    margin: 0;
+    color: var(--muted);
+    font-weight: 650;
+    line-height: 1.55;
+}
+
+.premium-venue-cta {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 1.25rem;
+    max-width: 62rem;
+    margin: 0 auto;
+    padding: 1.45rem;
+    border: 1px solid rgba(201, 150, 47, 0.42);
+    border-radius: 1rem;
+    background: rgba(201, 150, 47, 0.12);
+    text-align: left;
+}
+
+.premium-venue-cta h2 {
+    margin: 0 0 0.35rem;
+    color: #fff;
+    font-family: var(--font-display);
+    font-size: clamp(1.45rem, 3vw, 2rem);
+    line-height: 1.1;
+}
+
+.premium-venue-cta p {
+    margin: 0;
+    color: #c9d2cf;
+    font-size: 0.95rem;
+}
+
+.premium-venue-cta__actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 0.55rem;
+}
+
+@media (max-width: 860px) {
+    .premium-venue-glance__grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .premium-venue-cta {
+        grid-template-columns: 1fr;
+    }
+
+    .premium-venue-cta__actions {
+        justify-content: flex-start;
+    }
+}
+
+@media (max-width: 560px) {
+    .premium-venue-glance {
+        margin-top: 0;
+        padding-top: 1rem;
+    }
+
+    .premium-venue-glance__grid {
+        grid-template-columns: 1fr;
+    }
+
+    .premium-venue-mobile-bar {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .premium-venue-mobile-bar .btn {
+        min-width: 0;
+        padding-left: 0.55rem;
+        padding-right: 0.55rem;
+        font-size: 0.78rem;
+    }
+
+    .premium-venue-cta__actions {
+        display: grid;
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ==========================================================================
+   Phase 8E: Premium hero mock match
+   Hero-only pass: centered premium card, centered text, mock-style CTAs.
+   ========================================================================== */
+
+.premium-venue-page {
+    padding-top: 1rem;
+}
+
+.premium-venue-hero {
+    width: min(calc(100% - 2rem), 64rem);
+    min-height: clamp(21rem, 46vh, 28rem);
+    margin: 0 auto;
+    border: 1px solid rgba(231, 223, 210, 0.9);
+    border-radius: 1.15rem 1.15rem 0 0;
+    box-shadow: 0 18px 48px rgba(20, 40, 38, 0.14);
+}
+
+.premium-venue-hero::before {
+    background:
+        linear-gradient(
+            180deg,
+            rgba(0, 0, 0, 0.42) 0%,
+            rgba(0, 0, 0, 0.48) 42%,
+            rgba(0, 0, 0, 0.72) 100%
+        );
+}
+
+.premium-venue-hero__inner {
+    min-height: inherit;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding-top: 2.75rem;
+    padding-bottom: 2.25rem;
+    text-align: center;
+}
+
+.premium-venue-hero__badge {
+    margin-bottom: 0.7rem;
+    box-shadow: 0 8px 18px rgba(201, 150, 47, 0.28);
+}
+
+.premium-venue-hero__eyebrow {
+    margin-bottom: 0.35rem;
+    color: #efe6cf;
+    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
+}
+
+.premium-venue-hero__title {
+    max-width: 14ch;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: clamp(3rem, 7vw, 5.25rem);
+    text-align: center;
+    text-shadow: 0 4px 28px rgba(0, 0, 0, 0.55);
+}
+
+.premium-venue-hero__tagline {
+    max-width: 42rem;
+    margin-left: auto;
+    margin-right: auto;
+    color: #fff;
+    font-weight: 800;
+    text-align: center;
+    text-shadow: 0 3px 18px rgba(0, 0, 0, 0.62);
+}
+
+.premium-venue-hero__facts {
+    justify-content: center;
+    color: #f6efe2;
+    text-align: center;
+    text-shadow: 0 2px 14px rgba(0, 0, 0, 0.58);
+}
+
+.premium-venue-hero__facts span,
+.premium-venue-hero__facts a {
+    justify-content: center;
+}
+
+.premium-venue-hero__actions {
+    justify-content: center;
+    gap: 0.85rem;
+    width: 100%;
+}
+
+.premium-venue-hero__cta {
+    min-width: 11rem;
+    min-height: 3.35rem;
+    padding: 0.95rem 1.5rem;
+    border-radius: 0.55rem;
+    font-size: 0.98rem;
+    font-weight: 900;
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.22);
+}
+
+.premium-venue-hero__cta--rsvp {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+}
+
+.premium-venue-hero__cta--rsvp:hover {
+    background: #d8a63a;
+    border-color: #d8a63a;
+    color: #fff;
+}
+
+.premium-venue-hero__cta--directions {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: #fff;
+}
+
+.premium-venue-hero__cta--directions:hover {
+    background: var(--primary-dark);
+    border-color: var(--primary-dark);
+    color: #fff;
+}
+
+.premium-venue-hero__cta--call {
+    background: rgba(0, 0, 0, 0.34);
+    border-color: rgba(255, 255, 255, 0.55);
+    color: #fff;
+}
+
+.premium-venue-hero__cta--call:hover {
+    background: rgba(0, 0, 0, 0.56);
+    border-color: rgba(255, 255, 255, 0.75);
+    color: #fff;
+}
+
+@media (max-width: 640px) {
+    .premium-venue-page {
+        padding-top: 0;
+    }
+
+    .premium-venue-hero {
+        width: 100%;
+        min-height: 31rem;
+        border-radius: 0;
+        border-left: 0;
+        border-right: 0;
+    }
+
+    .premium-venue-hero__inner {
+        justify-content: flex-end;
+        align-items: flex-start;
+        text-align: left;
+        padding-top: 2rem;
+        padding-bottom: 1.5rem;
+    }
+
+    .premium-venue-hero__title,
+    .premium-venue-hero__tagline {
+        margin-left: 0;
+        margin-right: 0;
+        text-align: left;
+    }
+
+    .premium-venue-hero__facts {
+        justify-content: flex-start;
+        text-align: left;
+    }
+
+    .premium-venue-hero__actions {
+        grid-template-columns: 1fr;
+        gap: 0.6rem;
+    }
+
+    .premium-venue-hero__cta {
+        width: 100%;
+        min-width: 0;
+    }
+}
+
+/* ==========================================================================
+   Phase 8F: Premium glance strip mock match
+   Tight centered white fact card below premium hero.
+   ========================================================================== */
+
+.premium-venue-glance {
+    width: min(calc(100% - 2rem), 64rem);
+    margin: -1.45rem auto 0;
+    padding: 0;
+    position: relative;
+    z-index: 5;
+}
+
+.premium-venue-glance__grid {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0;
+    padding: 1.05rem 1.25rem;
+    border: 1px solid rgba(231, 223, 210, 0.96);
+    border-radius: 0.9rem;
+    background: rgba(255, 255, 255, 0.98);
+    box-shadow:
+        0 18px 42px rgba(20, 40, 38, 0.12),
+        inset 0 1px 0 rgba(255, 255, 255, 0.86);
+    backdrop-filter: blur(14px);
+}
+
+.premium-venue-glance__item {
+    display: grid;
+    grid-template-columns: 2.25rem minmax(0, 1fr);
+    gap: 0.1rem 0.65rem;
+    align-items: center;
+    min-width: 0;
+    padding: 0 0.95rem;
+    border-right: 1px solid rgba(231, 223, 210, 0.82);
+}
+
+.premium-venue-glance__item:last-child {
+    border-right: 0;
+}
+
+.premium-venue-glance__item i {
+    grid-row: span 2;
+    width: 2rem;
+    height: 2rem;
+    display: inline-grid;
+    place-items: center;
+    border-radius: 0.65rem;
+    background: transparent;
+    color: var(--primary);
+    font-size: 1.2rem;
+}
+
+.premium-venue-glance__item span {
+    color: #9baea7;
+    font-size: 0.68rem;
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.premium-venue-glance__item strong {
+    min-width: 0;
+    color: #273735;
+    font-size: 0.94rem;
+    font-weight: 850;
+    line-height: 1.2;
+    overflow-wrap: anywhere;
+}
+
+@media (max-width: 860px) {
+    .premium-venue-glance {
+        width: min(calc(100% - 1.5rem), 64rem);
+        margin-top: 0.85rem;
+    }
+
+    .premium-venue-glance__grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        padding: 0.85rem;
+    }
+
+    .premium-venue-glance__item {
+        padding: 0.75rem;
+        border-right: 0;
+        border-bottom: 1px solid rgba(231, 223, 210, 0.82);
+    }
+
+    .premium-venue-glance__item:nth-last-child(-n+2) {
+        border-bottom: 0;
+    }
+}
+
+@media (max-width: 560px) {
+    .premium-venue-glance {
+        width: calc(100% - 1rem);
+        margin-top: 0.65rem;
+    }
+
+    .premium-venue-glance__grid {
+        grid-template-columns: 1fr;
+        padding: 0.65rem;
+    }
+
+    .premium-venue-glance__item {
+        grid-template-columns: 2rem minmax(0, 1fr);
+        padding: 0.65rem;
+        border-bottom: 1px solid rgba(231, 223, 210, 0.82);
+    }
+
+    .premium-venue-glance__item:nth-last-child(-n+2) {
+        border-bottom: 1px solid rgba(231, 223, 210, 0.82);
+    }
+
+    .premium-venue-glance__item:last-child {
+        border-bottom: 0;
+    }
+}
+
+/* ==========================================================================
+   Phase 8F: Premium glance strip attached row
+   Non-floating fact row under premium hero, matching the mock structure.
+   ========================================================================== */
+
+.premium-venue-glance {
+    width: min(calc(100% - 2rem), 64rem);
+    margin: 0 auto;
+    padding: 0;
+    position: relative;
+    z-index: 2;
+    background: #fff;
+    border-left: 1px solid rgba(231, 223, 210, 0.92);
+    border-right: 1px solid rgba(231, 223, 210, 0.92);
+    border-bottom: 1px solid rgba(231, 223, 210, 0.92);
+}
+
+.premium-venue-glance__grid {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0;
+    padding: 1.05rem 1.25rem;
+    border: 0;
+    border-radius: 0;
+    background: #fff;
+    box-shadow: none;
+    backdrop-filter: none;
+}
+
+.premium-venue-glance__item {
+    display: grid;
+    grid-template-columns: 2.1rem minmax(0, 1fr);
+    gap: 0.1rem 0.65rem;
+    align-items: center;
+    min-width: 0;
+    padding: 0 0.95rem;
+    border-right: 1px solid rgba(231, 223, 210, 0.82);
+}
+
+.premium-venue-glance__item:last-child {
+    border-right: 0;
+}
+
+.premium-venue-glance__item i {
+    grid-row: span 2;
+    width: 2rem;
+    height: 2rem;
+    display: inline-grid;
+    place-items: center;
+    background: transparent;
+    color: var(--primary);
+    font-size: 1.15rem;
+}
+
+.premium-venue-glance__item span {
+    color: #9baea7;
+    font-size: 0.68rem;
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.premium-venue-glance__item strong {
+    min-width: 0;
+    color: #273735;
+    font-size: 0.94rem;
+    font-weight: 850;
+    line-height: 1.2;
+    overflow-wrap: anywhere;
+}
+
+@media (max-width: 860px) {
+    .premium-venue-glance {
+        width: 100%;
+        border-left: 0;
+        border-right: 0;
+    }
+
+    .premium-venue-glance__grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        padding: 0.85rem;
+    }
+
+    .premium-venue-glance__item {
+        padding: 0.75rem;
+        border-right: 0;
+        border-bottom: 1px solid rgba(231, 223, 210, 0.82);
+    }
+
+    .premium-venue-glance__item:nth-last-child(-n+2) {
+        border-bottom: 0;
+    }
+}
+
+@media (max-width: 560px) {
+    .premium-venue-glance__grid {
+        grid-template-columns: 1fr;
+        padding: 0.65rem;
+    }
+
+    .premium-venue-glance__item {
+        grid-template-columns: 2rem minmax(0, 1fr);
+        padding: 0.65rem;
+        border-bottom: 1px solid rgba(231, 223, 210, 0.82);
+    }
+
+    .premium-venue-glance__item:nth-last-child(-n+2) {
+        border-bottom: 1px solid rgba(231, 223, 210, 0.82);
+    }
+
+    .premium-venue-glance__item:last-child {
+        border-bottom: 0;
+    }
+}
+
+/* ==========================================================================
+   Phase 8G: Premium shell width and equal nav
+   Match mock: wider contained hero/nav shell and evenly spread nav buttons.
+   ========================================================================== */
+
+:root {
+    --premium-shell-width: 76rem;
+}
+
+.premium-venue-page {
+    padding-top: 1.35rem;
+}
+
+.premium-venue-hero {
+    width: min(calc(100% - 3rem), var(--premium-shell-width));
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 1.15rem 1.15rem 0 0;
+}
+
+.premium-venue-subnav {
+    width: min(calc(100% - 3rem), var(--premium-shell-width));
+    margin-left: auto;
+    margin-right: auto;
+    position: sticky;
+    top: 0;
+    z-index: 35;
+    background: #fff;
+    border-left: 1px solid rgba(231, 223, 210, 0.92);
+    border-right: 1px solid rgba(231, 223, 210, 0.92);
+    border-bottom: 1px solid rgba(231, 223, 210, 0.92);
+    box-shadow: 0 10px 24px rgba(20, 40, 38, 0.06);
+    backdrop-filter: none;
+}
+
+.premium-venue-subnav__inner {
+    width: 100%;
+    max-width: none;
+    height: 4rem;
+    display: flex;
+    align-items: stretch;
+    justify-content: stretch;
+    gap: 0;
+    padding-left: 0;
+    padding-right: 0;
+    overflow: visible;
+}
+
+.premium-venue-subnav a {
+    flex: 1 1 0;
+    min-width: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem 0.5rem;
+    border-radius: 0;
+    border-bottom: 3px solid transparent;
+    color: #2f3e3b;
+    font-size: 0.9rem;
+    font-weight: 850;
+    text-align: center;
+}
+
+.premium-venue-subnav a:hover,
+.premium-venue-subnav a:focus-visible {
+    background: rgba(31, 94, 91, 0.06);
+    color: var(--primary);
+    border-bottom-color: var(--primary);
+}
+
+.premium-venue-glance {
+    width: min(calc(100% - 3rem), var(--premium-shell-width));
+}
+
+.premium-venue-section > .container,
+.premium-venue-footer > .container {
+    max-width: var(--premium-shell-width);
+}
+
+@media (max-width: 860px) {
+    .premium-venue-page {
+        padding-top: 0;
+    }
+
+    .premium-venue-hero,
+    .premium-venue-subnav,
+    .premium-venue-glance {
+        width: 100%;
+    }
+
+    .premium-venue-subnav__inner {
+        height: 3.6rem;
+        overflow-x: auto;
+        scrollbar-width: none;
+    }
+
+    .premium-venue-subnav__inner::-webkit-scrollbar {
+        display: none;
+    }
+
+    .premium-venue-subnav a {
+        flex: 1 0 5.5rem;
+        font-size: 0.82rem;
+    }
+}
+
+/* ==========================================================================
+   Phase 8H: Premium topbar inside hero
+   Move the back/logo/header controls into the hero card overlay.
+   ========================================================================== */
+
+.premium-venue-page {
+    position: relative;
+}
+
+.premium-venue-bar {
+    position: absolute;
+    top: 1.35rem;
+    left: 50%;
+    z-index: 12;
+    width: min(calc(100% - 3rem), var(--premium-shell-width));
+    transform: translateX(-50%);
+    background: transparent;
+    border: 0;
+    pointer-events: none;
+}
+
+.premium-venue-bar__inner {
+    position: relative;
+    width: 100%;
+    max-width: none;
+    min-height: 3rem;
+    padding: 0 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: #fff;
+    font-size: 0.9rem;
+    pointer-events: auto;
+}
+
+.premium-venue-bar__back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: #fff;
+    font-weight: 900;
+    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.55);
+}
+
+.premium-venue-bar__back:hover {
+    color: var(--accent);
+}
+
+.premium-venue-bar__mark {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #fff;
+    font-size: 1.05rem;
+    text-shadow: 0 2px 14px rgba(0, 0, 0, 0.6);
+    white-space: nowrap;
+}
+
+.premium-venue-bar__mark span {
+    color: var(--secondary);
+}
+
+.premium-venue-bar__inner::after {
+    content: "\f0c9";
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    color: #fff;
+    font-size: 1.1rem;
+    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.55);
+}
+
+.premium-venue-hero {
+    margin-top: 0;
+}
+
+.premium-venue-hero__inner {
+    padding-top: 4.35rem;
+}
+
+@media (max-width: 860px) {
+    .premium-venue-bar {
+        top: 0.75rem;
+        width: 100%;
+    }
+
+    .premium-venue-bar__inner {
+        padding: 0 1rem;
+    }
+
+    .premium-venue-bar__mark {
+        font-size: 0.95rem;
+    }
+}
+
+@media (max-width: 520px) {
+    .premium-venue-bar__mark {
+        display: none;
+    }
+}
+
+/* ==========================================================================
+   Phase 8I: Premium remove menu icon and align about block
+   ========================================================================== */
+
+/* Remove fake hamburger from premium hero top bar */
+.premium-venue-bar__inner::after {
+    content: none !important;
+    display: none !important;
+}
+
+/* About section should match the mock: text left, photos right, same visual width */
+#premium-about > .container {
+    display: grid;
+    grid-template-columns: minmax(0, 0.95fr) minmax(22rem, 0.85fr);
+    gap: clamp(1.5rem, 4vw, 3rem);
+    align-items: start;
+}
+
+#premium-about .premium-venue-section__eyebrow,
+#premium-about .premium-venue-section__title,
+#premium-about .premium-venue-section__lead {
+    grid-column: 1;
+}
+
+#premium-about .premium-venue-section__title {
+    max-width: 13ch;
+    margin-bottom: 1.1rem;
+}
+
+#premium-about .premium-venue-section__lead {
+    max-width: 42rem;
+    font-size: 1rem;
+    line-height: 1.7;
+}
+
+#premium-about .premium-venue-photo-row {
+    grid-column: 2;
+    grid-row: 1 / span 4;
+    align-self: center;
+    margin-top: 0;
+}
+
+#premium-about .premium-venue-photo-row__item {
+    border-radius: 0.75rem;
+}
+
+#premium-about .premium-venue-photo-row__item:first-child {
+    min-height: 17rem;
+}
+
+/* Keep the mock-style contained page rhythm */
+.premium-venue-section {
+    padding: 2.6rem 0;
+}
+
+@media (max-width: 860px) {
+    #premium-about > .container {
+        display: block;
+    }
+
+    #premium-about .premium-venue-section__title {
+        max-width: none;
+    }
+
+    #premium-about .premium-venue-section__lead {
+        max-width: none;
+    }
+
+    #premium-about .premium-venue-photo-row {
+        margin-top: 1.25rem;
+    }
+}
+
+/* ==========================================================================
+   Phase 8J: Premium about mock tightening
+   Keep About + photo collage in one desktop row, but reduce empty space.
+   ========================================================================== */
+
+#premium-about {
+    padding-top: 2.25rem;
+    padding-bottom: 2.25rem;
+}
+
+#premium-about > .container {
+    max-width: var(--premium-shell-width);
+    display: grid;
+    grid-template-columns: minmax(0, 0.92fr) minmax(24rem, 0.95fr);
+    gap: clamp(1.5rem, 3vw, 2.4rem);
+    align-items: center;
+}
+
+#premium-about .premium-venue-section__eyebrow {
+    margin-bottom: 0.6rem;
+}
+
+#premium-about .premium-venue-section__title {
+    max-width: none;
+    margin-bottom: 1rem;
+    font-size: clamp(1.85rem, 3vw, 2.55rem);
+    line-height: 1.05;
+}
+
+#premium-about .premium-venue-section__lead {
+    max-width: 39rem;
+    font-size: 0.98rem;
+    line-height: 1.62;
+}
+
+#premium-about .premium-venue-photo-row {
+    width: 100%;
+    max-width: 35rem;
+    justify-self: end;
+    align-self: center;
+    margin-top: 0;
+    gap: 0.55rem;
+}
+
+#premium-about .premium-venue-photo-row__item {
+    border-radius: 0.65rem;
+}
+
+#premium-about .premium-venue-photo-row__item:first-child {
+    min-height: 15.5rem;
+}
+
+@media (max-width: 860px) {
+    #premium-about > .container {
+        display: block;
+    }
+
+    #premium-about .premium-venue-section__title,
+    #premium-about .premium-venue-section__lead {
+        max-width: none;
+    }
+
+    #premium-about .premium-venue-photo-row {
+        max-width: none;
+        margin-top: 1.25rem;
+    }
+}
+
+/* ==========================================================================
+   Phase 8K: Force premium glance white row
+   Final override for the info strip under the premium nav.
+   ========================================================================== */
+
+.premium-venue-glance {
+    width: min(calc(100% - 3rem), var(--premium-shell-width)) !important;
+    margin: 0 auto !important;
+    padding: 0 !important;
+    background: #ffffff !important;
+    border-left: 1px solid rgba(231, 223, 210, 0.95) !important;
+    border-right: 1px solid rgba(231, 223, 210, 0.95) !important;
+    border-bottom: 1px solid rgba(231, 223, 210, 0.95) !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    position: relative !important;
+    z-index: 3 !important;
+}
+
+.premium-venue-glance__grid {
+    width: 100% !important;
+    max-width: none !important;
+    display: grid !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 0 !important;
+    padding: 1.05rem 1.35rem !important;
+    background: #ffffff !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+}
+
+.premium-venue-glance__item {
+    display: grid !important;
+    grid-template-columns: 2.1rem minmax(0, 1fr) !important;
+    gap: 0.12rem 0.65rem !important;
+    align-items: center !important;
+    padding: 0 1rem !important;
+    border-right: 1px solid rgba(231, 223, 210, 0.85) !important;
+    min-width: 0 !important;
+}
+
+.premium-venue-glance__item:last-child {
+    border-right: 0 !important;
+}
+
+.premium-venue-glance__item i {
+    grid-row: span 2 !important;
+    width: 2rem !important;
+    height: 2rem !important;
+    display: inline-grid !important;
+    place-items: center !important;
+    background: transparent !important;
+    color: var(--primary) !important;
+    font-size: 1.1rem !important;
+}
+
+.premium-venue-glance__item span {
+    color: #9baea7 !important;
+    font-size: 0.68rem !important;
+    font-weight: 900 !important;
+    line-height: 1 !important;
+    letter-spacing: 0.12em !important;
+    text-transform: uppercase !important;
+}
+
+.premium-venue-glance__item strong {
+    color: #273735 !important;
+    font-size: 0.95rem !important;
+    font-weight: 850 !important;
+    line-height: 1.25 !important;
+    overflow-wrap: anywhere !important;
+}
+
+/* The section below should start after the white info row, not bleed upward. */
+#premium-about {
+    background: #ffffff !important;
+    padding-top: 2.5rem !important;
+}
+
+/* Keep nav and glance visually connected as one premium shell. */
+.premium-venue-subnav {
+    background: #ffffff !important;
+    box-shadow: none !important;
+}
+
+@media (max-width: 860px) {
+    .premium-venue-glance {
+        width: 100% !important;
+        border-left: 0 !important;
+        border-right: 0 !important;
+    }
+
+    .premium-venue-glance__grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        padding: 0.75rem !important;
+    }
+
+    .premium-venue-glance__item {
+        padding: 0.75rem !important;
+        border-right: 0 !important;
+        border-bottom: 1px solid rgba(231, 223, 210, 0.85) !important;
+    }
+
+    .premium-venue-glance__item:nth-last-child(-n+2) {
+        border-bottom: 0 !important;
+    }
+}
+
+@media (max-width: 560px) {
+    .premium-venue-glance__grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    .premium-venue-glance__item:nth-last-child(-n+2) {
+        border-bottom: 1px solid rgba(231, 223, 210, 0.85) !important;
+    }
+
+    .premium-venue-glance__item:last-child {
+        border-bottom: 0 !important;
+    }
+}
+
+/* ==========================================================================
+   Phase 8L: Premium contained tan glance card
+   White page background, contained #fcfaf6 info card.
+   ========================================================================== */
+
+.premium-venue-page {
+    background: #ffffff !important;
+}
+
+.premium-venue-glance {
+    width: min(calc(100% - 3rem), var(--premium-shell-width)) !important;
+    margin: 0 auto !important;
+    padding: 1.15rem 0 0 !important;
+    background: transparent !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+}
+
+.premium-venue-glance__grid {
+    width: 100% !important;
+    max-width: none !important;
+    display: grid !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 0 !important;
+    padding: 1.05rem 1.35rem !important;
+    background: #fcfaf6 !important;
+    border: 1px solid rgba(231, 223, 210, 0.95) !important;
+    border-radius: 0.75rem !important;
+    box-shadow: 0 8px 20px rgba(20, 40, 38, 0.06) !important;
+    backdrop-filter: none !important;
+}
+
+.premium-venue-glance__item {
+    display: grid !important;
+    grid-template-columns: 2.1rem minmax(0, 1fr) !important;
+    gap: 0.12rem 0.65rem !important;
+    align-items: center !important;
+    min-width: 0 !important;
+    padding: 0 1rem !important;
+    border-right: 1px solid rgba(231, 223, 210, 0.9) !important;
+}
+
+.premium-venue-glance__item:last-child {
+    border-right: 0 !important;
+}
+
+.premium-venue-glance__item i {
+    grid-row: span 2 !important;
+    width: 2rem !important;
+    height: 2rem !important;
+    display: inline-grid !important;
+    place-items: center !important;
+    background: transparent !important;
+    color: var(--primary) !important;
+    font-size: 1.1rem !important;
+}
+
+.premium-venue-glance__item span {
+    color: #9baea7 !important;
+    font-size: 0.68rem !important;
+    font-weight: 900 !important;
+    line-height: 1 !important;
+    letter-spacing: 0.12em !important;
+    text-transform: uppercase !important;
+}
+
+.premium-venue-glance__item strong {
+    color: #273735 !important;
+    font-size: 0.95rem !important;
+    font-weight: 850 !important;
+    line-height: 1.25 !important;
+    overflow-wrap: anywhere !important;
+}
+
+.premium-venue-subnav {
+    background: #ffffff !important;
+}
+
+#premium-about {
+    background: #ffffff !important;
+}
+
+@media (max-width: 860px) {
+    .premium-venue-glance {
+        width: min(calc(100% - 1.25rem), var(--premium-shell-width)) !important;
+        padding-top: 0.9rem !important;
+    }
+
+    .premium-venue-glance__grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        padding: 0.75rem !important;
+    }
+
+    .premium-venue-glance__item {
+        padding: 0.75rem !important;
+        border-right: 0 !important;
+        border-bottom: 1px solid rgba(231, 223, 210, 0.9) !important;
+    }
+
+    .premium-venue-glance__item:nth-last-child(-n+2) {
+        border-bottom: 0 !important;
+    }
+}
+
+@media (max-width: 560px) {
+    .premium-venue-glance {
+        width: calc(100% - 1rem) !important;
+    }
+
+    .premium-venue-glance__grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    .premium-venue-glance__item:nth-last-child(-n+2) {
+        border-bottom: 1px solid rgba(231, 223, 210, 0.9) !important;
+    }
+
+    .premium-venue-glance__item:last-child {
+        border-bottom: 0 !important;
+    }
+}
+
+/* ==========================================================================
+   Phase 8M: Restore premium page background
+   Cream page background, white About section only.
+   ========================================================================== */
+
+.premium-venue-page {
+    background: var(--background) !important;
+}
+
+.premium-venue-section {
+    background: var(--background) !important;
+}
+
+#premium-about {
+    background: #ffffff !important;
+}
+
+#premium-about > .container {
+    background: #ffffff !important;
+}
+
+.premium-venue-glance {
+    background: transparent !important;
+}
+
+.premium-venue-glance__grid {
+    background: #fcfaf6 !important;
+}
+
+.premium-venue-subnav {
+    background: #ffffff !important;
+}
+
+/* ==========================================================================
+   Phase 8N: Contained premium white body panel
+   The white area is a centered panel, not full page width.
+   Glance card sits inside the white panel above About.
+   ========================================================================== */
+
+.premium-venue-page {
+    background: var(--background) !important;
+}
+
+/* Make the nav, info strip, and About area read as one contained white body */
+.premium-venue-subnav,
+.premium-venue-glance,
+#premium-about {
+    width: min(calc(100% - 3rem), var(--premium-shell-width)) !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    background: #ffffff !important;
+    border-left: 1px solid rgba(231, 223, 210, 0.92) !important;
+    border-right: 1px solid rgba(231, 223, 210, 0.92) !important;
+}
+
+/* The section itself is the white panel. Its inner container should not create full-width white. */
+#premium-about {
+    padding: 2.25rem 0 2.5rem !important;
+    border-bottom: 1px solid rgba(231, 223, 210, 0.92) !important;
+}
+
+#premium-about > .container {
+    width: 100% !important;
+    max-width: none !important;
+    padding-left: clamp(1.25rem, 4vw, 3rem) !important;
+    padding-right: clamp(1.25rem, 4vw, 3rem) !important;
+    background: transparent !important;
+}
+
+/* Info card sits inside the same white panel, not outside or full-width. */
+.premium-venue-glance {
+    padding: 1.15rem clamp(1.25rem, 4vw, 3rem) 0 !important;
+    border-bottom: 0 !important;
+    box-shadow: none !important;
+}
+
+.premium-venue-glance__grid {
+    background: #fcfaf6 !important;
+    border: 1px solid rgba(231, 223, 210, 0.95) !important;
+    border-radius: 0.75rem !important;
+    box-shadow: 0 8px 20px rgba(20, 40, 38, 0.055) !important;
+}
+
+/* Undo previous full-width white section overrides. */
+.premium-venue-section {
+    background: var(--background) !important;
+}
+
+#premium-about.premium-venue-section {
+    background: #ffffff !important;
+}
+
+/* The next section starts back on the cream background. */
+#premium-menu {
+    background: var(--background) !important;
+}
+
+@media (max-width: 860px) {
+    .premium-venue-subnav,
+    .premium-venue-glance,
+    #premium-about {
+        width: 100% !important;
+        border-left: 0 !important;
+        border-right: 0 !important;
+    }
+
+    .premium-venue-glance {
+        padding-left: 1rem !important;
+        padding-right: 1rem !important;
+    }
+}
+
+/* ==========================================================================
+   Phase 8O: Premium menu preview
+   Mock-style menu band using first 3 menu item images.
+   ========================================================================== */
+
+/* White border around hero Call button */
+.premium-venue-hero__cta--call {
+    border: 1.5px solid rgba(255, 255, 255, 0.86) !important;
+}
+
+/* Menu section uses the same warm card color as the info card */
+.premium-venue-menu-preview {
+    background: #fcfaf6 !important;
+    border-top: 1px solid rgba(231, 223, 210, 0.78);
+    border-bottom: 1px solid rgba(231, 223, 210, 0.78);
+}
+
+.premium-venue-menu-preview__inner {
+    display: grid;
+    grid-template-columns: minmax(0, 0.82fr) minmax(22rem, 1fr);
+    gap: clamp(1.25rem, 4vw, 3rem);
+    align-items: center;
+}
+
+.premium-venue-menu-preview__copy p {
+    max-width: 27rem;
+    margin: -0.45rem 0 1.2rem;
+    color: var(--muted);
+    font-size: 0.98rem;
+    font-weight: 650;
+    line-height: 1.55;
+}
+
+.premium-venue-menu-preview__photos {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.75rem;
+}
+
+.premium-venue-menu-preview__photo {
+    margin: 0;
+    overflow: hidden;
+    border-radius: 0.85rem;
+    background: #fff;
+    aspect-ratio: 1 / 1;
+    box-shadow: 0 10px 24px rgba(20, 40, 38, 0.08);
+}
+
+.premium-venue-menu-preview__photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* If no item photos exist yet, keep the section polished instead of broken. */
+.premium-venue-menu-preview__empty {
+    grid-column: 1 / -1;
+    min-height: 9rem;
+    display: grid;
+    place-items: center;
+    gap: 0.55rem;
+    border: 1px dashed rgba(31, 94, 91, 0.25);
+    border-radius: 0.85rem;
+    background: rgba(255, 255, 255, 0.62);
+    color: var(--muted);
+    font-weight: 800;
+}
+
+.premium-venue-menu-preview__empty i {
+    color: var(--primary);
+    font-size: 1.5rem;
+}
+
+.premium-venue-menu-preview__full {
+    margin-top: 1.35rem;
+}
+
+/* The full allergy/menu panel should feel secondary under the visual preview. */
+.premium-venue-menu-preview__full .venue-menu-section,
+.premium-venue-menu-preview__full .menu-allergy-card,
+.premium-venue-menu-preview__full .venue-menu-panel {
+    background: #ffffff;
+}
+
+@media (max-width: 860px) {
+    .premium-venue-menu-preview__inner {
+        grid-template-columns: 1fr;
+    }
+
+    .premium-venue-menu-preview__photos {
+        grid-template-columns: repeat(3, minmax(8rem, 1fr));
+        overflow-x: auto;
+        padding-bottom: 0.55rem;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .premium-venue-menu-preview__photo {
+        scroll-snap-align: start;
+    }
+}
+
+@media (max-width: 560px) {
+    .premium-venue-menu-preview__photos {
+        grid-template-columns: none;
+        display: flex;
+    }
+
+    .premium-venue-menu-preview__photo {
+        flex: 0 0 74%;
+    }
+}
+
+/* ==========================================================================
+   Phase 8P: Premium menu source and background fix
+   ========================================================================== */
+
+#premium-menu.premium-venue-menu-preview {
+    background: #fcfaf6 !important;
+}
+
+#premium-menu.premium-venue-section {
+    background: #fcfaf6 !important;
+}
+
+#premium-menu > .container {
+    background: transparent !important;
+}
+
+.premium-venue-menu-preview__inner,
+.premium-venue-menu-preview__full {
+    background: transparent !important;
+}
+
+.premium-venue-menu-preview__photos {
+    min-height: 10rem;
+}
+
+.premium-venue-menu-preview__photo {
+    background: #ffffff !important;
+}
+
+/* ==========================================================================
+   Phase 8Q: Premium layered background system
+   Outer page, contained content shell, alternating section rows, CTA/footer.
+   Future admin setting targets:
+   - premium page background color/image
+   - premium content shell background color/image
+   ========================================================================== */
+
+:root {
+    --premium-page-background: #faf6ee;
+    --premium-content-background: #fefefc;
+    --premium-alt-section-background: #fcfaf6;
+    --premium-cta-background: #14201e;
+    --premium-footer-background: #15231f;
+}
+
+/* Outer page background only. This should show on the left/right gutters. */
+.premium-venue-page {
+    background: var(--premium-page-background) !important;
+}
+
+/* Premium shell width stays contained. Nothing should stretch white full browser width. */
+.premium-venue-hero,
+.premium-venue-subnav,
+.premium-venue-glance,
+#premium-about,
+#premium-menu,
+#premium-photos,
+#premium-events,
+#premium-visit,
+.premium-venue-footer {
+    width: min(calc(100% - 3rem), var(--premium-shell-width)) !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+}
+
+/* Default contained main content sections. */
+.premium-venue-subnav,
+.premium-venue-glance,
+#premium-about,
+#premium-photos,
+#premium-visit {
+    background: var(--premium-content-background) !important;
+}
+
+/* Alternating warm rows. */
+#premium-menu,
+#premium-events {
+    background: var(--premium-alt-section-background) !important;
+}
+
+/* Keep section inner containers transparent so the section color shows correctly. */
+.premium-venue-section > .container,
+.premium-venue-glance > .container,
+.premium-venue-menu-preview__inner,
+.premium-venue-menu-preview__full {
+    background: transparent !important;
+}
+
+/* Info card sits inside the content shell, with the warm card color. */
+.premium-venue-glance {
+    padding: 1.15rem clamp(1.25rem, 4vw, 3rem) 0 !important;
+    border-left: 1px solid rgba(231, 223, 210, 0.92) !important;
+    border-right: 1px solid rgba(231, 223, 210, 0.92) !important;
+    border-bottom: 0 !important;
+    box-shadow: none !important;
+}
+
+.premium-venue-glance__grid {
+    background: var(--premium-alt-section-background) !important;
+    border: 1px solid rgba(231, 223, 210, 0.95) !important;
+    border-radius: 0.75rem !important;
+    box-shadow: 0 8px 20px rgba(20, 40, 38, 0.055) !important;
+}
+
+/* About is the first main content row and remains the clean content color. */
+#premium-about {
+    padding: 2.25rem 0 2.5rem !important;
+    border-left: 1px solid rgba(231, 223, 210, 0.92) !important;
+    border-right: 1px solid rgba(231, 223, 210, 0.92) !important;
+    border-bottom: 0 !important;
+}
+
+#premium-about > .container {
+    width: 100% !important;
+    max-width: none !important;
+    padding-left: clamp(1.25rem, 4vw, 3rem) !important;
+    padding-right: clamp(1.25rem, 4vw, 3rem) !important;
+}
+
+/* Alternating section rows keep their full contained band color. */
+#premium-menu,
+#premium-photos,
+#premium-events,
+#premium-visit {
+    padding-top: 2.6rem !important;
+    padding-bottom: 2.6rem !important;
+    border-left: 1px solid rgba(231, 223, 210, 0.78) !important;
+    border-right: 1px solid rgba(231, 223, 210, 0.78) !important;
+    border-top: 1px solid rgba(231, 223, 210, 0.55) !important;
+    border-bottom: 0 !important;
+}
+
+#premium-menu > .container,
+#premium-photos > .container,
+#premium-events > .container,
+#premium-visit > .container {
+    width: 100% !important;
+    max-width: none !important;
+    padding-left: clamp(1.25rem, 4vw, 3rem) !important;
+    padding-right: clamp(1.25rem, 4vw, 3rem) !important;
+}
+
+/* CTA row is the dark premium conversion band before the normal footer. */
+.premium-venue-footer {
+    background: var(--premium-cta-background) !important;
+    padding: 2rem clamp(1.25rem, 4vw, 3rem) !important;
+    border-left: 1px solid rgba(20, 32, 30, 0.7) !important;
+    border-right: 1px solid rgba(20, 32, 30, 0.7) !important;
+}
+
+/* Main site footer after the CTA. */
+.site-footer,
+.footer {
+    background: var(--premium-footer-background);
+}
+
+/* Remove previous accidental full-width white panels. */
+#premium-about > .container,
+#premium-menu > .container,
+#premium-photos > .container,
+#premium-events > .container,
+#premium-visit > .container {
+    box-shadow: none !important;
+}
+
+/* Keep the call button premium outline. */
+.premium-venue-hero__cta--call {
+    border: 1.5px solid rgba(255, 255, 255, 0.88) !important;
+}
+
+/* Mobile can use full width, but colors still layer the same way. */
+@media (max-width: 860px) {
+    .premium-venue-hero,
+    .premium-venue-subnav,
+    .premium-venue-glance,
+    #premium-about,
+    #premium-menu,
+    #premium-photos,
+    #premium-events,
+    #premium-visit,
+    .premium-venue-footer {
+        width: 100% !important;
+        border-left: 0 !important;
+        border-right: 0 !important;
+    }
+
+    .premium-venue-glance {
+        padding-left: 1rem !important;
+        padding-right: 1rem !important;
+    }
+}
+
+/* ==========================================================================
+   Phase 8R: Premium admin bar overlap fix
+   When logged in as admin, keep the premium hero overlay below the admin toolbar.
+   ========================================================================== */
+
+.premium-venue-page:has(.frontend-admin-bar) .premium-venue-bar,
+.premium-venue-page:has(.venue-admin-bar) .premium-venue-bar,
+.premium-venue-page:has(.admin-quickbar) .premium-venue-bar {
+    top: 5.6rem !important;
+}
+
+/* Keep extra hero breathing room when admin controls are visible. */
+.premium-venue-page:has(.frontend-admin-bar) .premium-venue-hero__inner,
+.premium-venue-page:has(.venue-admin-bar) .premium-venue-hero__inner,
+.premium-venue-page:has(.admin-quickbar) .premium-venue-hero__inner {
+    padding-top: 5.25rem !important;
+}
+
+@media (max-width: 860px) {
+    .premium-venue-page:has(.frontend-admin-bar) .premium-venue-bar,
+    .premium-venue-page:has(.venue-admin-bar) .premium-venue-bar,
+    .premium-venue-page:has(.admin-quickbar) .premium-venue-bar {
+        top: 4.8rem !important;
+    }
+}
+
+/* ==========================================================================
+   Phase 8S: Premium topbar text cleanup
+   ========================================================================== */
+
+.premium-venue-bar__inner {
+    justify-content: flex-start !important;
+}
+
+.premium-venue-bar__mark {
+    display: none !important;
+}
+
+.premium-venue-bar__back {
+    font-size: 0.96rem;
+}
+
+/* ==========================================================================
+   Phase 8T: Premium back link spacing
+   ========================================================================== */
+
+.premium-venue-bar__inner {
+    padding-left: clamp(1.5rem, 3vw, 2.5rem) !important;
+    padding-right: clamp(1.5rem, 3vw, 2.5rem) !important;
+}
+
+.premium-venue-bar__back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+}
+
+@media (max-width: 560px) {
+    .premium-venue-bar__inner {
+        padding-left: 1.25rem !important;
+        padding-right: 1.25rem !important;
+    }
+}

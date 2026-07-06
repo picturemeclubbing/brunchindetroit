@@ -13,3 +13,6 @@ public/uploads/gallery-adwall/*
 # Local uploaded venue/profile images
 public/uploads/venues/*
 !public/uploads/venues/index.html
+
+# Local Claude project export
+claude-project-export/
