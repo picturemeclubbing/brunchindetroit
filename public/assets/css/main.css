@@ -15769,9 +15769,8 @@ body:has(.premium-venue-page) {
     border-right: 1px solid rgba(20, 32, 30, 0.7) !important;
 }
 
-/* Main site footer after the CTA. */
-.site-footer,
-.footer {
+/* Main site footer after the CTA, scoped to the premium profile only. */
+body:has(.premium-venue-page) .site-footer {
     background: var(--premium-footer-background);
 }
 
