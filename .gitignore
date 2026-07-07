@@ -16,3 +16,7 @@ public/uploads/venues/*
 
 # Local Claude project export
 claude-project-export/
+
+# Local laptop helper/transfer files
+files.zip
+run_local_site_laptop.bat
